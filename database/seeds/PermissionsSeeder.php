@@ -93,6 +93,7 @@ class PermissionsSeeder extends Seeder
             ['name' => 'tax_reliefs', 'description' => '累计减免税', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'should_deducted_tax', 'description' => '累计应扣税', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'have_deducted_tax', 'description' => '累计已扣税', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'should_be_tax', 'description' => '累计已扣税', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // 物业费
             ['name' => 'cc_water', 'description' => '成钞水量', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'cc_water_rate', 'description' => '成钞水费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],

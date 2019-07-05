@@ -87,23 +87,17 @@ class DataProcess
      *
      * @return int
      */
-    public function getPeriodId($date):int
+    public function getPeriodId():int
     {
-        $is_date = strtotime($date)?: false;
-
-        if ($is_date === false) {
-            return -99;     // 日期格式非法
-        }
-
-        $d = date('Y-m-d', strtotime($date));
-        $period = Period::select('id')->where('startdate', '<=', $d)
-            ->where('enddate', '>=' , $d)
-            ->first();
+        $period = Period::max('id');
 
         if (empty($period)) {
-            return 0;       // 未查询到周期ID
+            $period = Period::create([
+                'startdate' => date('Y-m-d')
+            ]);
+            return $period->id;
         }
-        return $period->id;
+        return $period;
     }
 
     /**

@@ -16,7 +16,7 @@ class CreatePeriodsTables extends Migration
         Schema::create('periods', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('startdate')->comment('周期开始时间');
-            $table->date('enddate')->comment('周期结束时间');
+            $table->date('enddate')->nullable()->comment('周期结束时间');
         });
     }
 

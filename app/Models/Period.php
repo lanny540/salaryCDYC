@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $startdate 周期开始时间
- * @property string $enddate 周期结束时间
+ * @property string|null $enddate 周期结束时间
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Period newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Period newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Period query()
@@ -21,4 +21,8 @@ use Illuminate\Database\Eloquent\Model;
 class Period extends Model
 {
     protected $table = 'periods';
+    protected $fillable = [
+        'startdate', 'enddate'
+    ];
+    public $timestamps= false;
 }

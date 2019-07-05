@@ -3,8 +3,6 @@
 @section('css')
 <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
 <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
-<!-- Data picker -->
-<link href="{{ asset('css/plugins/datepicker/bootstrap-datepicker3.min.css') }}" rel="stylesheet">
 @stop
 
 @section('breadcrumbs')
@@ -46,13 +44,6 @@
                     <fieldset>
                         <div class="row">
                             <div class="col-lg-7">
-                                <div class="form-group" id="selectMonth">
-                                    <label>选择月份</label>
-                                    <div class="input-group date">
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                        <input type="text" class="form-control" name="period" value="{{ \Carbon\Carbon::today()->year }}-{{ \Carbon\Carbon::today()->month }}">
-                                    </div>
-                                </div>
                                 <div class="form-group">
                                     <label for="roleType" >上传数据分类 *</label>
                                     <select name="roleType" id="roleType" class="form-control" onchange="getLevel2(this)">
@@ -172,9 +163,6 @@
 <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('js/plugins/validate/additional-methods.js') }}"></script>
 <script src="{{ asset('js/plugins/validate/localization/messages_zh.min.js') }}"></script>
-<!-- Date picker -->
-<script src="{{ asset('js/plugins/datepicker/js/bootstrap-datepicker.min.js') }}"></script>
-<script src="{{ asset('js/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.min.js') }}"></script>
 <!-- SheetJs -->
 <script src="{{ asset('js/plugins/Sheetjs/xlsx.core.min.js') }}"></script>
 
@@ -302,15 +290,6 @@
         $('.custom-file-input').on('change', function() {
             let fileName = $(this).val().split('\\').pop();
             $(this).next('.custom-file-label').addClass("selected").html(fileName);
-        });
-        $('#selectMonth .input-group.date').datepicker({
-            language: "zh-CN",
-            minViewMode: 1,
-            keyboardNavigation: false,
-            forceParse: false,
-            autoclose: true,
-            todayHighlight: true,
-            format: "yyyy-mm"
         });
     });
 

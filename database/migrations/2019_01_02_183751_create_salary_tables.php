@@ -254,6 +254,7 @@ class CreateSalaryTables extends Migration
              * tax_reliefs          累计减免税
              * should_deducted_tax  累计应扣税
              * have_deducted_tax    累计已扣税
+             * have_deducted_tax    累计应补税
              */
             $table->float('income')->default(0)->comment('累计收入额');
             $table->float('deduct_expenses')->default(0)->comment('累减除费用');
@@ -272,35 +273,14 @@ class CreateSalaryTables extends Migration
             $table->float('tax_reliefs')->default(0)->comment('累计减免税');
             $table->float('should_deducted_tax')->default(0)->comment('累计应扣税');
             $table->float('have_deducted_tax')->default(0)->comment('累计已扣税');
+            $table->float('should_be_tax')->default(0)->comment('累计应补税');
 
             $table->timestamps();
             $table->unsignedInteger('user_id')->index()->comment('上传人员ID');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
         });
 
-
-        /**
-         * 补发导入表
-         * 包括 补发工资、补发补贴、补发其他
-         */
-        /**
-         * 工会发放、课酬、劳动竞赛、党员奖励
-         * 走流程
-        Schema::create('varSalary', function (Blueprint $table) {
-        $table->increments('id');
-        $table->unsignedInteger('wf_id')->index()->comment('流程ID');
-        $table->unsignedInteger('user_id')->index()->comment('用户ID');
-        $table->unsignedInteger('category_id')->index()->comment('薪酬分类ID');
-        $table->float('money')->default(0)->comment('金额');
-        $table->string('remark')->comment('备注，发放说明');
-        $table->tinyInteger('statusCode')->default(0)->comment('记录标识:0未处理,1已生成凭证,2已进入工资条');
-        $table->integer('period_id')->default(0)->comment('会计期ID');
-        $table->timestamps();
-        $table->foreign('wf_id')->references('id')->on('workFlows')->onUpdate('cascade');
-        $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
-        });
-         */
-
+        //todo: 扣除表
         // 薪酬日志
         Schema::create('salaryLog', function (Blueprint $table) {
             $table->increments('id');

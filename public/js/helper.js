@@ -152,6 +152,19 @@ function mergeSalary(data) {
     let commonT = [];
     let res = [];
 
+    // TODO: 合计字段 的计算
+    // 工资合计
+    for(let j = 0,len = wage.length; j < len; j++){
+        let total_wage = wage[j].annual + wage[j].post_wage + wage[j].retained_wage + wage[j].compensation + wage[j].night_shift + wage[j].overtime_wage + wage[j].seniority_wage;
+        wage[j].total_wage = total_wage;
+    }
+    // 奖金合计
+    for(let j = 0,len = bonus.length; j < len; j++){
+        let total_bonus = bonus[j]['月奖'] + bonus[j]['专项奖'] + bonus[j]['节日慰问费'] + bonus[j]['工会发放'] + bonus[j]['课酬'] + bonus[j]['劳动竞赛'] + bonus[j]['党员奖励'] + bonus[j]['其他奖励'];
+        wage[j]['奖金合计'] = total_bonus;
+    }
+    // console.log(wage);
+
     for (let i = 0; i < wage.length; i++) {
         commonT[i] = R.pick(['policyNumber', 'username'], wage[i]);
         const hasPolicy = R.propEq('policyNumber', commonT[i].policyNumber);

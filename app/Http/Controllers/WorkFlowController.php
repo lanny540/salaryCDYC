@@ -119,7 +119,7 @@ class WorkFlowController extends Controller
         Storage::disk('excelFiles')->put($fileName, $content);
         $info['file'] = asset('/storage/excelFiles/'.$fileName);
         // 根据选择的日期得到会计周期ID
-        $info['period'] = $this->dataProcess->getPeriodId($request->get('period'));
+        $info['period'] = $this->dataProcess->getPeriodId();
 
         // 将数据写入DB
         $res = $this->dataProcess->convertData($info, $importData);

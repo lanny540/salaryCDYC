@@ -90,6 +90,7 @@ class CreateStatisticsTables extends Migration
             $table->float('tax_reliefs')->default(0)->comment('累计减免税');
             $table->float('should_deducted_tax')->default(0)->comment('累计应扣税');
             $table->float('have_deducted_tax')->default(0)->comment('累计已扣税');
+            $table->float('should_be_tax')->default(0)->comment('累计应补税');
             // 收入合计
             $table->float('total_income')->default(0)->comment('收入合计');  // 收入合计
         });

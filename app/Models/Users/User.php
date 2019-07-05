@@ -67,10 +67,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(SalaryLog::class, 'user_id', 'id');
     }
-
-    //一对多。一个用户对应多条薪酬汇总记录
-    public function salarySummary()
-    {
-        return $this->hasMany(SalarySummary::class, 'user_id', 'id');
-    }
 }

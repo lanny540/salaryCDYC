@@ -25,7 +25,8 @@ class SalaryController extends Controller
 
     public function temp()
     {
-        $res = $this->dataProcess->statmonthlyIncome(5);
+        $period_id = $this->dataProcess->getPeriodId();
+        $res = $this->dataProcess->statmonthlyIncome($period_id);
         return $res;
     }
 
