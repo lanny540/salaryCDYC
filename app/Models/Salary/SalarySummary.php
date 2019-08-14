@@ -150,6 +150,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalarySummary whereUnionDeduction($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalarySummary whereUsername($value)
  * @mixin \Eloquent
+ * @property float $should_be_tax 累计应补税
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalarySummary whereShouldBeTax($value)
  */
 class SalarySummary extends Model
 {

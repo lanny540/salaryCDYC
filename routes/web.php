@@ -39,7 +39,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // 薪酬计算页面
     Route::get('calculation', 'salaryController@calculate')->name('salary.calculate');
-    Route::get('temp', 'salaryController@temp');
+    Route::get('calSalary', 'salaryController@calSalary');
+    Route::post('settleAccount', 'salaryController@settleAccount');
 
     // 工资条页面
     Route::get('sheet', 'PrintController@sheetIndex')->name('sheet.index');

@@ -152,20 +152,7 @@ function mergeSalary(data) {
     let commonT = [];
     let res = [];
 
-    // TODO: 合计字段 的计算
-    // 工资合计
-    for(let j = 0,len = wage.length; j < len; j++){
-        let total_wage = wage[j].annual + wage[j].post_wage + wage[j].retained_wage + wage[j].compensation + wage[j].night_shift + wage[j].overtime_wage + wage[j].seniority_wage;
-        wage[j].total_wage = total_wage;
-    }
-    // 奖金合计
-    for(let j = 0,len = bonus.length; j < len; j++){
-        let total_bonus = bonus[j]['月奖'] + bonus[j]['专项奖'] + bonus[j]['节日慰问费'] + bonus[j]['工会发放'] + bonus[j]['课酬'] + bonus[j]['劳动竞赛'] + bonus[j]['党员奖励'] + bonus[j]['其他奖励'];
-        wage[j]['奖金合计'] = total_bonus;
-    }
-    // console.log(wage);
-
-    for (let i = 0; i < wage.length; i++) {
+    for (let i = 0, len = wage.length; i < len; i++) {
         commonT[i] = R.pick(['policyNumber', 'username'], wage[i]);
         const hasPolicy = R.propEq('policyNumber', commonT[i].policyNumber);
         // 合并
@@ -176,9 +163,16 @@ function mergeSalary(data) {
         res[i] = R.merge(res[i], R.filter(hasPolicy, property)[0]);
         res[i] = R.merge(res[i], R.filter(hasPolicy, deduction)[0]);
         res[i] = R.merge(res[i], R.filter(hasPolicy, other)[0]);
+    }
+
+    // TODO: 合计字段 的计算
+    for (let i = 0, len = res.length; i < len; i++) {
+        // 工资合计
+        res[i]['total_wage'] = res[i]['annual'] + res[i]['post_wage'] + res[i]['retained_wage'] + res[i]['compensation'] + res[i]['night_shift'] + res[i]['overtime_wage'] + res[i]['seniority_wage'];
+        // 奖金合计
+        res[i]['奖金合计'] = res[i]['月奖'] + res[i]['专项奖'] + res[i]['节日慰问费'] + res[i]['工会发放'] + res[i]['课酬'] + res[i]['劳动竞赛'] + res[i]['党员奖励'] + res[i]['其他奖励'];
 
     }
-    // let temp = R.pick(['policyNumber', 'username'], wage);
-    // console.log(wage);
-    return R.flatten(res);
+
+    return res;
 }

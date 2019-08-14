@@ -42,9 +42,9 @@ class WorkFlowController extends Controller
     /**
      * 根据角色获取对应表名以及字段名
      *
-     * @param Request $request
+     * @param $roleId
      *
-     * @return array
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|Role|null
      */
     public function getColumns($roleId)
     {
@@ -107,7 +107,7 @@ class WorkFlowController extends Controller
 
         $info['roleId'] = $request->get('roleType');
         $temp1 = $request->get('level2Name');
-        $info['roleLevel'] = isset($temp1) ? $temp1 : 0;
+        $info['roleLevel'] = $temp1 ?? 0;
         $info['targetTable'] = $request->get('targetTable');
         $importData = json_decode($request->get('importData'), true);
 

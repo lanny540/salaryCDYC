@@ -223,7 +223,7 @@
                         if (level2 !== '') {
                             filters = R.append(level2, filters);
                         }
-                        // console.log(filters);  显示需要抽取的字段
+                        // console.log(filters);  //显示需要抽取的字段
                     }
                 });
             }

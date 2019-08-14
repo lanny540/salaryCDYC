@@ -50,39 +50,25 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Property whereXyWater($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Property whereXyWaterRate($value)
  * @mixin \Eloquent
+ * @property float $water_back 水量退补费
+ * @property float $water_rate_back 水费退补费
+ * @property float $electricity_back 电费退补费
+ * @property float $total_property 合计水电物管
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Property whereElectricityBack($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Property whereTotalProperty($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Property whereWaterBack($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Property whereWaterRateBack($value)
  */
 class Property extends Model
 {
     protected $table = 'property';
 
-//    protected $fillable = [
-//        'username', 'policyNumber',
-//        'cc_water', 'cc_water_rate', 'cc_electricity', 'cc_property',
-//        'xy_water', 'xy_water_rate', 'xy_electricity', 'xy_property',
-//        'utilities', 'property_fee', 'property_back',
-//        'period_id', 'upload_files', 'user_id'
-//    ];
-
-    // 追加物业费合计属性
-    protected $appends = ['sum_property'];
-
-    public function getSumPropertyAttribute()
-    {
-        $sum['cc_water'] = $this->attributes['cc_water'];
-        $sum['cc_water_rate'] = $this->attributes['cc_water_rate'];
-        $sum['cc_electricity'] = $this->attributes['cc_electricity'];
-        $sum['cc_property'] = $this->attributes['cc_property'];
-
-        $sum['xy_water'] = $this->attributes['xy_water'];
-        $sum['xy_water_rate'] = $this->attributes['xy_water_rate'];
-        $sum['xy_electricity'] = $this->attributes['xy_electricity'];
-        $sum['xy_property'] = $this->attributes['xy_property'];
-
-        $sum['utilities'] = $this->attributes['utilities'];
-        $sum['property_fee'] = $this->attributes['property_fee'];
-        $sum['property_back'] = $this->attributes['property_back'];
-
-        return array_sum($sum);
-    }
-
+    protected $fillable = [
+        'username', 'policyNumber',
+        'cc_water', 'cc_water_rate', 'cc_electricity', 'cc_property',
+        'xy_water', 'xy_water_rate', 'xy_electricity', 'xy_property',
+        'water_back', 'water_rate_back', 'electricity_back', 'property_back',
+        'utilities', 'property_fee', 'total_property',
+        'period_id', 'upload_files', 'user_id'
+    ];
 }

@@ -59,11 +59,12 @@ class DataProcess
      */
     public function dataToDb(string $targetTable, array $insertData)
     {
+        $tableName = strtolower($targetTable);
         DB::beginTransaction();
 
         try {
             // 先清空表再插入数据
-            if (($targetTable === 'taximport') || ($targetTable === 'insurances') || ($targetTable === 'subsidy')) {
+            if (('taximport' === $tableName) || ('insurances' === $tableName) || ($tableName === 'subsidy')) {
                 DB::table($targetTable)->truncate();
             }
             //插入数据
@@ -97,6 +98,35 @@ class DataProcess
             ]);
             return $period->id;
         }
+        return $period;
+    }
+
+    /**
+     * 关闭当前会计周期
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     */
+    public function closePeriod()
+    {
+        $period = Period::latest('id')->first();
+
+        $period->enddate = date('Y-m-d');
+        $period->save();
+
+        return $period;
+    }
+
+    /**
+     * 新开会计周期
+     *
+     * @return Period|\Illuminate\Database\Eloquent\Model
+     */
+    public function newPeriod()
+    {
+        $old_period = Period::latest('id')->first();
+        $period = Period::create([
+           'startdate' => Carbon::createFromFormat('Y-m-d', $old_period->enddate)->addDay()
+        ]);
         return $period;
     }
 
@@ -211,6 +241,7 @@ class DataProcess
                     foreach ($permissions as $k => $v) {
                         $res[$i][$k] = $data[$i][$v];
                     }
+                    $res[$i]['total_property'] = $res[$i]['utilities'] + $res[$i]['property_fee'];
                 }
                 break;
             // 社保、补贴
@@ -405,10 +436,10 @@ class DataProcess
     {
         $columns = 'policyNumber, username,';
         $columns .= 'income,deduct_expenses,special_deduction,';
-        $columns .= 'tax_child,tax_old,tax_loan,tax_rent,';
+        $columns .= 'tax_child,tax_old,tax_edu,tax_loan,tax_rent,';
         $columns .= 'tax_other_deduct,deduct_donate,tax_income,taxrate,';
         $columns .= 'quick_deduction,taxable,tax_reliefs,';
-        $columns .= 'should_deducted_tax,have_deducted_tax';
+        $columns .= 'should_deducted_tax,have_deducted_tax,should_be_tax';
         if ($policy !== '')
         {
             return DB::select('select '.$columns.' from taximport where policyNumber = ?', [$policy]);
@@ -418,7 +449,6 @@ class DataProcess
 
     /**
      * 查询物业费合计
-     * TODO：计算方法需财务确认
      *
      * @param int $period_id 会计周期
      * @param string $policy 查询人保险编号
@@ -440,7 +470,7 @@ class DataProcess
             $data[$i]['policyNumber'] = $temp[$i]['policyNumber'];
             $data[$i]['username'] = $temp[$i]['username'];
             $data[$i]['period_id'] = $temp[$i]['period_id'];
-//            $data[$i]['sum_property'] = $temp[$i]['sum_property'];
+            $data[$i]['total_property'] = $temp[$i]['total_property'];
         }
         return $data;
     }
