@@ -74,7 +74,7 @@ class PermissionsSeeder extends Seeder
             ['name' => 'single', 'description' => '独子费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'subsidy', 'description' => '补贴合计', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // 扣款
-            ['name' => 'deduction', 'description' => '扣款相关', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'deduction', 'description' => '扣款金额', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // 税务导入
             ['name' => 'income', 'description' => '累计收入额', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'deduct_expenses', 'description' => '累减除费用', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
@@ -93,7 +93,7 @@ class PermissionsSeeder extends Seeder
             ['name' => 'tax_reliefs', 'description' => '累计减免税', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'should_deducted_tax', 'description' => '累计应扣税', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'have_deducted_tax', 'description' => '累计已扣税', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'should_be_tax', 'description' => '累计已扣税', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'should_be_tax', 'description' => '累计应补税', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // 物业费
             ['name' => 'cc_water', 'description' => '成钞水量', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'cc_water_rate', 'description' => '成钞水费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
@@ -103,12 +103,14 @@ class PermissionsSeeder extends Seeder
             ['name' => 'xy_water_rate', 'description' => '鑫源水费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'xy_electricity', 'description' => '鑫源电费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'xy_property', 'description' => '鑫源物管', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'water_back', 'description' => '水量退补费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'water_rate_back', 'description' => '水费退补费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'electricity_back', 'description' => '电费退补费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'property_back', 'description' => '物业退补费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'utilities', 'description' => '水电', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'property_fee', 'description' => '物管费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'property_back', 'description' => '物业退补费', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // 其他费用
             ['name' => 'other_salary', 'description' => '其他费用', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            // TODO: 流程相关的奖金、补发导入表
         ];
         Permission::insert($permissions);
 
@@ -146,7 +148,6 @@ class PermissionsSeeder extends Seeder
             ['name' => 'deduction', 'description' => '财务扣款', 'typeId' => 2, 'target_table' => 'deductions', 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // 税务导入
             ['name' => 'taxImport', 'description' => '税务导入', 'typeId' => 2, 'target_table' => 'taxImport', 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            // TODO：流程相关的奖金，补发相关
         ];
         Role::insert($roles);
 

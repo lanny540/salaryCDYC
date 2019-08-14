@@ -77,9 +77,13 @@ class CreateSalaryTables extends Migration
             $table->float('xy_water_rate')->default(0)->comment('鑫源水费');
             $table->float('xy_electricity')->default(0)->comment('鑫源电费');
             $table->float('xy_property')->default(0)->comment('鑫源物管');
+            $table->float('water_back')->default(0)->comment('水量退补费');
+            $table->float('water_rate_back')->default(0)->comment('水费退补费');
+            $table->float('electricity_back')->default(0)->comment('电费退补费');
+            $table->float('property_back')->default(0)->comment('物管退补费');
             $table->float('utilities')->default(0)->comment('水电');
             $table->float('property_fee')->default(0)->comment('物管费');
-            $table->float('property_back')->default(0)->comment('物业退补费');
+            $table->float('total_property')->default(0)->comment('合计水电物管');
 
             $table->integer('period_id')->default(0)->comment('会计期ID');
             $table->string('upload_files')->nullable()->comment('上传文件地址');
@@ -281,6 +285,7 @@ class CreateSalaryTables extends Migration
         });
 
         //todo: 扣除表
+
         // 薪酬日志
         Schema::create('salaryLog', function (Blueprint $table) {
             $table->increments('id');

@@ -26,6 +26,7 @@ class SalarySeeder extends Seeder
             ['name' => '课酬', 'role_id' => 11],
             ['name' => '劳动竞赛', 'role_id' => 12],
             ['name' => '党员奖励', 'role_id' => 11],
+            ['name' => '其他奖励', 'role_id' => 11],
         ];
         \App\Models\Salary\BonusType::insert($bonus_types);
 
