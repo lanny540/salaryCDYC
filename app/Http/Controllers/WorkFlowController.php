@@ -12,9 +12,9 @@ use App\Services\DataProcess;
 use App\Services\WorkFlowProcess;
 use Auth;
 use File;
+use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Storage;
-use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
 class WorkFlowController extends Controller
@@ -29,32 +29,32 @@ class WorkFlowController extends Controller
     }
 
     /**
-     * 上传数据视图
+     * 上传数据视图.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function uploadIndex()
     {
         $roles = Auth::user()->roles()->where('typeId', 2)->pluck('description', 'id');
+
         return view('workflow.upload')->with(['roles' => $roles]);
     }
 
     /**
-     * 根据角色获取对应表名以及字段名
+     * 根据角色获取对应表名以及字段名.
      *
      * @param $roleId
      *
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|Role|null
+     * @return null|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|Role
      */
     public function getColumns($roleId)
     {
-        $role = Role::with('permissions')
+        return Role::with('permissions')
             ->select(['id', 'target_table'])->where('id', $roleId)->first();
-        return $role;
     }
 
     /**
-     * 获取二级分类信息
+     * 获取二级分类信息.
      *
      * @param $roleId
      *
@@ -65,13 +65,11 @@ class WorkFlowController extends Controller
         // 其他奖金分类
         if ($roleId >= 10 && $roleId <= 12) {
             $columns = BonusType::select('id', 'name')->where('role_id', $roleId)->get();
-        }
-        // 扣款分类
-        elseif ($roleId >= 20 && $roleId <= 22) {
+        } elseif ($roleId >= 20 && $roleId <= 22) {
+            // 扣款分类
             $columns = DeductionType::select('id', 'name')->where('role_id', $roleId)->get();
-        }
-        // 其他费用分类
-        elseif ($roleId >= 13 && $roleId <= 16) {
+        } elseif ($roleId >= 13 && $roleId <= 16) {
+            // 其他费用分类
             $columns = OtherType::select('id', 'name')->where('role_id', $roleId)->get();
         } else {
             // 报错
@@ -82,13 +80,14 @@ class WorkFlowController extends Controller
     }
 
     /**
-     * 从数据库获取人员信息用于校验
+     * 从数据库获取人员信息用于校验.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getProfiles()
     {
         $infos = UserProfile::select('userName', 'policyNumber', 'wageCard', 'bonusCard')->get();
+
         return response()->json($infos);
     }
 
@@ -97,8 +96,9 @@ class WorkFlowController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function wizardSubmit(Request $request)
     {
@@ -113,8 +113,8 @@ class WorkFlowController extends Controller
 
         // 保存文件至本地
         $file = $_FILES['excel'];
-        $arr=explode('.', $file['name']);
-        $fileName = uniqid('excel_', false). '.' . end($arr);
+        $arr = explode('.', $file['name']);
+        $fileName = uniqid('excel_', false).'.'.end($arr);
         $content = File::get($file['tmp_name']);
         Storage::disk('excelFiles')->put($fileName, $content);
         $info['file'] = asset('/storage/excelFiles/'.$fileName);
@@ -133,7 +133,7 @@ class WorkFlowController extends Controller
         // 写入成功
 
         // 判断是否是需要走流程的角色，不是则修改$code，直接上传已审核数据
-        if ($info['roleId'] !== 99) {
+        if (99 !== $info['roleId']) {
             $code = 9;
         }
         // 写流程表
@@ -151,18 +151,17 @@ class WorkFlowController extends Controller
         return redirect()->route('upload.index')->withSuccess('数据保存成功!');
     }
 
-
     /**
-     * 流程列表视图
+     * 流程列表视图.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        if (Auth::id() === 1) {
+        if (1 === Auth::id()) {
             $role = 1;
         } else {
-            $role = Role::whereHas('users', function ($q){
+            $role = Role::whereHas('users', function ($q) {
                 $q->where('id', 1);
             })->where('typeId', 1)->max('id');
         }
@@ -171,12 +170,13 @@ class WorkFlowController extends Controller
     }
 
     /**
-     * 根据角色获取流程列表
+     * 根据角色获取流程列表.
      *
      * @param Request $request
      *
-     * @return mixed
      * @throws \Exception
+     *
+     * @return mixed
      */
     public function getWorkFlows(Request $request)
     {
@@ -184,13 +184,14 @@ class WorkFlowController extends Controller
             'workflows.id',
             'workflows.title',
             'userprofile.userName',
-            'workflowstatus.description'
+            'workflowstatus.description',
         ])
             ->leftJoin('workflowstatus', 'workflowstatus.statusCode', '=', 'workflows.statuscode')
-            ->leftJoin('userprofile', 'workflows.createdUser', '=', 'userprofile.user_id');
+            ->leftJoin('userprofile', 'workflows.createdUser', '=', 'userprofile.user_id')
+        ;
 
         if ($request->has('status')) {
-            if ($request->get('status') == 1) {
+            if (1 === $request->get('status')) {
                 $workFlows = $workFlows->get();
             } else {
                 $temp = $request->get('status') - 5;
@@ -205,41 +206,45 @@ class WorkFlowController extends Controller
             ->addColumn('action', function ($workflow) {
                 return '<a href="'.route('workflow.show', $workflow->id).'" class="btn btn-xs btn-primary edit"><i class="glyphicon glyphicon-edit"></i> 浏览</a>';
             })
-            ->make(true);
+            ->make(true)
+        ;
     }
 
     /**
-     * 根据流程ID查询流程数据
+     * 根据流程ID查询流程数据.
      *
      * @param $workflowId
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function Show($workflowId)
+    public function show($workflowId)
     {
         $workflow = WorkFlow::where('id', $workflowId)
             ->select(['id', 'title', 'fileUrl', 'statusCode'])
-            ->first();
+            ->first()
+        ;
         $logs = WorkFlowLog::select(['workflowlogs.*', 'userprofile.userName'])
             ->leftJoin('userprofile', 'userprofile.user_id', '=', 'workflowlogs.user_id')
             ->where('wf_id', $workflowId)
             ->orderByDesc('id')->get();
+
         return view('workflow.show')->with(['workflow' => $workflow, 'logs' => $logs]);
     }
 
     /**
-     * 流程办理
+     * 流程办理.
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Validation\ValidationException
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function post(Request $request)
     {
         $this->validate($request, [
             'wfId' => 'required',
-            'action' => 'required'
+            'action' => 'required',
         ]);
 
         $id = $request->get('wfId');
@@ -248,10 +253,10 @@ class WorkFlowController extends Controller
 
         $res = $this->wfProcess->workflowProcess($id, $action, $content);
 
-        if ($res['code'] === 500) {
+        if (500 === $res['code']) {
             return redirect()->route('workflow.show', $id)->withErrors($res['message']);
         }
+
         return redirect()->route('check.index')->withSuccess($res['message']);
     }
-
 }

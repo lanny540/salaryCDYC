@@ -165,7 +165,7 @@
         $('.salarysubmit').click(function () {
             $('#statistForm').children('.ibox-content').toggleClass('sk-loading');
             $.get('/calSalary', function (data) {
-                if (data.statusCode !== 201) {
+                if (data === '') {
                     swal({
                         type: 'error',
                         title: '错误!',
@@ -173,7 +173,7 @@
                     });
                 } else {
                     staticsSalary = mergeSalary(data);
-                    console.log(staticsSalary);
+                    // console.log(staticsSalary);
 
                     let salaryTable = $('#staticsSalary').dataTable();
                     if ($('#staticsSalary').hasClass('dataTable')) {
@@ -258,8 +258,8 @@
                         ]
                     });
                 }
+                $('#statistForm').children('.ibox-content').toggleClass('sk-loading');
             });
-            $('#statistForm').children('.ibox-content').toggleClass('sk-loading');
         });
 
         $('.settleAccount').click(function () {
@@ -277,12 +277,19 @@
                     confirmButtonText: "确定结算!",
                     closeOnConfirm: false,
                 }, function () {
-                    $.post('/settleAccount', function (data) {
-                        swal({
-                            title: data.title,
-                            text: data.text,
-                            type: data.type,
-                        });
+                    $.ajax({
+                        type: 'POST',
+                        url: '/settleAccount',
+                        data: {
+                            salary: staticsSalary,
+                        },
+                        success: function(data) {
+                            swal({
+                                title: data.title,
+                                text: data.text,
+                                type: data.type,
+                            });
+                        }
                     });
                 });
             }

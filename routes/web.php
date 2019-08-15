@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
     // 获取流程数据
     Route::get('getWorkFlows', 'WorkFlowController@getWorkFlows')->name('workflow.index');
     // 获取流程详细数据
-    Route::get('workflow/{workflowId}', 'WorkFlowController@Show')->name('workflow.show');
+    Route::get('workflow/{workflowId}', 'WorkFlowController@show')->name('workflow.show');
     // 审核流程
     Route::post('checkPost', 'WorkFlowController@post')->name('check.post');
 

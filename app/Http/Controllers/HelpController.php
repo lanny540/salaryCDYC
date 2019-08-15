@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class HelpController extends Controller
 {
     /**
-     * 个税计算视图
+     * 个税计算视图.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -18,7 +18,7 @@ class HelpController extends Controller
     }
 
     /**
-     * 系统BUG报告视图
+     * 系统BUG报告视图.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -28,7 +28,7 @@ class HelpController extends Controller
     }
 
     /**
-     * 联系我们视图
+     * 联系我们视图.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -38,7 +38,7 @@ class HelpController extends Controller
     }
 
     /**
-     * 个税计算
+     * 个税计算.
      *
      * @param Request $request
      *
@@ -48,11 +48,12 @@ class HelpController extends Controller
     {
 //        TODO:个税计算方法
         $data = $request->get('money', 0);
+
         return response()->json($data);
     }
 
     /**
-     * 报告提交
+     * 报告提交.
      *
      * @param Request $request
      *
@@ -64,12 +65,12 @@ class HelpController extends Controller
         $imageUrl = asset('/images/bugs/');
 
         BugReport::create([
-            'reportType'  => $request->get('type'),
-            'content'  => $request->get('content'),
-            'contact'  => $request->get('contact', ''),
-            'screenShot'  => $imageUrl,
-            'created_at'    => \Carbon\Carbon::now(),
-            'updated_at'    => \Carbon\Carbon::now()
+            'reportType' => $request->get('type'),
+            'content' => $request->get('content'),
+            'contact' => $request->get('contact', ''),
+            'screenShot' => $imageUrl,
+            'created_at' => \Carbon\Carbon::now(),
+            'updated_at' => \Carbon\Carbon::now(),
         ]);
 
         return redirect()->route('report')->withSuccess('感谢您的宝贵意见!');

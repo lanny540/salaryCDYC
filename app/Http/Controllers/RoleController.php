@@ -9,7 +9,7 @@ use Spatie\Permission\Models\Role;
 class RoleController extends Controller
 {
     /**
-     * 角色管理视图
+     * 角色管理视图.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -21,19 +21,21 @@ class RoleController extends Controller
         $roles = Role::with('permissions')
             ->select($columns)
             ->where('id', '<>', 1)
-            ->get();
+            ->get()
+        ;
         $permissions = Permission::select($columns)->get();
 
         return view('settings.roles')->with(['roles' => $roles, 'permissions' => $permissions]);
     }
 
     /**
-     * 创建角色
+     * 创建角色.
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -52,12 +54,12 @@ class RoleController extends Controller
 
         return response()->json([
             'code' => 201,
-            'message' => '新角色已创建成功'
+            'message' => '新角色已创建成功',
         ]);
     }
 
     /**
-     * Ajax 返回具体角色信息
+     * Ajax 返回具体角色信息.
      *
      * @param $roleId
      *
@@ -65,7 +67,7 @@ class RoleController extends Controller
      */
     public function show($roleId)
     {
-        $role = Role::with(['permissions' => function($query) {
+        $role = Role::with(['permissions' => function ($query) {
             $query->select('id', 'description');
         }])->findOrFail($roleId);
 
@@ -73,22 +75,23 @@ class RoleController extends Controller
     }
 
     /**
-     * 变更角色权限
+     * 变更角色权限.
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Validation\ValidationException
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request)
     {
         $this->validate($request, [
-            'role_id' => 'required'
+            'role_id' => 'required',
         ]);
 
         $roleId = $request->get('role_id');
 
-        if ($roleId === 0) {
+        if (0 === $roleId) {
             return redirect()->back()->withErrors('错误请求角色参数');
         }
 
@@ -106,6 +109,7 @@ class RoleController extends Controller
                 $role->givePermissionTo($p);    // 分配权限到角色
             }
         }
+
         return redirect()->route('role.index')->withSuccess('角色权限更新成功!');
     }
 }

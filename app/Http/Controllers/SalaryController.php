@@ -9,13 +9,14 @@ use Illuminate\Http\Request;
 class SalaryController extends Controller
 {
     protected $dataProcess;
+
     public function __construct(DataProcess $services)
     {
         $this->dataProcess = $services;
     }
 
     /**
-     * 薪酬计算视图
+     * 薪酬计算视图.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -25,36 +26,40 @@ class SalaryController extends Controller
     }
 
     /**
-     * 当前会计期薪酬汇总计算
+     * 当前会计期薪酬汇总计算.
      *
      * @return mixed
      */
     public function calSalary()
-    {   $code = 1001;
+    {
         $res = '';
         if (Auth::user()->hasRole('financial_manager')) {
             $period_id = $this->dataProcess->getPeriodId();
             $res = $this->dataProcess->statmonthlyIncome($period_id);
-            $code = 201;
         }
 
-        return response()->json([
-            'statusCode' => $code,
-            'salary' => $res
-        ]);
+        return $res;
     }
 
     /**
-     * 会计期结算
-     * 关闭当前会计期，新开会计期
+     * 会计期结算.
+     *
+     * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function settleAccount()
+    public function settleAccount(Request $request)
     {
         if (Auth::user()->hasRole('financial_manager')) {
+            // 将汇总数据写入到数据库
+            $salaries = $request->get('salary');
+            $period = $this->dataProcess->getPeriodId();
+
+            // 关闭当前会计期
             $old_period = $this->dataProcess->closePeriod();
-            $new_period = $this->dataProcess->newPeriod();
+            // 新开会计期
+//            $new_period = $this->dataProcess->newPeriod();
+            // 返回消息
             $text = '会计期已关闭,时间是'.$old_period->startdate.'到'.$old_period->enddate.' ! ';
             $text .= '新会计期自动将于明天开启.';
             $type = 'success';
@@ -73,7 +78,7 @@ class SalaryController extends Controller
     }
 
     /**
-     * 个人薪酬信息视图
+     * 个人薪酬信息视图.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -83,7 +88,7 @@ class SalaryController extends Controller
     }
 
     /**
-     * 个人薪酬明细视图
+     * 个人薪酬明细视图.
      *
      * @param $salaryId
      *

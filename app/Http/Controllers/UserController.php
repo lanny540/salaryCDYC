@@ -6,17 +6,17 @@ use App\Models\Department;
 use App\Models\Users\User;
 use App\Models\Users\UserProfile;
 use App\Models\Users\UserRemitting;
-use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Http\Request;
+use Log;
 use Spatie\Permission\Models\Role;
 use Validator;
-use Log;
 use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
     /**
-     * 人员信息管理视图
+     * 人员信息管理视图.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -26,7 +26,7 @@ class UserController extends Controller
     }
 
     /**
-     * 编辑人员信息视图
+     * 编辑人员信息视图.
      *
      * @param $userId
      *
@@ -38,17 +38,20 @@ class UserController extends Controller
         $user = User::with(['profile', 'remit'])
             ->where('id', $userId)
             ->select('users.id', 'users.name')
-            ->firstOrFail();
+            ->firstOrFail()
+        ;
         $departments = Department::select('id', 'name')
             ->where('level', 5)
             ->orderBy('weight')
-            ->get();
+            ->get()
+        ;
         $roles = Role::select('id', 'description', 'typeId')->get();
+
         return view('user.edit')->with(['user' => $user, 'departments' => $departments, 'roles' => $roles]);
     }
 
     /**
-     * 更新人员一般信息
+     * 更新人员一般信息.
      *
      * @param Request $request
      * @param $userId
@@ -93,7 +96,7 @@ class UserController extends Controller
     }
 
     /**
-     * 更新人员特殊信息
+     * 更新人员特殊信息.
      *
      * @param Request $request
      * @param $userId
@@ -114,7 +117,7 @@ class UserController extends Controller
     }
 
     /**
-     * 更新非工行卡信息
+     * 更新非工行卡信息.
      *
      * @param Request $request
      * @param $userId
@@ -150,7 +153,7 @@ class UserController extends Controller
                 'remit_bank' => $request->get('remit_bank'),
                 'remit_bank_no' => $request->get('remit_bank_no'),
                 'remit_province' => $request->get('remit_province'),
-                'remit_city' => $request->get('remit_city')
+                'remit_city' => $request->get('remit_city'),
             ]
         );
 
@@ -158,7 +161,7 @@ class UserController extends Controller
     }
 
     /**
-     * 更新用户所属角色
+     * 更新用户所属角色.
      *
      * @param Request $request
      * @param $userId
@@ -174,32 +177,37 @@ class UserController extends Controller
         } else {
             $user->roles()->detach();   // 如果没有选择任何与用户关联的角色则将之前关联角色解除
         }
-        if ($userId === 1) {
+        if (1 === $userId) {
             $user->roles()->sync(1);
         }
+
         return redirect()->route('user.edit', $userId)->withSuccess('用户角色变更成功!');
     }
 
     /**
-     * 人员列表输出至datatables
+     * 人员列表输出至datatables.
+     *
+     * @throws \Exception
      *
      * @return mixed
-     * @throws \Exception
      */
     public function getUsersData()
     {
-        $users = User::with(['profile' => function($query){
+        $users = User::with(['profile' => function ($query) {
             $query->select('user_id', 'userName', 'department_id')
-                ->with(['department' => function($q){
+                ->with(['department' => function ($q) {
                     $q->select('id', 'name', 'level', 'weight')
-                        ->where('level', 5);
-                }]);
+                        ->where('level', 5)
+                    ;
+                }])
+            ;
         }])->select('users.id', 'users.name');
 
         return DataTables::of($users)
             ->addColumn('action', function ($user) {
                 return '<a href="javascript:;" class="btn btn-xs btn-primary edit"><i class="glyphicon glyphicon-edit"></i> 修改人员信息</a>';
             })
-            ->make(true);
+            ->make(true)
+        ;
     }
 }
