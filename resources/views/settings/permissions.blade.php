@@ -78,9 +78,11 @@
                             <h3><i class="fa fa-shield"></i> 业务权限</h3>
                         </div>
                         <div class="forum-item active">
+                            @foreach($datas as $k => $data)
+                            <h3><i class="fa fa-cube"></i> {{ $data }}</h3>
                             <div class="row">
                                 @foreach($permissions as $p)
-                                    @if($p->typeId === 2)
+                                    @if($p->typeId === $k)
                                         <div class="col-sm-3 col-md-2">
                                             <div class="form-group">
                                                 <span class="badge badge-success" style="font-size: 12px;">{{ $p->description }}</span>
@@ -89,6 +91,7 @@
                                     @endif
                                 @endforeach
                             </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>

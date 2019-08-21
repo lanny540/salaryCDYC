@@ -15,6 +15,16 @@ class RoleController extends Controller
      */
     public function index()
     {
+        $data = [
+            2 => '工资',
+            3 => '奖金',
+            4 => '其他费用',
+            5 => '社保',
+            6 => '补贴',
+            7 => '补发',
+            8 => '扣款',
+            9 => '专项税务',
+        ];
         // 查询列
         $columns = ['id', 'description', 'typeId'];
 
@@ -25,7 +35,7 @@ class RoleController extends Controller
         ;
         $permissions = Permission::select($columns)->get();
 
-        return view('settings.roles')->with(['roles' => $roles, 'permissions' => $permissions]);
+        return view('settings.roles')->with(['roles' => $roles, 'permissions' => $permissions, 'datas' => $data]);
     }
 
     /**

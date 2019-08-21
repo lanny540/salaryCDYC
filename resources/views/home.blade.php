@@ -76,9 +76,6 @@
                         <li>
                             <h2><a href="{{ route('upload.index') }}">上传数据</a></h2>
                         </li>
-                        <li>
-                            <h2><a href="{{ route('check.index') }}">审核数据</a></h2>
-                        </li>
                     </ul>
                 </div>
             </div>

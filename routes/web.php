@@ -28,14 +28,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('wizardSubmit', 'WorkFlowController@wizardSubmit')->name('wizard.submit');
     // 获取人员信息,用于上传数据校验
     Route::get('getProfiles', 'WorkFlowController@getProfiles');
-    // 流程列表页面
-    Route::get('workflow', 'WorkFlowController@index')->name('check.index');
-    // 获取流程数据
-    Route::get('getWorkFlows', 'WorkFlowController@getWorkFlows')->name('workflow.index');
-    // 获取流程详细数据
-    Route::get('workflow/{workflowId}', 'WorkFlowController@show')->name('workflow.show');
-    // 审核流程
-    Route::post('checkPost', 'WorkFlowController@post')->name('check.post');
 
     // 薪酬计算页面
     Route::get('calculation', 'salaryController@calculate')->name('salary.calculate');

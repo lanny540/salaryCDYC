@@ -125,9 +125,11 @@
                         </div>
                         <h3><i class="fa fa-shield"></i> 业务权限</h3>
                         <div class="forum-item">
+                            @foreach($datas as $k => $data)
+                            <h4><i class="fa fa-cube"></i> {{ $data }}</h4>
                             <div class="row">
                                 @foreach($permissions as $p)
-                                    @if($p->typeId === 2)
+                                    @if($p->typeId === $k)
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <div class="checkbox checkbox-primary">
@@ -139,6 +141,7 @@
                                     @endif
                                 @endforeach
                             </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -176,10 +179,14 @@
                             <label>期望目标表</label>
                             <select class="role_table_name form-control" name="role_table_name">
                                 <option value="0">无</option>
-                                <option value="wage">工资表</option>
-                                <option value="bonus">奖金表</option>
-                                <option value="property">物业费表</option>
-                                <option value="insurances">社保补贴表</option>
+                                <option value="wage">工资</option>
+                                <option value="bonus">奖金</option>
+                                <option value="other">其他费用</option>
+                                <option value="insurances">社保</option>
+                                <option value="subsidy">补贴</option>
+                                <option value="reissue">补发</option>
+                                <option value="deduction">扣款</option>
+                                <option value="taxImport">专项税务</option>
                             </select>
                         </div>
                     </div>

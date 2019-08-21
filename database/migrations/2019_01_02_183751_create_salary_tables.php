@@ -1,265 +1,267 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSalaryTables extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
-        /**
-         * 工资导入表
-         */
+        // 薪酬信息表
+        Schema::create('salary_info', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
+            $table->integer('user_id')->comment('上传人员ID');
+            $table->string('upload_file')->default('')->comment('上传文件路径');
+            $table->timestamps();
+        });
+        // 合计表
+        Schema::create('summary', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('username', 10)->index()->comment('人员姓名');
+            $table->string('policyNumber', 24)->index()->comment('保险编号');
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
+            $table->timestamps();
+
+            $table->float('wage_total')->default(0)->comment('应发工资.应发工资=年薪工资+岗位工资+保留工资+套级补差+中夜班费+加班工资+年功工资+基本养老金+增机+国家小计+地方小计+行业小计+企业小计+离退休补充+补偿');
+            $table->float('bonus_total')->default(0)->comment('奖金合计.奖金合计=月奖+工会发放+专项奖+课酬+劳动竞赛+节日慰问费+党员奖励+其他奖励  ');
+            $table->float('subsidy_total')->default(0)->comment('补贴合计.补贴合计=交通费+住房补贴+独子费');
+            $table->float('reissue_total')->default(0)->comment('补发合计.补发合计=补发工资+补发补贴+补发其他');
+            $table->float('should_total')->default(0)->comment('应发合计.应发合计=应发工资+应发辞退+应发内退+补贴合计+补发合计');
+            $table->float('enterprise_out_total')->default(0)->comment('企业超合计.企业超合计=公积企超标+失业企超标+医保企超标+年金企超标+退养企超标');
+            $table->float('salary_total')->default(0)->comment('工资薪金.工资薪金=应发合计+奖金合计+企业超合计');
+        });
+        // 工资表
         Schema::create('wage', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username', 10)->index()->comment('人员姓名');
             $table->string('policyNumber', 24)->index()->comment('保险编号');
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
+            $table->timestamps();
 
-            $table->float('annual')->default(0)->comment('年薪工资');
-            $table->float('post_wage')->default(0)->comment('岗位工资');
+            $table->float('annual_standard')->default(0)->comment('年薪工资标');
+            $table->float('wage_standard')->default(0)->comment('岗位工资标');
+            $table->float('wage_daily')->default(0)->comment('岗位工资日');
+            $table->float('sick_sub')->default(0)->comment('扣岗位工病');
+            $table->float('leave_sub')->default(0)->comment('扣岗位工事');
+            $table->float('baby_sub')->default(0)->comment('扣岗位工婴');
+            $table->float('annual')->default(0)->comment('年薪工资.年薪工资=年薪工资标-扣岗位工病-扣岗位工事-扣岗位工婴');
+            $table->float('wage')->default(0)->comment('岗位工资.岗位工资=岗位工资标-扣岗位工病-扣岗位工事-扣岗位工婴');
             $table->float('retained_wage')->default(0)->comment('保留工资');
             $table->float('compensation')->default(0)->comment('套级补差');
             $table->float('night_shift')->default(0)->comment('中夜班费');
             $table->float('overtime_wage')->default(0)->comment('加班工资');
             $table->float('seniority_wage')->default(0)->comment('年功工资');
-
-            $table->integer('period_id')->default(0)->comment('会计期ID');
-            $table->string('upload_files')->nullable()->comment('上传文件地址');
-            $table->timestamps();
-            $table->unsignedInteger('user_id')->index()->comment('上传人员ID');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
+            $table->float('lggw')->default(0)->comment('离岗岗位');
+            $table->float('lgbl')->default(0)->comment('离岗保留');
+            $table->float('lgzj')->default(0)->comment('离岗增加');
+            $table->float('lgng')->default(0)->comment('离岗年功');
+            $table->float('jbylj')->default(0)->comment('基本养老金.1、离岗休养人员，基本养老金=离岗岗位+离岗保留+离岗增加+离岗年功;2、其他退休人员，基本养老金直接取数');
+            $table->float('zj')->default(0)->comment('增机');
+            $table->float('gjbt')->default(0)->comment('国家补贴');
+            $table->float('gjsh')->default(0)->comment('国家生活');
+            $table->float('gjxj')->default(0)->comment('国家小计.国家小计=国家补贴+国家生活');
+            $table->float('dflc')->default(0)->comment('地方粮差');
+            $table->float('dfqt')->default(0)->comment('地方其他');
+            $table->float('dfwb')->default(0)->comment('地方物补');
+            $table->float('dfsh')->default(0)->comment('地方生活');
+            $table->float('dfxj')->default(0)->comment('地方小计.地方小计=地方粮差+地方其他+地方物补+地方生活');
+            $table->float('hygl')->default(0)->comment('行业工龄');
+            $table->float('hytb')->default(0)->comment('行业退补');
+            $table->float('hyqt')->default(0)->comment('行业其他');
+            $table->float('hyxj')->default(0)->comment('行业小计.行业小计=行业工龄+行业退补+行业其他');
+            $table->float('tcxj')->default(0)->comment('统筹小计.统筹小计=基本养老金+增机+国家小计+地方小计+行业小计');
+            $table->float('qylc')->default(0)->comment('企业粮差');
+            $table->float('qygl')->default(0)->comment('企业工龄');
+            $table->float('qysb')->default(0)->comment('企业书报');
+            $table->float('qysd')->default(0)->comment('企业水电');
+            $table->float('qysh')->default(0)->comment('企业生活');
+            $table->float('qydzf')->default(0)->comment('企业独子费');
+            $table->float('qyhlf')->default(0)->comment('企业护理费');
+            $table->float('qytxf')->default(0)->comment('企业通讯费');
+            $table->float('qygfz')->default(0)->comment('企业规范增');
+            $table->float('qygl2')->default(0)->comment('企业工龄02');
+            $table->float('qyntb')->default(0)->comment('企业内退补');
+            $table->float('qybf')->default(0)->comment('企业补发');
+            $table->float('qyxj')->default(0)->comment('企业小计.企业小计=企业粮差+企业工龄+企业书报+企业水电+企业生活+企业独子费+企业护理费+企业工龄02+企业通讯费+企业内退补+企业规范增+企业补发');
+            $table->float('ltxbc')->default(0)->comment('离退休补充');
+            $table->float('bc')->default(0)->comment('补偿');
+            $table->float('yfct')->default(0)->comment('应发辞退.如果dwdm="01020201",应发辞退=应发工资,应发工资=0');
+            $table->float('yfnt')->default(0)->comment('应发内退.如果dwdm="01020202",应发辞退=应发工资,应发工资=0');
+            $table->float('wage_total')->default(0)->comment('应发工资.应发工资=年薪工资+岗位工资+保留工资+套级补差+中夜班费+加班工资+年功工资+基本养老金+增机+国家小计+地方小计+行业小计+企业小计+离退休补充+补偿');
         });
-        /**
-         * 奖金类别表
-         */
-        Schema::create('bonus_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 50)->comment('奖金类别名称');
-            $table->unsignedInteger('role_id')->comment('允许使用此类别的角色');
-        });
-        /**
-         * 奖金导入表
-         */
+        // 奖金表
         Schema::create('bonus', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username', 10)->index()->comment('人员姓名');
             $table->string('policyNumber', 24)->index()->comment('保险编号');
-            $table->float('bonus')->default(0)->comment('奖金金额');
-            $table->string('comment')->comment('奖金备注');
-            $table->unsignedInteger('type_id')->index()->comment('奖金类别:1 月奖 2 专项奖 3节日慰问费');
-            $table->integer('period_id')->default(0)->comment('会计期ID');
-            $table->string('upload_files')->nullable()->comment('上传文件地址');
-            $table->unsignedInteger('user_id')->index()->comment('上传人员ID');
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
             $table->timestamps();
 
-            $table->foreign('type_id')->references('id')->on('bonus_types')->onUpdate('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
+            $table->float('month_bonus')->default(0)->comment('月奖');
+            $table->float('special')->default(0)->comment('专项奖');
+            $table->float('competition')->default(0)->comment('劳动竞赛');
+            $table->float('class_reward')->default(0)->comment('课酬');
+            $table->float('holiday')->default(0)->comment('节日慰问费');
+            $table->float('party_reward')->default(0)->comment('党员奖励');
+            $table->float('union_paying')->default(0)->comment('工会发放');
+            $table->float('other_reward')->default(0)->comment('其他奖励');
+            $table->float('bonus_total')->default(0)->comment('奖金合计.奖金合计=月奖+工会发放+专项奖+课酬+劳动竞赛+节日慰问费+党员奖励+其他奖励  ');
         });
-        /**
-         * 物业费用导入表
-         */
-        Schema::create('property', function (Blueprint $table) {
+        // 其他费用表（稿酬、特许使用权、劳务报酬）
+        Schema::create('other', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username', 10)->index()->comment('人员姓名');
             $table->string('policyNumber', 24)->index()->comment('保险编号');
-
-            $table->float('cc_water')->default(0)->comment('成钞水量');
-            $table->float('cc_water_rate')->default(0)->comment('成钞水费');
-            $table->float('cc_electricity')->default(0)->comment('成钞电费');
-            $table->float('cc_property')->default(0)->comment('成钞物管');
-            $table->float('xy_water')->default(0)->comment('鑫源水量');
-            $table->float('xy_water_rate')->default(0)->comment('鑫源水费');
-            $table->float('xy_electricity')->default(0)->comment('鑫源电费');
-            $table->float('xy_property')->default(0)->comment('鑫源物管');
-            $table->float('water_back')->default(0)->comment('水量退补费');
-            $table->float('water_rate_back')->default(0)->comment('水费退补费');
-            $table->float('electricity_back')->default(0)->comment('电费退补费');
-            $table->float('property_back')->default(0)->comment('物管退补费');
-            $table->float('utilities')->default(0)->comment('水电');
-            $table->float('property_fee')->default(0)->comment('物管费');
-            $table->float('total_property')->default(0)->comment('合计水电物管');
-
-            $table->integer('period_id')->default(0)->comment('会计期ID');
-            $table->string('upload_files')->nullable()->comment('上传文件地址');
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
             $table->timestamps();
-            $table->unsignedInteger('user_id')->index()->comment('上传人员ID');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
-        });
-        /**
-         * 扣款类别表
-         */
-        Schema::create('deductions_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 50)->comment('扣款类别名称');
-            $table->unsignedInteger('role_id')->comment('允许使用此类别的角色');
-        });
-        /**
-         * 扣款导入表
-         * 包括 公车费用、固定扣款、其他扣款、临时扣款、扣工会会费、扣欠款、捐赠
-         */
-        Schema::create('deductions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('username', 10)->index()->comment('人员姓名');
-            $table->string('policyNumber', 24)->index()->comment('保险编号');
-            $table->float('deduction')->default(0)->comment('扣款金额');
-            $table->string('comment')->comment('扣款备注');
-            $table->unsignedInteger('type_id')->index()->comment('扣款类别');
-            $table->integer('period_id')->default(0)->comment('会计期ID');
-            $table->string('upload_files')->nullable()->comment('上传文件地址');
-            $table->unsignedInteger('user_id')->index()->comment('上传人员ID');
-            $table->timestamps();
-            $table->foreign('type_id')->references('id')->on('deductions_types')->onUpdate('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
-        });
-        /**
-         * 其他费用类别表
-         */
-        Schema::create('other_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 50)->comment('其他费用类别名称');
-            $table->unsignedInteger('role_id')->comment('允许使用此类别的角色');
-        });
-        /**
-         * 其他费用导入表
-         * 包括 稿费、劳务报酬、特许使用权
-         */
-        Schema::create('otherSalary', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('username', 10)->index()->comment('人员姓名');
-            $table->string('policyNumber', 24)->index()->comment('保险编号');
-            $table->float('otherSalary')->default(0)->comment('其他费用金额');
-            $table->string('comment')->comment('其他费用备注');
-            $table->unsignedInteger('type_id')->index()->comment('其他费用类别');
-            $table->integer('period_id')->default(0)->comment('会计期ID');
-            $table->string('upload_files')->nullable()->comment('上传文件地址');
-            $table->unsignedInteger('user_id')->index()->comment('上传人员ID');
-            $table->timestamps();
-            $table->foreign('type_id')->references('id')->on('other_types')->onUpdate('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
-        });
 
-        // 一人对应一条记录
-        /**
-         * 社保导入表
-         */
+            $table->float('finance_article')->default(0)->comment('财务发稿酬');
+            $table->float('union_article')->default(0)->comment('工会发稿酬');
+            $table->float('article_fee')->default(0)->comment('稿酬.稿酬=财务发稿酬+工会发稿酬');
+            $table->float('article_add_tax')->default(0)->comment('稿酬应补税');
+            $table->float('article_sub_tax')->default(0)->comment('稿酬减免税');
+            $table->float('franchise')->default(0)->comment('特许使用权');
+            $table->float('franchise_add_tax')->default(0)->comment('特许应补税');
+            $table->float('franchise_sub_tax')->default(0)->comment('特许减免税');
+            $table->float('labour')->default(0)->comment('劳务报酬');
+            $table->float('labour_add_tax')->default(0)->comment('劳务应补税');
+            $table->float('labour_sub_tax')->default(0)->comment('劳务减免税');
+        });
+        // 社保表
         Schema::create('insurances', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username', 10)->index()->comment('人员姓名');
             $table->string('policyNumber', 24)->index()->comment('保险编号');
-            /*
-             * gjj_classic              公积金标准
-             * gjj_deduction            公积金补扣
-             * gjj_person               公积金个人
-             * gjj_enterprise           公积企业缴
-             * annuity_classic          年金标准
-             * annuity_deduction        年金补扣
-             * annuity_person           年金个人
-             * annuity_enterprise       年金企业缴
-             * retire_classic           退养金标准
-             * retire_deduction         退养金补扣
-             * retire_person            退养金个人
-             * retire_enterprise        退养企业缴
-             * medical_classic          医保金标准
-             * medical_deduction        医保金补扣
-             * medical_person           医保金个人
-             * medical_enterprise       医疗企业缴
-             * unemployment_classic     失业金标准
-             * unemployment_deduction   失业金补扣
-             * unemployment_person      失业金个人
-             * unemployment_enterprise  失业企业缴
-             * injury_enterprise        工伤企业缴
-             * birth_enterprise         生育企业缴
-             */
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
+            $table->timestamps();
+
             $table->float('gjj_classic')->default(0)->comment('公积金标准');
-            $table->float('gjj_deduction')->default(0)->comment('公积金补扣');
-            $table->float('gjj_person')->default(0)->comment('公积金个人');
+            $table->float('gjj_add')->default(0)->comment('公积金补扣');
+            $table->float('gjj_person')->default(0)->comment('公积金个人.个人=标准+补扣');
+            $table->float('gjj_deduction')->default(0)->comment('公积金扣除');
             $table->float('gjj_enterprise')->default(0)->comment('公积企业缴');
+            $table->float('gjj_out_range')->default(0)->comment('公积企超标.超标=企业缴-企业免税扣除');
+
             $table->float('annuity_classic')->default(0)->comment('年金标准');
-            $table->float('annuity_deduction')->default(0)->comment('年金补扣');
+            $table->float('annuity_add')->default(0)->comment('年金补扣');
             $table->float('annuity_person')->default(0)->comment('年金个人');
+            $table->float('annuity_deduction')->default(0)->comment('年金扣除');
             $table->float('annuity_enterprise')->default(0)->comment('年金企业缴');
+            $table->float('annuity_out_range')->default(0)->comment('年金企超标');
+
             $table->float('retire_classic')->default(0)->comment('退养金标准');
-            $table->float('retire_deduction')->default(0)->comment('退养金补扣');
+            $table->float('retire_add')->default(0)->comment('退养金补扣');
             $table->float('retire_person')->default(0)->comment('退养金个人');
+            $table->float('retire_deduction')->default(0)->comment('退养金扣除');
             $table->float('retire_enterprise')->default(0)->comment('退养企业缴');
+            $table->float('retire_out_range')->default(0)->comment('退养企超标');
+
             $table->float('medical_classic')->default(0)->comment('医保金标准');
-            $table->float('medical_deduction')->default(0)->comment('医保金补扣');
+            $table->float('medical_add')->default(0)->comment('医保金补扣');
             $table->float('medical_person')->default(0)->comment('医保金个人');
+            $table->float('medical_deduction')->default(0)->comment('医保金补扣');
             $table->float('medical_enterprise')->default(0)->comment('医疗企业缴');
+            $table->float('medical_out_range')->default(0)->comment('医疗企超标');
+
             $table->float('unemployment_classic')->default(0)->comment('失业金标准');
-            $table->float('unemployment_deduction')->default(0)->comment('失业金补扣');
+            $table->float('unemployment_add')->default(0)->comment('失业金补扣');
             $table->float('unemployment_person')->default(0)->comment('失业金个人');
+            $table->float('unemployment_deduction')->default(0)->comment('失业金扣除');
             $table->float('unemployment_enterprise')->default(0)->comment('失业企业缴');
+            $table->float('unemployment_out_range')->default(0)->comment('失业企超标');
+
             $table->float('injury_enterprise')->default(0)->comment('工伤企业缴');
             $table->float('birth_enterprise')->default(0)->comment('生育企业缴');
 
-            $table->timestamps();
-            $table->unsignedInteger('user_id')->index()->comment('上传人员ID');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
+            $table->float('enterprise_out_total')->default(0)->comment('企业超合计.企业超合计=公积企超标+失业企超标+医保企超标+年金企超标+退养企超标');
+            $table->float('specail_deduction')->default(0)->comment('专项扣除.专项扣除=退养金扣除+医保金扣除+失业金扣除+公积金扣除');
+
+            $table->float('car_deduction')->default(0)->comment('公车补扣除');
+            $table->float('car_deduction_comment')->default(0)->comment('公车扣备注');
+            $table->float('rest_deduction')->default(0)->comment('它项扣除');
+            $table->float('rest_deduction_comment')->default(0)->comment('它项扣备注');
+            $table->float('sum_deduction')->default(0)->comment('其他扣除.其他扣除=公车补扣除+它项扣除');
         });
-        /**
-         * 补贴导入表
-         */
+        // 补贴表
         Schema::create('subsidy', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username', 10)->index()->comment('人员姓名');
             $table->string('policyNumber', 24)->index()->comment('保险编号');
-
-            /**
-             * communication            通讯补贴         人力
-             * traffic                  交通费          人力
-             * housing                  住房补贴         基建
-             * single_classic           独子费标准       医院
-             * single_add               独子费补发        医院
-             * single                   独子费           医院
-             * subsidy                  补贴合计 = 住房补贴 + 独子费标准 + 独子费补发 + 独子费
-             */
-            $table->float('communication')->default(0)->comment('通讯补贴');
-            $table->float('traffic')->default(0)->comment('交通费');
-            $table->float('housing')->default(0)->comment('住房补贴');
-            $table->float('single_classic')->default(0)->comment('独子费标准');
-            $table->float('single_add')->default(0)->comment('独子费补发');
-            $table->float('single')->default(0)->comment('独子费');
-            $table->float('subsidy')->default(0)->comment('补贴合计');
-
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
             $table->timestamps();
-            $table->unsignedInteger('user_id')->index()->comment('上传人员ID');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
+
+            $table->float('communication')->default(0)->comment('通讯补贴');
+            $table->float('traffic_standard')->default(0)->comment('交通补贴标');
+            $table->float('traffic_add')->default(0)->comment('交通补贴考');
+            $table->float('traffic')->default(0)->comment('交通费.交通费=交通补贴标+交通补贴考');
+            $table->float('housing')->default(0)->comment('住房补贴');
+            $table->float('single_standard')->default(0)->comment('独子费标准');
+            $table->float('single_add')->default(0)->comment('独子费补发');
+            $table->float('single')->default(0)->comment('独子费.独子费=独子费标准+独子费补发');
+            $table->float('subsidy_total')->default(0)->comment('补贴合计.补贴合计=交通费+住房补贴+独子费');
         });
-        /**
-         * 税务导入表
-         * 用于导入税务系统的税务数据
-         */
+        // 补发表
+        Schema::create('reissue', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('username', 10)->index()->comment('人员姓名');
+            $table->string('policyNumber', 24)->index()->comment('保险编号');
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
+            $table->timestamps();
+
+            $table->float('reissue_wage')->default(0)->comment('补发工资');
+            $table->float('reissue_subsidy')->default(0)->comment('补发补贴');
+            $table->float('reissue_other')->default(0)->comment('补发其他');
+            $table->float('reissue_total')->default(0)->comment('补发合计.补发合计=补发工资+补发补贴+补发其他');
+        });
+        // 扣款表
+        Schema::create('deduction', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('username', 10)->index()->comment('人员姓名');
+            $table->string('policyNumber', 24)->index()->comment('保险编号');
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
+            $table->timestamps();
+
+            $table->float('garage_water')->default(0)->comment('车库水费');
+            $table->float('garage_electric')->default(0)->comment('车库电费');
+            $table->float('garage_property')->default(0)->comment('车库物管');
+            $table->float('cc_water')->default(0)->comment('成钞水费');
+            $table->float('cc_electric')->default(0)->comment('成钞电费');
+            $table->float('cc_property')->default(0)->comment('成钞物管');
+            $table->float('xy_water')->default(0)->comment('鑫源水费');
+            $table->float('xy_electric')->default(0)->comment('鑫源电费');
+            $table->float('xy_property')->default(0)->comment('鑫源物管');
+            $table->float('back_water')->default(0)->comment('退补水费');
+            $table->float('back_electric')->default(0)->comment('退补电费');
+            $table->float('back_property')->default(0)->comment('退补物管费');
+            $table->float('water_electric')->default(0)->comment('水电');
+            $table->float('property_fee')->default(0)->comment('物管费');
+
+            $table->float('car_fee')->default(0)->comment('公车费用');
+            $table->float('fixed_deduction')->default(0)->comment('固定扣款');
+            $table->float('other_deduction')->default(0)->comment('其他扣款');
+            $table->float('temp_deduction')->default(0)->comment('临时扣款');
+            $table->float('union_deduction')->default(0)->comment('扣工会会费');
+            $table->float('prior_deduction')->default(0)->comment('上期余欠款');
+            $table->float('had_debt')->default(0)->comment('已销欠款');
+            $table->float('debt')->default(0)->comment('扣欠款');
+            $table->float('donate')->default(0)->comment('捐赠');
+            $table->float('tax_diff')->default(0)->comment('税差');
+            $table->float('personal_tax')->default(0)->comment('个人所得税');
+            $table->float('deduction_total')->default(0)->comment('扣款合计');
+        });
+        // 专项税务表
         Schema::create('taxImport', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username', 10)->index()->comment('人员姓名');
             $table->string('policyNumber', 24)->index()->comment('保险编号');
-            /*
-             * income               累计收入额
-             * deduct_expenses      累减除费用
-             * special_deduction    累计专项扣
-             * tax_child            累专附子女
-             * tax_old              累专附老人
-             * tax_edu              累专附继教
-             * tax_loan             累专附房利
-             * tax_rent             累专附房租
-             * tax_other_deduct     累其他扣除
-             * deduct_donate        累计扣捐赠
-             * tax_income           累税所得额
-             * taxrate              税率(%)
-             * quick_deduction      速算扣除数
-             * taxable              累计应纳税
-             * tax_reliefs          累计减免税
-             * should_deducted_tax  累计应扣税
-             * have_deducted_tax    累计已扣税
-             * have_deducted_tax    累计应补税
-             */
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
+            $table->timestamps();
+
             $table->float('income')->default(0)->comment('累计收入额');
             $table->float('deduct_expenses')->default(0)->comment('累减除费用');
             $table->float('special_deduction')->default(0)->comment('累计专项扣');
@@ -276,85 +278,30 @@ class CreateSalaryTables extends Migration
             $table->float('taxable')->default(0)->comment('累计应纳税');
             $table->float('tax_reliefs')->default(0)->comment('累计减免税');
             $table->float('should_deducted_tax')->default(0)->comment('累计应扣税');
-            $table->float('have_deducted_tax')->default(0)->comment('累计已扣税');
+            $table->float('have_deducted_tax')->default(0)->comment('累计申扣税');
             $table->float('should_be_tax')->default(0)->comment('累计应补税');
-
-            $table->timestamps();
-            $table->unsignedInteger('user_id')->index()->comment('上传人员ID');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
-        });
-
-        //todo: 扣除表
-
-        // 薪酬日志
-        Schema::create('salaryLog', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('user_id')->index()->comment('用户ID');
-            $table->string('content')->default('')->comment('薪酬变更日志');
-            $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
+            $table->float('reduce_tax')->default(0)->comment('减免个税');
+            $table->float('prior_had_deducted_tax')->default(0)->comment('上月已扣税');
+            $table->float('declare_tax')->default(0)->comment('申报个税');
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::table('wage', function(Blueprint $table){
-            $table->dropForeign('wage_user_id_foreign');
-        });
+        Schema::dropIfExists('salary_info');
+        Schema::dropIfExists('summary');
         Schema::dropIfExists('wage');
-
-        Schema::table('bonus', function(Blueprint $table){
-            $table->dropForeign('bonus_user_id_foreign');
-            $table->dropForeign('bonus_type_id_foreign');
-        });
         Schema::dropIfExists('bonus');
-        Schema::dropIfExists('bonus_types');
-
-        Schema::table('property', function(Blueprint $table){
-            $table->dropForeign('property_user_id_foreign');
-        });
-        Schema::dropIfExists('property');
-
-        Schema::table('deductions', function(Blueprint $table){
-            $table->dropForeign('deductions_user_id_foreign');
-            $table->dropForeign('deductions_type_id_foreign');
-        });
-        Schema::dropIfExists('deductions');
-        Schema::dropIfExists('deductions_types');
-
-        Schema::table('otherSalary', function(Blueprint $table){
-            $table->dropForeign('otherSalary_user_id_foreign');
-            $table->dropForeign('otherSalary_type_id_foreign');
-        });
-        Schema::dropIfExists('otherSalary');
-        Schema::dropIfExists('other_types');
-
-        Schema::table('insurances', function (Blueprint $table){
-            $table->dropForeign('insurances_user_id_foreign');
-        });
+        Schema::dropIfExists('other');
         Schema::dropIfExists('insurances');
-
-        Schema::table('subsidy', function (Blueprint $table){
-                    $table->dropForeign('subsidy_user_id_foreign');
-                });
         Schema::dropIfExists('subsidy');
-
-        Schema::table('taxImport', function(Blueprint $table){
-            $table->dropForeign('taxImport_user_id_foreign');
-        });
+        Schema::dropIfExists('reissue');
+        Schema::dropIfExists('deduction');
         Schema::dropIfExists('taxImport');
-
-
-        Schema::table('salaryLog', function(Blueprint $table){
-            $table->dropForeign('salaryLog_user_id_foreign');
-        });
-        Schema::dropIfExists('salaryLog');
     }
 }

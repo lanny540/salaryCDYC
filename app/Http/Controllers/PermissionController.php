@@ -13,12 +13,22 @@ class PermissionController extends Controller
      */
     public function permissionIndex()
     {
+        $data = [
+            2 => '工资',
+            3 => '奖金',
+            4 => '其他费用',
+            5 => '社保',
+            6 => '补贴',
+            7 => '补发',
+            8 => '扣款',
+            9 => '专项税务',
+        ];
         $permissions = Permission::select('id', 'description', 'typeId')
             ->orderBy('typeId')->get();
         $counts[0] = Permission::where('typeId', 0)->get()->count();
         $counts[1] = Permission::where('typeId', 1)->get()->count();
-        $counts[2] = Permission::where('typeId', 2)->get()->count();
-        return view('settings.permissions')->with(['permissions' => $permissions, 'counts' => $counts]);
+        $counts[2] = Permission::where('typeId', '>=', 2)->get()->count();
+        return view('settings.permissions')->with(['permissions' => $permissions, 'counts' => $counts, 'datas' => $data]);
     }
 
 }
