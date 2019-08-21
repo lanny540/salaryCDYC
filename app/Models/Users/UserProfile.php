@@ -3,31 +3,32 @@
 namespace App\Models\Users;
 
 use App\Models\Department;
+use App\Models\Salary\SalarySummary;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Users\UserProfile
+ * App\Models\Users\UserProfile.
  *
- * @property int $user_id 用户ID，外键
- * @property string $userName 姓名
- * @property string|null $sex 性别
- * @property int $department_id 部门ID
- * @property string $uid 身份证
- * @property string|null $mobile 手机
- * @property string|null $phone 电话
- * @property string|null $address 住址
- * @property string $policyNumber 保险编号
- * @property string $wageCard 工资卡
- * @property string $bonusCard 奖金卡
- * @property int $flag 非工行工资卡标识符. 0 工行卡 1 非工行卡
- * @property string $status 员工状态:在职、离职、行业内交流
- * @property string|null $hiredate 入职时间
- * @property string|null $departure 离职时间
- * @property int $handicapped 是否残疾人. 0 否 1 是
- * @property float $tax_rebates 减免税率
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Department $department
+ * @property int                             $user_id       用户ID，外键
+ * @property string                          $userName      姓名
+ * @property null|string                     $sex           性别
+ * @property int                             $department_id 部门ID
+ * @property string                          $uid           身份证
+ * @property null|string                     $mobile        手机
+ * @property null|string                     $phone         电话
+ * @property null|string                     $address       住址
+ * @property string                          $policyNumber  保险编号
+ * @property string                          $wageCard      工资卡
+ * @property string                          $bonusCard     奖金卡
+ * @property int                             $flag          非工行工资卡标识符. 0 工行卡 1 非工行卡
+ * @property string                          $status        员工状态:在职、离职、行业内交流
+ * @property null|string                     $hiredate      入职时间
+ * @property null|string                     $departure     离职时间
+ * @property int                             $handicapped   是否残疾人. 0 否 1 是
+ * @property float                           $tax_rebates   减免税率
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property \App\Models\Department          $department
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile query()
@@ -51,6 +52,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile whereUserName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile whereWageCard($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Salary\SalarySummary[] $salaries
  */
 class UserProfile extends Model
 {
@@ -63,11 +65,17 @@ class UserProfile extends Model
         'uid', 'mobile', 'phone', 'address',
         'policyNumber', 'wageCard', 'bonusCard',
         'flag', 'status', 'hiredate', 'departure',
-        'handicapped', 'tax_rebates'
+        'handicapped', 'tax_rebates',
     ];
 
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');
+    }
+
+    // 一对多。一个用户的保险编号对应多条薪金汇总记录
+    public function salaries()
+    {
+        return $this->hasMany(SalarySummary::class, 'policyNumber', 'policyNumber');
     }
 }

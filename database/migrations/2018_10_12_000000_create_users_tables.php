@@ -1,9 +1,9 @@
 <?php
 
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
 class CreateUsersTables extends Migration
 {
@@ -57,7 +57,7 @@ class CreateUsersTables extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::table('userProfile', function(Blueprint $table){
+        Schema::table('userProfile', function (Blueprint $table) {
             $table->dropForeign('userProfile_department_id_foreign');
             $table->dropForeign('userProfile_user_id_foreign');
         });

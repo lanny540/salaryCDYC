@@ -6,16 +6,16 @@ use App\Models\Users\UserProfile;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Department
+ * App\Models\Department.
  *
- * @property int $id
- * @property string $name 部门名称
- * @property string $dwdm 部门编码
- * @property int $weight 排序
- * @property int $level 层级
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Users\UserProfile[] $users
+ * @property int                                                                      $id
+ * @property string                                                                   $name       部门名称
+ * @property string                                                                   $dwdm       部门编码
+ * @property int                                                                      $weight     排序
+ * @property int                                                                      $level      层级
+ * @property null|\Illuminate\Support\Carbon                                          $created_at
+ * @property null|\Illuminate\Support\Carbon                                          $updated_at
+ * @property \App\Models\Users\UserProfile[]|\Illuminate\Database\Eloquent\Collection $users
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department query()
@@ -35,7 +35,7 @@ class Department extends Model
     protected $table = 'departments';
 
     protected $fillable = [
-        'name', 'dwdm', 'weight', 'level', 'pid'
+        'name', 'dwdm', 'weight', 'level', 'pid',
     ];
 
     public function users()

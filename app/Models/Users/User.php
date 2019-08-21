@@ -2,28 +2,26 @@
 
 namespace App\Models\Users;
 
-use App\Models\Salary\SalaryLog;
-use App\Models\Salary\SalarySummary;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * App\Models\Users\User
+ * App\Models\Users\User.
  *
- * @property int $id
- * @property string $name 登录名
- * @property string $password 登录密码
- * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
- * @property-read \App\Models\Users\UserProfile $profile
- * @property-read \App\Models\Users\UserRemitting $remit
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Salary\SalaryLog[] $salaryLog
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Salary\SalarySummary[] $salarySummary
+ * @property int                                                                                                       $id
+ * @property string                                                                                                    $name           登录名
+ * @property string                                                                                                    $password       登录密码
+ * @property null|string                                                                                               $remember_token
+ * @property null|\Illuminate\Support\Carbon                                                                           $created_at
+ * @property null|\Illuminate\Support\Carbon                                                                           $updated_at
+ * @property \Illuminate\Notifications\DatabaseNotification[]|\Illuminate\Notifications\DatabaseNotificationCollection $notifications
+ * @property \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[]                           $permissions
+ * @property \App\Models\Users\UserProfile                                                                             $profile
+ * @property \App\Models\Users\UserRemitting                                                                           $remit
+ * @property \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[]                                 $roles
+ * @property \App\Models\Salary\SalaryLog[]|\Illuminate\Database\Eloquent\Collection                                   $salaryLog
+ * @property \App\Models\Salary\SalarySummary[]|\Illuminate\Database\Eloquent\Collection                               $salarySummary
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User permission($permissions)
@@ -60,11 +58,5 @@ class User extends Authenticatable
     public function remit()
     {
         return $this->hasOne(UserRemitting::class, 'user_id', 'id');
-    }
-
-    //一对多。一个用户对应多条薪酬变更日志
-    public function salaryLog()
-    {
-        return $this->hasMany(SalaryLog::class, 'user_id', 'id');
     }
 }

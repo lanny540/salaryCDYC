@@ -58,6 +58,7 @@ class SalaryController extends Controller
             // 关闭当前会计期
             $old_period = $this->dataProcess->closePeriod();
             // 新开会计期
+            // TODO
 //            $new_period = $this->dataProcess->newPeriod();
             // 返回消息
             $text = '会计期已关闭,时间是'.$old_period->startdate.'到'.$old_period->enddate.' ! ';

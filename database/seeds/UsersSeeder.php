@@ -3,27 +3,25 @@
 use App\Models\Department;
 use App\Models\Users\User;
 use App\Models\Users\UserProfile;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
-class UsersTableSeeder extends Seeder
+class UsersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run()
     {
-        $date = \Carbon\Carbon::now();
+        $date = Carbon::now();
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         User::truncate();
         UserProfile::truncate();
 
-
         $user = User::create([
-            'name'  => 'admin',
-            'password'  => bcrypt('123qwe'),
+            'name' => 'admin',
+            'password' => bcrypt('123qwe'),
             'created_at' => $date, 'updated_at' => $date,
         ]);
 
@@ -59,10 +57,10 @@ class UsersTableSeeder extends Seeder
         $department = Department::where('level', 5)->pluck('id')->toArray();
         $tempUsers = [];
         $userProfiles = [];
-        for ($i=1; $i < 20; $i++){
+        for ($i = 1; $i < 20; ++$i) {
             $data1 = [
-                'name'  => 'tempuser'.$i,
-                'password'  => bcrypt('123qwe'),
+                'name' => 'tempuser'.$i,
+                'password' => bcrypt('123qwe'),
                 'created_at' => $date, 'updated_at' => $date,
             ];
             $data2 = [

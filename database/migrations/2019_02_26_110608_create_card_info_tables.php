@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCardInfoTables extends Migration
 {
@@ -35,7 +35,7 @@ class CreateCardInfoTables extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::table('card_info', function(Blueprint $table){
+        Schema::table('card_info', function (Blueprint $table) {
             $table->dropForeign('card_info_user_id_foreign');
         });
         Schema::dropIfExists('card_info');

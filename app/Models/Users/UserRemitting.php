@@ -5,18 +5,18 @@ namespace App\Models\Users;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Users\UserRemitting
+ * App\Models\Users\UserRemitting.
  *
- * @property int $id
- * @property int $user_id 用户ID，外键
- * @property string $remit_card_no 代汇卡号
- * @property string $remit_name 代汇姓名
- * @property string $remit_bank 代汇开户行
- * @property string $remit_bank_no 代汇行号
- * @property string $remit_province 代汇省份
- * @property string $remit_city 代汇市
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int                             $id
+ * @property int                             $user_id        用户ID，外键
+ * @property string                          $remit_card_no  代汇卡号
+ * @property string                          $remit_name     代汇姓名
+ * @property string                          $remit_bank     代汇开户行
+ * @property string                          $remit_bank_no  代汇行号
+ * @property string                          $remit_province 代汇省份
+ * @property string                          $remit_city     代汇市
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserRemitting newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserRemitting newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserRemitting query()
@@ -38,6 +38,6 @@ class UserRemitting extends Model
 
     protected $fillable = [
         'user_id', 'remit_card_no', 'remit_name', 'remit_bank', 'remit_bank_no',
-        'remit_province', 'remit_city'
+        'remit_province', 'remit_city',
     ];
 }

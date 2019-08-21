@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * $topics = Topic::limit(2)->withOnly('user', ['username'])->get();
  */
 /**
- * App\Models\BaseModel
+ * App\Models\BaseModel.
  *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BaseModel newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BaseModel newQuery()
@@ -22,9 +22,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class BaseModel extends Model
 {
-    public function scopeWithOnly($query, $relation, Array $columns)
+    public function scopeWithOnly($query, $relation, array $columns)
     {
-        return $query->with([$relation => function($query) use ($columns) {
+        return $query->with([$relation => function ($query) use ($columns) {
             $query->select(array_merge($columns));
         }]);
     }
