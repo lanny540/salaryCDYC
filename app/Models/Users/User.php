@@ -12,9 +12,9 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int                                                                                                       $id
  * @property string                                                                                                    $name           登录名
  * @property string                                                                                                    $password       登录密码
- * @property null|string                                                                                               $remember_token
- * @property null|\Illuminate\Support\Carbon                                                                           $created_at
- * @property null|\Illuminate\Support\Carbon                                                                           $updated_at
+ * @property string|null                                                                                               $remember_token
+ * @property \Illuminate\Support\Carbon|null                                                                           $created_at
+ * @property \Illuminate\Support\Carbon|null                                                                           $updated_at
  * @property \Illuminate\Notifications\DatabaseNotification[]|\Illuminate\Notifications\DatabaseNotificationCollection $notifications
  * @property \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[]                           $permissions
  * @property \App\Models\Users\UserProfile                                                                             $profile

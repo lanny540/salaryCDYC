@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('css')
-<link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
 <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
 @stop
 
@@ -29,7 +28,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox" id="wizardForm">
-                <div class="ibox-content" style="min-height: 600px">
+                <div class="ibox-content">
                     <div class="sk-spinner sk-spinner-wave">
                         <div class="sk-rect1"></div>
                         <div class="sk-rect2"></div>
@@ -47,6 +46,7 @@
                                 <div class="form-group">
                                     <label for="roleType" >上传数据分类 *</label>
                                     <select name="roleType" id="roleType" class="form-control" onchange="getLevel2(this)">
+                                        <option value="0">薪酬汇总</option>
                                         @foreach($roles as $k => $r)
                                             <option value="{{ $k }}">{{ $r }}</option>
                                         @endforeach
@@ -79,61 +79,27 @@
                                 <p>1. 请按照模板格式上传数据。</p>
                                 <p>2. 请不要在姓名中间加空格。</p>
                                 <p>3. 请仔细检查金额。</p>
-                                <p>4. 请不要随意修改模板列的排列顺序。</p>
-                                <p>5. 系统上传支持 xls\xlsx 文件。</p>
+                                <p>4. 系统上传支持 xls\xlsx 文件。</p>
                             </div>
-                        </div>
-                    </fieldset>
-
-                    <h1>数据校验</h1>
-                    <fieldset>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="checkbox checkbox-success">
-                                    <input id="isChecked" name="isChecked" type="checkbox" class="required" disabled>
-                                    <label for="isChecked">数据校验已通过，确认上传数据.</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <h4 id="countNumber"></h4>
-                            </div>
-                        </div>
-                        <hr>
-                        <div style="overflow: auto; min-height: 550px;" class="pre-scrollable">
-                            <table class="table table-sm">
-                                <thead>
-                                <tr>
-                                    <th>姓名</th>
-                                    <th>保险编号</th>
-                                    <th>银行卡号</th>
-                                    <th>部门</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody id="excelData"></tbody>
-                            </table>
                         </div>
                     </fieldset>
 
                     <h1>上传完成</h1>
                     <fieldset>
-                        <h2>请完善该流程的基本信息</h2>
+                        <h2>请确认本次上传信息</h2>
                         <div style="margin-top: 60px">
                             <div class="row">
+                                <input type="hidden" name="importData">
+                                <input type="hidden" name="published_at">
                                 <div class="col-lg-8">
                                     <div class="form-group">
-                                        <label style="font-size: large">流程标题 *</label>
-                                        <input id="title" name="title" type="text" class="form-control"
-                                               placeholder="{{ \Carbon\Carbon::now()->toDateString() }}{{ Auth::user()->profile->department->name }}{{ Auth::user()->profile->userName }}发起关于">
-                                        <input type="hidden" name="importData">
-                                        <input type="hidden" name="targetTable">
-
+                                        <label style="font-size: large">上传时间：</label>
                                     </div>
                                     <div class="form-group">
-                                        <div class="checkbox checkbox-primary">
-                                            <input id="statusCode" name="statusCode" type="checkbox" >
-                                            <label for="statusCode" style="font-size: large">是否立即提交业务？</label>
-                                        </div>
+                                        <label style="font-size: large">所属会计期：</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size: large">上传记录数：</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -172,9 +138,9 @@
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}});
 
     let filters = [];       //根据角色得到需要获取的列名
-    let targetTable = '';   //角色对应表名
-    let excel = [];
-    let wb;                 //读取excel数据
+    let wb;                 //excel数据
+    let excel = [];         //处理后的数据
+
 
     $("#form").steps({
         bodyTag: "fieldset",
@@ -182,12 +148,6 @@
         {
             if (currentIndex > newIndex) {
                 return true;
-            }
-
-            // 数据校验正确并勾选checkbox
-            var check = $("#isChecked").is(":checked");
-            if (newIndex === 3 && check === false) {
-                return false;
             }
 
             var form = $(this);
@@ -208,18 +168,17 @@
             if (currentIndex === 1 && priorIndex === 0)
             {
                 filters = [];
-                targetTable = '';
                 let roleType = $('#roleType').val();
                 $.get({
                     url: '/getColumns/' + roleType,
                     success: function (data) {
+                        // console.log(data);
                         console.log('分类信息获取成功');
-                        $('input[name="targetTable"]').val(data.target_table);
                         for (let x of data.permissions) {
                             x = R.pick(['description'], x);
                             filters = R.append(x.description, filters);
                         }
-                        var level2 = $('#level2Name').find('option:selected').text();
+                        let level2 = $('#level2Name').find('option:selected').text();
                         if (level2 !== '') {
                             filters = R.append(level2, filters);
                         }
@@ -229,49 +188,22 @@
             }
             if (currentIndex === 2 && priorIndex === 1)
             {
-                // loading start
-                $('#wizardForm').children('.ibox-content').toggleClass('sk-loading');
-                document.getElementById('countNumber').innerHTML = '记录数: ' + excel.length;
-                // 从数据库获取需要验证的数据，与excel读取的数据做验证
-                $.get('/getProfiles', function (data) {
-                    // console.log(data);
-                    let res = excelDataCheck(excel, data);
-                    document.getElementById('excelData').innerHTML = excelData(res);
-                    if (checkResult(res) === true) {
-                        $("#isChecked").removeAttr("disabled");
-                    }
-
-                    // loading stop
-                    $('#wizardForm').children('.ibox-content').toggleClass('sk-loading');
-                });
-                // console.log(excel);
-            }
-            if (currentIndex === 3 && priorIndex === 2)
-            {
-                let roleType = $('#roleType').val();
-                let title = $('#title').attr('placeholder');
-                title = title + $('#roleType').find('option:selected').text() +'的业务流程';
-                $('#title').val(title);
-
+                console.log(excel);
                 let jsonstr = JSON.stringify(excel);
                 $('input[name="importData"]').val(jsonstr);
+                $('input[name="published_at"]').val(excel[0]['发放日期']);
                 // console.log('tempdata: ', jsonstr);
             }
         },
         onFinishing: function (event, currentIndex)
         {
-            var form = $(this);
-
-            // Disable validation on fields that are disabled.
-            // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
+            let form = $(this);
             form.validate().settings.ignore = ":disabled";
-
-            // Start validation; Prevent form submission if false
             return form.valid();
         },
         onFinished: function (event, currentIndex)
         {
-            var form = $(this);
+            let form = $(this);
             form.submit();
         }
     }).validate({

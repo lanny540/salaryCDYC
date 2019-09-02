@@ -24,6 +24,7 @@ class RoleController extends Controller
             7 => '补发',
             8 => '扣款',
             9 => '专项税务',
+            10 => '新增读取',
         ];
         // 查询列
         $columns = ['id', 'description', 'typeId'];

@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['namespace' => 'Auth'], function () {
+Route::group(['namespace' => 'auth'], function () {
     Route::get('login', 'LoginController@showLoginForm')->name('login');
     Route::post('login', 'LoginController@login');
     Route::post('logout', 'LoginController@logout')->name('logout');
@@ -23,7 +23,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getColumns/{roleId}', 'WorkFlowController@getColumns');
     // 获取二级分类名
     Route::get('getCatesName/{roleId}', 'WorkFlowController@getCatesName');
-
     // 向导表单提交
     Route::post('wizardSubmit', 'WorkFlowController@wizardSubmit')->name('wizard.submit');
     // 获取人员信息,用于上传数据校验

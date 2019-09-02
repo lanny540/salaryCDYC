@@ -205,6 +205,27 @@ class PermissionsSeeder extends Seeder
             ['name' => 'reduce_tax', 'description' => '减免个税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'prior_had_deducted_tax', 'description' => '上月已扣税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'declare_tax', 'description' => '申报个税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            // type = 10 额外读取表
+            ['name' => 'extra_column1', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column2', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column3', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column4', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column5', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column6', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column7', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column8', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column9', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column10', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column11', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column12', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column13', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column14', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column15', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column16', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column17', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column18', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column19', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column20', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
         ];
         Permission::insert($permissions);
 
@@ -235,7 +256,9 @@ class PermissionsSeeder extends Seeder
             ['name' => 'deduction', 'description' => '扣款', 'typeId' => 2, 'target_table' => 'deduction', 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // 专项税务
             ['name' => 'taxImport', 'description' => '专项税务', 'typeId' => 2, 'target_table' => 'taxImport', 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-        ];
+            // 额外读取
+            ['name' => 'extra', 'description' => '额外读取', 'typeId' => 2, 'target_table' => 'extra', 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ];
         Role::insert($roles);
 
         $role = Role::findOrFail(1);    //获取管理员角色
@@ -288,6 +311,12 @@ class PermissionsSeeder extends Seeder
 
         $role = Role::findOrFail(14);    // 扣款
         $ps = Permission::whereBetween('id', [156, 176])->get();
+        foreach ($ps as $p) {
+            $role->givePermissionTo($p);
+        }
+
+        $role = Role::findOrFail(15);    // 额外
+        $ps = Permission::whereBetween('id', [177, 196])->get();
         foreach ($ps as $p) {
             $role->givePermissionTo($p);
         }

@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                                                                   $dwdm       部门编码
  * @property int                                                                      $weight     排序
  * @property int                                                                      $level      层级
- * @property null|\Illuminate\Support\Carbon                                          $created_at
- * @property null|\Illuminate\Support\Carbon                                          $updated_at
+ * @property \Illuminate\Support\Carbon|null                                          $created_at
+ * @property \Illuminate\Support\Carbon|null                                          $updated_at
  * @property \App\Models\Users\UserProfile[]|\Illuminate\Database\Eloquent\Collection $users
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department newQuery()

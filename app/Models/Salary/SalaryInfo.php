@@ -5,12 +5,12 @@ namespace App\Models\Salary;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Salary\SalaryInfo
+ * App\Models\Salary\SalaryInfo.
  *
- * @property int $id
- * @property int $period_id 会计期ID
- * @property int $user_id 上传人员ID
- * @property string $upload_file 上传文件路径
+ * @property int                             $id
+ * @property int                             $period_id   会计期ID
+ * @property int                             $user_id     上传人员ID
+ * @property string                          $upload_file 上传文件路径
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalaryInfo newModelQuery()
@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalaryInfo whereUploadFile($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalaryInfo whereUserId($value)
  * @mixin \Eloquent
+ * @property string $published_at 发放时间
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalaryInfo wherePublishedAt($value)
  */
 class SalaryInfo extends Model
 {

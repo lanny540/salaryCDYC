@@ -11,23 +11,23 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int                             $user_id       用户ID，外键
  * @property string                          $userName      姓名
- * @property null|string                     $sex           性别
+ * @property string|null                     $sex           性别
  * @property int                             $department_id 部门ID
  * @property string                          $uid           身份证
- * @property null|string                     $mobile        手机
- * @property null|string                     $phone         电话
- * @property null|string                     $address       住址
+ * @property string|null                     $mobile        手机
+ * @property string|null                     $phone         电话
+ * @property string|null                     $address       住址
  * @property string                          $policyNumber  保险编号
  * @property string                          $wageCard      工资卡
  * @property string                          $bonusCard     奖金卡
  * @property int                             $flag          非工行工资卡标识符. 0 工行卡 1 非工行卡
  * @property string                          $status        员工状态:在职、离职、行业内交流
- * @property null|string                     $hiredate      入职时间
- * @property null|string                     $departure     离职时间
+ * @property string|null                     $hiredate      入职时间
+ * @property string|null                     $departure     离职时间
  * @property int                             $handicapped   是否残疾人. 0 否 1 是
  * @property float                           $tax_rebates   减免税率
- * @property null|\Illuminate\Support\Carbon $created_at
- * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \App\Models\Department          $department
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile newQuery()
@@ -52,7 +52,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile whereUserName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile whereWageCard($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Salary\SalarySummary[] $salaries
+ * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Salary\SalarySummary[] $salaries
  */
 class UserProfile extends Model
 {

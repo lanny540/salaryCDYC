@@ -73,7 +73,7 @@ function importf(obj) {
 
 // 根据列名筛选数据
 function filterDate(arr1, temp) {
-    const commonArray = ['姓名', '保险编号', 'dwdm', '部门', '银行卡号', '备注'];
+    const commonArray = ['转储姓名', '保险编号', '发放日期'];
     let filter = commonArray.concat(temp);
     let data = [];
     for (let x of arr1) {
@@ -144,35 +144,4 @@ function checkResult(data) {
     }
 
     return checkResule;
-}
-
-// 将数据合并处理成薪酬统计数据
-function mergeSalary(data) {
-    const { wage, bonus, insurance, subsidy, tax, property, deduction, other } = data;
-    let commonT = [];
-    let res = [];
-
-    for (let i = 0, len = wage.length; i < len; i++) {
-        commonT[i] = R.pick(['policyNumber', 'username'], wage[i]);
-        const hasPolicy = R.propEq('policyNumber', commonT[i].policyNumber);
-        // 合并
-        res[i] = R.merge(R.filter(hasPolicy, wage)[0], R.filter(hasPolicy, bonus)[0]);
-        res[i] = R.merge(res[i], R.filter(hasPolicy, insurance)[0]);
-        res[i] = R.merge(res[i], R.filter(hasPolicy, subsidy)[0]);
-        res[i] = R.merge(res[i], R.filter(hasPolicy, tax)[0]);
-        res[i] = R.merge(res[i], R.filter(hasPolicy, property)[0]);
-        res[i] = R.merge(res[i], R.filter(hasPolicy, deduction)[0]);
-        res[i] = R.merge(res[i], R.filter(hasPolicy, other)[0]);
-    }
-
-    // TODO: 合计字段 的计算
-    for (let i = 0, len = res.length; i < len; i++) {
-        // 工资合计
-        res[i]['total_wage'] = res[i]['annual'] + res[i]['post_wage'] + res[i]['retained_wage'] + res[i]['compensation'] + res[i]['night_shift'] + res[i]['overtime_wage'] + res[i]['seniority_wage'];
-        // 奖金合计
-        res[i]['奖金合计'] = res[i]['月奖'] + res[i]['专项奖'] + res[i]['节日慰问费'] + res[i]['工会发放'] + res[i]['课酬'] + res[i]['劳动竞赛'] + res[i]['党员奖励'] + res[i]['其他奖励'];
-
-    }
-
-    return res;
 }

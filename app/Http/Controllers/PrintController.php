@@ -15,6 +15,7 @@ class PrintController extends Controller
     {
         // TODO: 根据传入的IDS，获取人员薪酬信息
         $count = $request->get('ids');
+
         return view('print.sheetPrint')->with(['counts' => $count]);
     }
 
@@ -22,5 +23,4 @@ class PrintController extends Controller
     {
         return view('print.income');
     }
-
 }

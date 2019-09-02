@@ -82,7 +82,7 @@
                             <h3><i class="fa fa-cube"></i> {{ $data }}</h3>
                             <div class="row">
                                 @foreach($permissions as $p)
-                                    @if($p->typeId === $k)
+                                    @if($p->typeId === $k && $p->description !== '')
                                         <div class="col-sm-3 col-md-2">
                                             <div class="form-group">
                                                 <span class="badge badge-success" style="font-size: 12px;">{{ $p->description }}</span>

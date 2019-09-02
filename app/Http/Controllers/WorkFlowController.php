@@ -2,28 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Salary\BonusType;
-use App\Models\Salary\DeductionType;
-use App\Models\Salary\OtherType;
 use App\Models\Users\UserProfile;
-use App\Models\WorkFlow\WorkFlow;
 use App\Services\DataProcess;
-use App\Services\WorkFlowProcess;
 use Auth;
 use File;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Storage;
 
 class WorkFlowController extends Controller
 {
     protected $dataProcess;
-    protected $wfProcess;
 
-    public function __construct(DataProcess $services, WorkFlowProcess $workFlowProcess)
+    public function __construct(DataProcess $services)
     {
         $this->dataProcess = $services;
-        $this->wfProcess = $workFlowProcess;
     }
 
     /**
@@ -43,10 +37,20 @@ class WorkFlowController extends Controller
      *
      * @param $roleId
      *
-     * @return null|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|Role
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|Role|null
      */
     public function getColumns($roleId)
     {
+        // 如果 0，则选择所有字段
+        if (0 == $roleId) {
+            $permissionAll = Permission::where('typeId', '>=', 2)
+                ->where('description', '<>', '')->get();
+
+            return response()->json([
+                'permissions' => $permissionAll,
+            ]);
+        }
+        // 非 0，则选择该角色下的所有字段
         return Role::with('permissions')
             ->select(['id', 'target_table'])->where('id', $roleId)->first();
     }
@@ -58,7 +62,7 @@ class WorkFlowController extends Controller
      */
     public function getProfiles()
     {
-        $infos = UserProfile::select('userName', 'policyNumber', 'wageCard', 'bonusCard')->get();
+        $infos = UserProfile::select(['userName', 'policyNumber', 'wageCard', 'bonusCard'])->get();
 
         return response()->json($infos);
     }
@@ -74,14 +78,14 @@ class WorkFlowController extends Controller
      */
     public function wizardSubmit(Request $request)
     {
-        $temp = $request->get('statusCode');
-        $code = isset($temp) ? 1 : 0;
-
+        // 发放日期
+        $published_at = $request->get('published_at');
+        // 获取最新的会计期ID
+        $info['period'] = $this->dataProcess->getPeriodId();
+        // 角色ID
         $info['roleId'] = $request->get('roleType');
-        $temp1 = $request->get('level2Name');
-        $info['roleLevel'] = $temp1 ?? 0;
-        $info['targetTable'] = $request->get('targetTable');
-        $importData = json_decode($request->get('importData'), true);
+        // 格式化待插入的数据
+        $info['importData'] = json_decode($request->get('importData'), true);
 
         // 保存文件至本地
         $file = $_FILES['excel'];
@@ -90,36 +94,15 @@ class WorkFlowController extends Controller
         $content = File::get($file['tmp_name']);
         Storage::disk('excelFiles')->put($fileName, $content);
         $info['file'] = asset('/storage/excelFiles/'.$fileName);
-        // 根据选择的日期得到会计周期ID
-        $info['period'] = $this->dataProcess->getPeriodId();
 
         // 将数据写入DB
-        $res = $this->dataProcess->convertData($info, $importData);
-        // 写数据表
-        $result = $this->dataProcess->dataToDb($info['targetTable'], $res);
+        $result = $this->dataProcess->dataToDb($info, $published_at);
 
         // 写入失败
         if (!$result) {
-            return redirect()->route('upload.index')->withErrors('数据保存错误!');
+            return redirect()->route('upload.index')->withErrors('数据上传错误!');
         }
-        // 写入成功
 
-        // 判断是否是需要走流程的角色，不是则修改$code，直接上传已审核数据
-        if (99 !== $info['roleId']) {
-            $code = 9;
-        }
-        // 写流程表
-        $workflow = WorkFlow::create([
-            'title' => $request->get('title'),
-            'category_id' => $request->get('roleType'),
-            'statusCode' => $code,
-            'createdUser' => Auth::id(),
-            'fileUrl' => $info['file'],
-        ]);
-
-        // 创建流程日志
-        $this->dataProcess->initializeWorkFlowLog($workflow->id, $code);
-
-        return redirect()->route('upload.index')->withSuccess('数据保存成功!');
+        return redirect()->route('upload.index')->with('success', '数据上传成功!');
     }
 }

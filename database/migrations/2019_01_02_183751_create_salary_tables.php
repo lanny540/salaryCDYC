@@ -17,6 +17,7 @@ class CreateSalaryTables extends Migration
             $table->integer('period_id')->default(0)->index()->comment('会计期ID');
             $table->integer('user_id')->comment('上传人员ID');
             $table->string('upload_file')->default('')->comment('上传文件路径');
+            $table->string('published_at', 16)->comment('发放时间');
             $table->timestamps();
         });
         // 合计表
@@ -284,6 +285,35 @@ class CreateSalaryTables extends Migration
             $table->float('prior_had_deducted_tax')->default(0)->comment('上月已扣税');
             $table->float('declare_tax')->default(0)->comment('申报个税');
         });
+        // 新增表.如果以后需要读取更多的列，则从此表读取
+        Schema::create('extra', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('username', 10)->index()->comment('人员姓名');
+            $table->string('policyNumber', 24)->index()->comment('保险编号');
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
+            $table->timestamps();
+
+            $table->float('extra_column1')->default(0);
+            $table->float('extra_column2')->default(0);
+            $table->float('extra_column3')->default(0);
+            $table->float('extra_column4')->default(0);
+            $table->float('extra_column5')->default(0);
+            $table->float('extra_column6')->default(0);
+            $table->float('extra_column7')->default(0);
+            $table->float('extra_column8')->default(0);
+            $table->float('extra_column9')->default(0);
+            $table->float('extra_column10')->default(0);
+            $table->float('extra_column11')->default(0);
+            $table->float('extra_column12')->default(0);
+            $table->float('extra_column13')->default(0);
+            $table->float('extra_column14')->default(0);
+            $table->float('extra_column15')->default(0);
+            $table->float('extra_column16')->default(0);
+            $table->float('extra_column17')->default(0);
+            $table->float('extra_column18')->default(0);
+            $table->float('extra_column19')->default(0);
+            $table->float('extra_column20')->default(0);
+        });
     }
 
     /**
@@ -303,5 +333,6 @@ class CreateSalaryTables extends Migration
         Schema::dropIfExists('reissue');
         Schema::dropIfExists('deduction');
         Schema::dropIfExists('taxImport');
+        Schema::dropIfExists('extra');
     }
 }

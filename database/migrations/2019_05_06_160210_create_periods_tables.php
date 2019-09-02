@@ -13,7 +13,8 @@ class CreatePeriodsTables extends Migration
     {
         Schema::create('periods', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->dateTime('startdate')->comment('周期开始时间');
+            $table->string('published_at', 16)->comment('发放日期');
+            $table->dateTime('startdate')->nullable()->comment('周期开始时间');
             $table->dateTime('enddate')->nullable()->comment('周期结束时间');
         });
     }

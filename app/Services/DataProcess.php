@@ -3,84 +3,114 @@
 namespace App\Services;
 
 use App\Models\Period;
-use App\Models\Salary\BonusType;
-use App\Models\Salary\DeductionType;
-use App\Models\Salary\OtherType;
-use App\Models\Salary\Property;
 use App\Models\Salary\SalarySummary;
-use App\Models\WorkFlow\WorkFlowLog;
 use Auth;
 use Carbon\Carbon;
 use DB;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DataProcess
 {
     /**
-     * 初始化流程日志
-     * 初始只有3种情况，不立即发布，立即发布，上传已审核数据不需要走流程.
-     *
-     * @param int $wf_id 流程ID
-     * @param int $code  流程标识ID
-     */
-    public function initializeWorkFlowLog(int $wf_id, int $code): void
-    {
-        switch ($code) {
-            case 0:
-                $action = '待发起';
-
-                break;
-            case 1:
-                $action = '发起';
-
-                break;
-            case 9:
-                $action = '上传已审核数据';
-
-                break;
-            default:
-                $action = '错误流程参数';
-        }
-        WorkFlowLog::create([
-            'wf_id' => $wf_id,
-            'user_id' => Auth::id(),
-            'action' => $action,
-            'content' => '',
-        ]);
-    }
-
-    /**
      * 数据写入DB.
      *
-     * @param string $targetTable
-     * @param array  $insertData
-     *
-     * @throws \Exception
+     * @param array  $info   表单提交数据
+     * @param string $period 发放日期
      *
      * @return bool|\Illuminate\Http\RedirectResponse
+     *
+     * @throws \Exception
      */
-    public function dataToDb(string $targetTable, array $insertData)
+    public function dataToDb(array $info, string $period)
     {
-        $tableName = strtolower($targetTable);
         DB::beginTransaction();
 
         try {
-            // 先清空表再插入数据
-            if (('taximport' === $tableName) || ('insurances' === $tableName) || ('subsidy' === $tableName)) {
-                DB::table($targetTable)->truncate();
-            }
-            //插入数据
-            DB::table($targetTable)->insert($insertData);
+            // 将基础信息写入salary_info表
+            SalarySummary::create([
+                'period_id' => $info['period'],
+                'user_id' => Auth::id(),
+                'upload_file' => $info['file'],
+                'published_at' => $period,
+            ]);
 
+            if (0 === $info['roleId']) {
+                for ($i = 7; $i <= 15; ++$i) {
+                    $this->insertToTable($i, $info['importData']);
+                }
+            } else {
+                $this->insertToTable($info['roleId'], $info['importData']);
+            }
+
+            $this->closePeriod();
+            $this->newPeriod($period);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-//            return false;
+
+            return false;
             // 调试用代码
-            return redirect()->back()->withErrors($e->getMessage());
+//            return redirect()->back()->withErrors($e->getMessage());
         }
 
         return true;
+    }
+
+    /**
+     * 将数据写入数据表.
+     *
+     * @param int   $roleId     角色ID
+     * @param array $insertData 插入数据
+     */
+    private function insertToTable(int $roleId, array $insertData): void
+    {
+        $data = [];
+        $length = count($insertData);
+        $period_id = $this->getPeriodId();
+        $date = Carbon::now();
+
+        $tableName = $this->getInsertTableName($roleId);
+        $columns = $this->getInsertColumns($roleId);
+
+        for ($i = 0; $i < $length; ++$i) {
+            foreach ($columns as $column) {
+                // 对应字段不为空，则字段有效
+                if ('' !== $column['description']) {
+                    $data[$i]['username'] = $insertData[$i]['转储姓名'];
+                    $data[$i]['policyNumber'] = $insertData[$i]['保险编号'];
+                    $data[$i]['period_id'] = $period_id;
+                    $data[$i]['created_at'] = $date;
+                    $data[$i]['updated_at'] = $date;
+                    $data[$i][$column['name']] = $insertData[$i][$column['description']];
+                }
+            }
+        }
+        DB::table($tableName)->insert($data);
+    }
+
+    /**
+     * 根据角色ID返回插入表名.
+     *
+     * @param int $roleId 角色ID
+     *
+     * @return string 插入表名
+     */
+    private function getInsertTableName(int $roleId): string
+    {
+        return Role::find($roleId)->target_table;
+    }
+
+    /**
+     * 根据角色ID返回插入表的字段名.
+     *
+     * @param int $roleId
+     *
+     * @return mixed
+     */
+    private function getInsertColumns(int $roleId)
+    {
+        return Permission::where('typeId', $roleId - 5)->select(['name', 'description', 'typeId'])->get();
     }
 
     /**
@@ -95,11 +125,7 @@ class DataProcess
         $period = Period::max('id');
 
         if (empty($period)) {
-            $period = Period::create([
-                'startdate' => date('Y-m-d'),
-            ]);
-
-            return $period->id;
+            return $this->newPeriod();
         }
 
         return $period;
@@ -108,13 +134,13 @@ class DataProcess
     /**
      * 关闭当前会计周期
      *
-     * @return null|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
     public function closePeriod()
     {
         $period = Period::latest('id')->first();
 
-        $period->enddate = date('Y-m-d');
+        $period->enddate = Carbon::now();
         $period->save();
 
         return $period;
@@ -123,32 +149,18 @@ class DataProcess
     /**
      * 新开会计周期
      *
-     * @return \Illuminate\Database\Eloquent\Model|Period
+     * @param string $published_at 发放日期
+     *
+     * @return int 会计周期ID
      */
-    public function newPeriod()
+    public function newPeriod(string $published_at = ''): int
     {
-        $old_period = Period::latest('id')->first();
-
-        return Period::create([
-            'startdate' => Carbon::createFromFormat('Y-m-d', $old_period->enddate)->addDay(),
+        $period = Period::create([
+            'published_at' => '' == $published_at ? date('Y.m') : $published_at,
+            'startdate' => Carbon::now(),
         ]);
-    }
 
-    /**
-     * 将导入数据转换成插入数据.
-     *
-     * @param array $type ['roleId'] 角色ID ['roleLevel'] 二级角色ID [2] 操作的表名
-     * @param array $data 待转换的数据
-     *
-     * @return array
-     */
-    public function convertData(array $type, array $data): array
-    {
-        // 常规字段转换
-        $r = $this->commonConvert($type, $data);
-
-        // 特殊字段转换
-        return $this->specialConvert($r, $type, $data);
+        return $period->id;
     }
 
     /**
@@ -201,153 +213,6 @@ class DataProcess
             'deduction' => $deduction,
             'other' => $other,
         ]);
-    }
-
-    /**
-     * 常规字段转换.
-     *
-     * @param array $type
-     * @param array $data
-     *
-     * @return array
-     */
-    private function commonConvert(array $type, array $data): array
-    {
-        $res = [];
-        $date = Carbon::now();
-        $count = \count($data);
-        for ($i = 0; $i < $count; ++$i) {
-            $res[$i]['username'] = $data[$i]['姓名'];
-            $res[$i]['policyNumber'] = $data[$i]['保险编号'];
-            // 社保、补贴、税务导入 没有 会计期 字段
-            if ((23 !== $type['roleId']) && (18 !== $type['roleId']) && (19 !== $type['roleId'])) {
-                $res[$i]['period_id'] = $type['period'];
-                $res[$i]['upload_files'] = $type['file'];
-            }
-            $res[$i]['user_id'] = \Auth::id();
-            $res[$i]['created_at'] = $date;
-            $res[$i]['updated_at'] = $date;
-        }
-
-        return $res;
-    }
-
-    /**
-     * 特殊字段转换.
-     *
-     * @param array $res
-     * @param array $type
-     * @param array $data
-     *
-     * @return array
-     */
-    private function specialConvert(array $res, array $type, array $data): array
-    {
-        $id = $type['roleId'];    //角色ID
-        $level = $type['roleLevel'];  //2级分类ID
-        $count = \count($data);
-
-        switch ($id) {
-            // 工资
-            case 9:
-                $permissions = Permission::select('name', 'description')
-                    ->whereHas('roles', function ($q) use ($id) {
-                        $q->where('id', $id);
-                    })->pluck('description', 'name');
-                for ($i = 0; $i < $count; ++$i) {
-                    foreach ($permissions as $k => $v) {
-                        $res[$i][$k] = $data[$i][$v];
-                    }
-                }
-
-                break;
-            // 奖金
-            case 10:case 11:case 12:
-                $permissions = BonusType::select('id', 'name')
-                    ->where('role_id', $id)
-                    ->where('id', $level)->pluck('name', 'id');
-                for ($i = 0; $i < $count; ++$i) {
-                    foreach ($permissions as $k => $v) {
-                        $res[$i]['bonus'] = $data[$i][$v];
-                        $res[$i]['type_id'] = $level;
-                    }
-                    $res[$i]['comment'] = $data[$i]['备注'];
-                }
-
-                break;
-            // 其他薪金
-            case 13:case 14:case 15:case 16:
-                $permissions = OtherType::select(['id', 'name'])
-                    ->where('role_id', $id)
-                    ->where('id', $level)->pluck('name', 'id');
-                for ($i = 0; $i < $count; ++$i) {
-                    foreach ($permissions as $k => $v) {
-                        $res[$i]['otherSalary'] = $data[$i][$v];
-                        $res[$i]['type_id'] = $level;
-                    }
-                    $res[$i]['comment'] = $data[$i]['备注'];
-                }
-
-                break;
-            // 物管费
-            case 17:
-                $permissions = Permission::select(['name', 'description'])
-                    ->whereHas('roles', function ($q) use ($id) {
-                        $q->where('id', $id);
-                    })->pluck('description', 'name');
-                for ($i = 0; $i < $count; ++$i) {
-                    foreach ($permissions as $k => $v) {
-                        $res[$i][$k] = $data[$i][$v];
-                    }
-                    $res[$i]['total_property'] = $res[$i]['utilities'] + $res[$i]['property_fee'];
-                }
-
-                break;
-            // 社保、补贴
-            case 18: case 19:
-                $permissions = Permission::select(['name', 'description'])
-                    ->whereHas('roles', function ($q) use ($id) {
-                        $q->where('id', $id);
-                    })->pluck('description', 'name');
-                for ($i = 0; $i < $count; ++$i) {
-                    foreach ($permissions as $k => $v) {
-                        $res[$i][$k] = $data[$i][$v];
-                    }
-                }
-
-                break;
-            // 扣款
-            case 20:case 21:case 22:
-                $permissions = DeductionType::select(['id', 'name'])
-                    ->where('role_id', $id)
-                    ->where('id', $level)->pluck('name', 'id');
-                for ($i = 0; $i < $count; ++$i) {
-                    foreach ($permissions as $k => $v) {
-                        $res[$i]['deduction'] = $data[$i][$v];
-                        $res[$i]['type_id'] = $level;
-                    }
-                    $res[$i]['comment'] = $data[$i]['备注'];
-                }
-
-                break;
-            // 税务导入
-            case 23:
-                $permissions = Permission::select(['name', 'description'])
-                    ->whereHas('roles', function ($q) use ($id) {
-                        $q->where('id', $id);
-                    })->pluck('description', 'name');
-                for ($i = 0; $i < $count; ++$i) {
-                    foreach ($permissions as $k => $v) {
-                        $res[$i][$k] = $data[$i][$v];
-                    }
-                }
-
-                break;
-            default:
-                $res = [];
-        }
-
-        return $res;
     }
 
     /**
@@ -508,87 +373,5 @@ class DataProcess
     private function otherData($period_id, $policy = ''): array
     {
         return DB::select($this->OtherSql($period_id, $policy));
-    }
-
-    /**
-     * 查询所有人员当前奖金的SQL语句（行转列）
-     * 1.先查询所有奖金分类，然后循环拼接.
-     *
-     * @param $periodId
-     * @param string $policy
-     *
-     * @return string
-     */
-    private function BonusSql($periodId, $policy = ''): string
-    {
-        $sql = '';
-        $sql .= 'SELECT bonus.policyNumber, bonus.username, bonus.period_id,';
-        $types = BonusType::all();
-        foreach ($types as $t) {
-            $sql .= ' SUM(IF(bonus.type_id = '.$t->id.', bonus,0)) AS '.$t->name.',';
-        }
-        $sql = rtrim($sql, ',');
-        $sql .= ' FROM bonus';
-        $sql .= ' WHERE bonus.period_id = '.$periodId;
-        if ('' !== $policy) {
-            $sql .= ' AND bonus.policyNumber = '.$policy;
-        }
-        $sql .= ' GROUP BY bonus.policyNumber, bonus.username, bonus.period_id';
-
-        return $sql;
-    }
-
-    /**
-     * 查询所有人员扣款的SQL语句（行转列）.
-     *
-     * @param $periodId
-     * @param string $policy
-     *
-     * @return string
-     */
-    private function DedutionSql($periodId, $policy = ''): string
-    {
-        $sql = '';
-        $sql .= 'SELECT deductions.policyNumber, deductions.username, deductions.period_id,';
-        $types = DeductionType::all();
-        foreach ($types as $t) {
-            $sql .= ' SUM(IF(deductions.type_id = '.$t->id.', deduction, 0)) AS '.$t->name.',';
-        }
-        $sql = rtrim($sql, ',');
-        $sql .= ' FROM deductions';
-        $sql .= ' WHERE deductions.period_id ='.$periodId;
-        if ('' !== $policy) {
-            $sql .= ' AND deductions.policyNumber = '.$policy;
-        }
-        $sql .= ' GROUP BY deductions.policyNumber, deductions.username, deductions.period_id';
-
-        return $sql;
-    }
-
-    /**
-     * 查询所有人员其他费用的SQL语句（行转列）.
-     *
-     * @param int    $periodId
-     * @param string $policy
-     *
-     * @return string
-     */
-    private function OtherSql($periodId, $policy = ''): string
-    {
-        $sql = '';
-        $sql .= 'SELECT othersalary.policyNumber, othersalary.username, othersalary.period_id,';
-        $types = OtherType::all();
-        foreach ($types as $t) {
-            $sql .= ' SUM(IF(othersalary.type_id = '.$t->id.', otherSalary,0)) AS '.$t->name.',';
-        }
-        $sql = rtrim($sql, ',');
-        $sql .= ' FROM othersalary';
-        $sql .= ' WHERE othersalary.period_id ='.$periodId;
-        if ('' !== $policy) {
-            $sql .= ' AND othersalary.policyNumber = '.$policy;
-        }
-        $sql .= ' GROUP BY othersalary.policyNumber, othersalary.username, othersalary.period_id';
-
-        return $sql;
     }
 }

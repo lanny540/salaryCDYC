@@ -129,7 +129,7 @@
                             <h4><i class="fa fa-cube"></i> {{ $data }}</h4>
                             <div class="row">
                                 @foreach($permissions as $p)
-                                    @if($p->typeId === $k)
+                                    @if($p->typeId === $k && $p->description !== '')
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <div class="checkbox checkbox-primary">

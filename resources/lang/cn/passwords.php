@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Password Reset Language Lines
@@ -18,5 +17,4 @@ return [
     'sent' => 'We have e-mailed your password reset link!',
     'token' => '此密码重置令牌无效。',
     'user' => "We can't find a user with that e-mail address.",
-
 ];
