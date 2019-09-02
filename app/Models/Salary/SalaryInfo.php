@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                          $upload_file 上传文件路径
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalaryInfo newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalaryInfo newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalaryInfo query()
@@ -23,7 +24,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalaryInfo whereUploadFile($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalaryInfo whereUserId($value)
  * @mixin \Eloquent
+ *
  * @property string $published_at 发放时间
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalaryInfo wherePublishedAt($value)
  */
 class SalaryInfo extends Model

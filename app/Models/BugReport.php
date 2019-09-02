@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null                     $screenShot 截图地址
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BugReport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BugReport newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BugReport query()

@@ -63,6 +63,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $yfct            应发辞退.如果dwdm="01020201",应发辞退=应发工资,应发工资=0
  * @property float                           $yfnt            应发内退.如果dwdm="01020202",应发辞退=应发工资,应发工资=0
  * @property float                           $wage_total      应发工资.应发工资=年薪工资+岗位工资+保留工资+套级补差+中夜班费+加班工资+年功工资+基本养老金+增机+国家小计+地方小计+行业小计+企业小计+离退休补充+补偿
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Wage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Wage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Wage query()

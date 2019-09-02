@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $union_paying 工会发放
  * @property float                           $other_reward 其他奖励
  * @property float                           $bonus_total  奖金合计.奖金合计=月奖+工会发放+专项奖+课酬+劳动竞赛+节日慰问费+党员奖励+其他奖励
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Bonus newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Bonus newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Bonus query()

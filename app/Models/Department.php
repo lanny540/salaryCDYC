@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null                                          $created_at
  * @property \Illuminate\Support\Carbon|null                                          $updated_at
  * @property \App\Models\Users\UserProfile[]|\Illuminate\Database\Eloquent\Collection $users
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department query()
@@ -27,7 +28,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereWeight($value)
  * @mixin \Eloquent
+ *
  * @property int $pid 父节点ID
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department wherePid($value)
  */
 class Department extends Model

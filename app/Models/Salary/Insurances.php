@@ -52,6 +52,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $rest_deduction          它项扣除
  * @property float                           $rest_deduction_comment  它项扣备注
  * @property float                           $sum_deduction           其他扣除.其他扣除=公车补扣除+它项扣除
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Insurances newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Insurances newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Insurances query()
