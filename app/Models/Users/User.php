@@ -22,7 +22,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[]                                 $roles
  * @property \App\Models\Salary\SalaryLog[]|\Illuminate\Database\Eloquent\Collection                                   $salaryLog
  * @property \App\Models\Salary\SalarySummary[]|\Illuminate\Database\Eloquent\Collection                               $salarySummary
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User permission($permissions)

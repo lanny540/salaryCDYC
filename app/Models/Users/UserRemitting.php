@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                          $remit_city     代汇市
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserRemitting newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserRemitting newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserRemitting query()

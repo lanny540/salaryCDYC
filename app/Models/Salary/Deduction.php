@@ -39,7 +39,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $tax_diff        税差
  * @property float                           $personal_tax    个人所得税
  * @property float                           $deduction_total 扣款合计
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Deduction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Deduction newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Deduction query()

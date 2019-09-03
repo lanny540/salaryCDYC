@@ -22,7 +22,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $single_add       独子费补发
  * @property float                           $single           独子费.独子费=独子费标准+独子费补发
  * @property float                           $subsidy_total    补贴合计.补贴合计=交通费+住房补贴+独子费
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Subsidy newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Subsidy newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Subsidy query()

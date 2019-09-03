@@ -29,7 +29,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \App\Models\Department          $department
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile query()
@@ -53,7 +52,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile whereUserName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile whereWageCard($value)
  * @mixin \Eloquent
- *
  * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Salary\SalarySummary[] $salaries
  */
 class UserProfile extends Model

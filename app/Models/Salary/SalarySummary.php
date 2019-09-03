@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $should_total         应发合计.应发合计=应发工资+应发辞退+应发内退+补贴合计+补发合计
  * @property float                           $enterprise_out_total 企业超合计.企业超合计=公积企超标+失业企超标+医保企超标+年金企超标+退养企超标
  * @property float                           $salary_total         工资薪金.工资薪金=应发合计+奖金合计+企业超合计
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalarySummary newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalarySummary newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\SalarySummary query()

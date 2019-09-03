@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $reduce_tax             减免个税
  * @property float                           $prior_had_deducted_tax 上月已扣税
  * @property float                           $declare_tax            申报个税
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport query()

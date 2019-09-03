@@ -33,7 +33,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $extra_column18
  * @property float                           $extra_column19
  * @property float                           $extra_column20
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Extra newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Extra newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Extra query()

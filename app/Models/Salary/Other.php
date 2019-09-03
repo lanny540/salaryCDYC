@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $labour            劳务报酬
  * @property float                           $labour_add_tax    劳务应补税
  * @property float                           $labour_sub_tax    劳务减免税
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Other newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Other newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Other query()
