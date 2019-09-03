@@ -77,6 +77,8 @@ class PermissionsSeeder extends Seeder
             ['name' => 'yfct', 'description' => '应发辞退', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'yfnt', 'description' => '应发内退', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'wage_total', 'description' => '应发工资', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'should_total', 'description' => '应发合计', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'salary_total', 'description' => '工资薪金', 'typeId' => 2, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // typeId = 3 奖金
             ['name' => 'month_bonus', 'description' => '月奖', 'typeId' => 3, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'special', 'description' => '专项奖', 'typeId' => 3, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
@@ -94,11 +96,8 @@ class PermissionsSeeder extends Seeder
             ['name' => 'article_add_tax', 'description' => '稿酬应补税', 'typeId' => 4, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'article_sub_tax', 'description' => '稿酬减免税', 'typeId' => 4, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'franchise', 'description' => '特许使用权', 'typeId' => 4, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'franchise_add_tax', 'description' => '特许应补税', 'typeId' => 4, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'franchise_sub_tax', 'description' => '特许减免税', 'typeId' => 4, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'labour', 'description' => '劳务报酬', 'typeId' => 4, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'labour_add_tax', 'description' => '劳务应补税', 'typeId' => 4, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'labour_sub_tax', 'description' => '劳务减免税', 'typeId' => 4, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'franchise_add_tax', 'description' => '特权应补税', 'typeId' => 4, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'franchise_sub_tax', 'description' => '特权减免税', 'typeId' => 4, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // typeId = 5 社保
             ['name' => 'gjj_classic', 'description' => '公积金标准', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'gjj_add', 'description' => '公积金补扣', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
@@ -122,8 +121,8 @@ class PermissionsSeeder extends Seeder
             ['name' => 'medical_add', 'description' => '医保金补扣', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'medical_person', 'description' => '医保金个人', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'medical_deduction', 'description' => '医保金补扣', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'medical_enterprise', 'description' => '医疗企业缴', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'medical_out_range', 'description' => '医疗企超标', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'medical_enterprise', 'description' => '医保企业缴', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'medical_out_range', 'description' => '医保企超标', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'unemployment_classic', 'description' => '失业金标准', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'unemployment_add', 'description' => '失业金补扣', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'unemployment_person', 'description' => '失业金个人', 'typeId' => 5, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
@@ -182,7 +181,6 @@ class PermissionsSeeder extends Seeder
             ['name' => 'donate', 'description' => '捐赠', 'typeId' => 8, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'tax_diff', 'description' => '税差', 'typeId' => 8, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'personal_tax', 'description' => '个人所得税', 'typeId' => 8, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'deduction_total', 'description' => '扣款合计', 'typeId' => 8, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // typeId = 9 专项税务
             ['name' => 'income', 'description' => '累计收入额', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'deduct_expenses', 'description' => '累减除费用', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
@@ -205,27 +203,33 @@ class PermissionsSeeder extends Seeder
             ['name' => 'reduce_tax', 'description' => '减免个税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'prior_had_deducted_tax', 'description' => '上月已扣税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'declare_tax', 'description' => '申报个税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            // type = 10 额外读取表
-            ['name' => 'extra_column1', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column2', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column3', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column4', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column5', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column6', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column7', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column8', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column9', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column10', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column11', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column12', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column13', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column14', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column15', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column16', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column17', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column18', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column19', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'extra_column20', 'description' => '', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            // type = 10 特殊薪酬表
+            ['name' => 'instead_salary', 'description' => '代汇', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'bank_salary', 'description' => '银行发放', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'actual_salary', 'description' => '实发工资', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'debt_salary', 'description' => '余欠款', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'court_salary', 'description' => '法院转提', 'typeId' => 10, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            // type = 11 额外读取表
+            ['name' => 'extra_column1', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column2', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column3', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column4', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column5', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column6', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column7', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column8', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column9', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column10', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column11', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column12', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column13', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column14', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column15', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column16', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column17', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column18', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column19', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'extra_column20', 'description' => '', 'typeId' => 11, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
         ];
         Permission::insert($permissions);
 
@@ -256,9 +260,11 @@ class PermissionsSeeder extends Seeder
             ['name' => 'deduction', 'description' => '扣款', 'typeId' => 2, 'target_table' => 'deduction', 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // 专项税务
             ['name' => 'taxImport', 'description' => '专项税务', 'typeId' => 2, 'target_table' => 'taxImport', 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            // 特殊薪酬
+            ['name' => 'special', 'description' => '特殊薪酬', 'typeId' => 2, 'target_table' => 'special', 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // 额外读取
             ['name' => 'extra', 'description' => '额外读取', 'typeId' => 2, 'target_table' => 'extra', 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ];
+        ];
         Role::insert($roles);
 
         $role = Role::findOrFail(1);    //获取管理员角色
@@ -268,55 +274,61 @@ class PermissionsSeeder extends Seeder
         }
 
         $role = Role::findOrFail(7);    // 工资
-        $ps = Permission::whereBetween('id', [8, 57])->get();
+        $ps = Permission::whereBetween('id', [8, 59])->get();
         foreach ($ps as $p) {
             $role->givePermissionTo($p);
         }
 
         $role = Role::findOrFail(8);    // 奖金
-        $ps = Permission::whereBetween('id', [58, 66])->get();
+        $ps = Permission::whereBetween('id', [60, 68])->get();
         foreach ($ps as $p) {
             $role->givePermissionTo($p);
         }
 
         $role = Role::findOrFail(9);    // 其他费用
-        $ps = Permission::whereBetween('id', [67, 77])->get();
+        $ps = Permission::whereBetween('id', [69, 76])->get();
         foreach ($ps as $p) {
             $role->givePermissionTo($p);
         }
 
         $role = Role::findOrFail(10);    // 社保
-        $ps = Permission::whereBetween('id', [78, 116])->get();
+        $ps = Permission::whereBetween('id', [77, 115])->get();
         foreach ($ps as $p) {
             $role->givePermissionTo($p);
         }
 
         $role = Role::findOrFail(11);    // 补贴
-        $ps = Permission::whereBetween('id', [117, 125])->get();
+        $ps = Permission::whereBetween('id', [116, 124])->get();
         foreach ($ps as $p) {
             $role->givePermissionTo($p);
         }
 
         $role = Role::findOrFail(12);    // 补发
-        $ps = Permission::whereBetween('id', [126, 129])->get();
+        $ps = Permission::whereBetween('id', [125, 128])->get();
         foreach ($ps as $p) {
             $role->givePermissionTo($p);
         }
 
         $role = Role::findOrFail(13);    // 扣款
-        $ps = Permission::whereBetween('id', [130, 155])->get();
+        $ps = Permission::whereBetween('id', [129, 153])->get();
         foreach ($ps as $p) {
             $role->givePermissionTo($p);
         }
 
         $role = Role::findOrFail(14);    // 扣款
-        $ps = Permission::whereBetween('id', [156, 176])->get();
+        $ps = Permission::whereBetween('id', [154, 174])->get();
         foreach ($ps as $p) {
             $role->givePermissionTo($p);
         }
 
-        $role = Role::findOrFail(15);    // 额外
-        $ps = Permission::whereBetween('id', [177, 196])->get();
+        $role = Role::findOrFail(15);    // 特殊
+        $ps = Permission::whereBetween('id', [175, 179])->get();
+        foreach ($ps as $p) {
+            $role->givePermissionTo($p);
+        }
+
+        $role = Role::findOrFail(16);    // 额外
+        $ps = Permission::whereBetween('id', [180, 199])->get();
         foreach ($ps as $p) {
             $role->givePermissionTo($p);
         }

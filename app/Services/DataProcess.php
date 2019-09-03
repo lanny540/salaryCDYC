@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Period;
+use App\Models\Salary\SalaryInfo;
 use App\Models\Salary\SalarySummary;
 use Auth;
 use Carbon\Carbon;
@@ -28,14 +29,17 @@ class DataProcess
 
         try {
             // 将基础信息写入salary_info表
-            SalarySummary::create([
+            SalaryInfo::create([
                 'period_id' => $info['period'],
                 'user_id' => Auth::id(),
                 'upload_file' => $info['file'],
                 'published_at' => $period,
             ]);
 
-            if (0 === $info['roleId']) {
+            if (0 == $info['roleId']) {
+                // 将数据存入合计表
+                $this->insertToSalarySummary($info['importData']);
+                // 将数据存入各类分表
                 for ($i = 7; $i <= 15; ++$i) {
                     $this->insertToTable($i, $info['importData']);
                 }
@@ -58,35 +62,90 @@ class DataProcess
     }
 
     /**
-     * 将数据写入数据表.
+     * 处理常规字段.
      *
-     * @param int   $roleId     角色ID
-     * @param array $insertData 插入数据
+     * @param array $insertData 单行需要插入的数据
+     *
+     * @return array
      */
-    private function insertToTable(int $roleId, array $insertData): void
+    private function commonColumn(array $insertData): array
+    {
+        $data = [];
+        $period_id = $this->getPeriodId();
+        $date = Carbon::now();
+
+        $data['username'] = $insertData['转储姓名'];
+        $data['policyNumber'] = $insertData['保险编号'];
+        $data['period_id'] = $period_id;
+        $data['created_at'] = $date;
+        $data['updated_at'] = $date;
+
+        return $data;
+    }
+
+    /**
+     * 将数据写入汇总表.
+     *
+     * @param array $insertData
+     *
+     * @return bool
+     */
+    private function insertToSalarySummary(array $insertData)
     {
         $data = [];
         $length = count($insertData);
-        $period_id = $this->getPeriodId();
-        $date = Carbon::now();
+
+        for ($i = 0; $i < $length; ++$i) {
+            $data[$i] = $this->commonColumn($insertData[$i]);
+            $data[$i]['wage_total'] = $insertData[$i]['应发工资'];
+            $data[$i]['bonus_total'] = $insertData[$i]['奖金合计'];
+            $data[$i]['subsidy_total'] = $insertData[$i]['补贴合计'];
+            $data[$i]['reissue_total'] = $insertData[$i]['补发合计'];
+            $data[$i]['should_total'] = $insertData[$i]['应发合计'];
+            $data[$i]['enterprise_out_total'] = $insertData[$i]['企业超合计'];
+            $data[$i]['salary_total'] = $insertData[$i]['工资薪金'];
+        }
+
+        DB::table('summary')->insert($data);
+        return true;
+    }
+
+    /**
+     * 将数据写入各类分表.
+     *
+     * @param int $roleId 角色ID
+     * @param array $insertData 插入数据
+     *
+     * @return bool
+     */
+    private function insertToTable(int $roleId, array $insertData)
+    {
+        $data = [];
+        $length = count($insertData);
+
+        // 如果额外读取列 没有对应字段，则跳过
+        if (16 === $roleId) {
+            $count = Permission::where('typeId', 11)->where('description', '<>', '')
+                ->select(['name', 'description', 'typeId'])->count();
+            if ($count == 0) {
+                return false;
+            }
+        }
 
         $tableName = $this->getInsertTableName($roleId);
         $columns = $this->getInsertColumns($roleId);
 
         for ($i = 0; $i < $length; ++$i) {
+            $data[$i] = $this->commonColumn($insertData[$i]);
             foreach ($columns as $column) {
                 // 对应字段不为空，则字段有效
-                if ('' !== $column['description']) {
-                    $data[$i]['username'] = $insertData[$i]['转储姓名'];
-                    $data[$i]['policyNumber'] = $insertData[$i]['保险编号'];
-                    $data[$i]['period_id'] = $period_id;
-                    $data[$i]['created_at'] = $date;
-                    $data[$i]['updated_at'] = $date;
-                    $data[$i][$column['name']] = $insertData[$i][$column['description']];
+                if ('' != $column->description) {
+                    $data[$i][$column->name] = $insertData[$i][$column->description];
                 }
             }
         }
         DB::table($tableName)->insert($data);
+        return true;
     }
 
     /**
@@ -96,9 +155,9 @@ class DataProcess
      *
      * @return string 插入表名
      */
-    private function getInsertTableName(int $roleId): string
+    public function getInsertTableName(int $roleId): string
     {
-        return Role::find($roleId)->target_table;
+        return Role::where('id', $roleId)->first()->target_table;
     }
 
     /**

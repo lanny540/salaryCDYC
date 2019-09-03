@@ -45,6 +45,7 @@ class SalarySummary extends Model
 
     protected $fillable = [
         'username', 'policyNumber', 'period_id',
-        'wage_total', 'bonus_total', 'subsidy_total', 'reissue_total', 'should_total', 'enterprise_out_total', 'salary_total',
+        'wage_total', 'bonus_total', 'subsidy_total', 'reissue_total',
+        'should_total', 'enterprise_out_total', 'salary_total',
     ];
 }

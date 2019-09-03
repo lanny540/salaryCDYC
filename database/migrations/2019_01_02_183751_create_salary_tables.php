@@ -94,6 +94,8 @@ class CreateSalaryTables extends Migration
             $table->float('yfct')->default(0)->comment('应发辞退.如果dwdm="01020201",应发辞退=应发工资,应发工资=0');
             $table->float('yfnt')->default(0)->comment('应发内退.如果dwdm="01020202",应发辞退=应发工资,应发工资=0');
             $table->float('wage_total')->default(0)->comment('应发工资.应发工资=年薪工资+岗位工资+保留工资+套级补差+中夜班费+加班工资+年功工资+基本养老金+增机+国家小计+地方小计+行业小计+企业小计+离退休补充+补偿');
+            $table->float('should_total')->default(0)->comment('应发合计');
+            $table->float('salary_total')->default(0)->comment('工资薪金');
         });
         // 奖金表
         Schema::create('bonus', function (Blueprint $table) {
@@ -127,11 +129,8 @@ class CreateSalaryTables extends Migration
             $table->float('article_add_tax')->default(0)->comment('稿酬应补税');
             $table->float('article_sub_tax')->default(0)->comment('稿酬减免税');
             $table->float('franchise')->default(0)->comment('特许使用权');
-            $table->float('franchise_add_tax')->default(0)->comment('特许应补税');
-            $table->float('franchise_sub_tax')->default(0)->comment('特许减免税');
-            $table->float('labour')->default(0)->comment('劳务报酬');
-            $table->float('labour_add_tax')->default(0)->comment('劳务应补税');
-            $table->float('labour_sub_tax')->default(0)->comment('劳务减免税');
+            $table->float('franchise_add_tax')->default(0)->comment('特权应补税');
+            $table->float('franchise_sub_tax')->default(0)->comment('特权减免税');
         });
         // 社保表
         Schema::create('insurances', function (Blueprint $table) {
@@ -253,7 +252,6 @@ class CreateSalaryTables extends Migration
             $table->float('donate')->default(0)->comment('捐赠');
             $table->float('tax_diff')->default(0)->comment('税差');
             $table->float('personal_tax')->default(0)->comment('个人所得税');
-            $table->float('deduction_total')->default(0)->comment('扣款合计');
         });
         // 专项税务表
         Schema::create('taxImport', function (Blueprint $table) {
@@ -284,6 +282,20 @@ class CreateSalaryTables extends Migration
             $table->float('reduce_tax')->default(0)->comment('减免个税');
             $table->float('prior_had_deducted_tax')->default(0)->comment('上月已扣税');
             $table->float('declare_tax')->default(0)->comment('申报个税');
+        });
+        // 特殊薪酬表
+        Schema::create('special', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('username', 10)->index()->comment('人员姓名');
+            $table->string('policyNumber', 24)->index()->comment('保险编号');
+            $table->integer('period_id')->default(0)->index()->comment('会计期ID');
+            $table->timestamps();
+
+            $table->float('instead_salary')->default(0)->comment('代汇');
+            $table->float('bank_salary')->default(0)->comment('银行发放');
+            $table->float('actual_salary')->default(0)->comment('实发工资');
+            $table->float('debt_salary')->default(0)->comment('余欠款');
+            $table->float('court_salary')->default(0)->comment('法院转提');
         });
         // 新增表.如果以后需要读取更多的列，则从此表读取
         Schema::create('extra', function (Blueprint $table) {
@@ -333,6 +345,7 @@ class CreateSalaryTables extends Migration
         Schema::dropIfExists('reissue');
         Schema::dropIfExists('deduction');
         Schema::dropIfExists('taxImport');
+        Schema::dropIfExists('special');
         Schema::dropIfExists('extra');
     }
 }

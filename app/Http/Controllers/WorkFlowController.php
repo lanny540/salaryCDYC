@@ -92,7 +92,7 @@ class WorkFlowController extends Controller
         $arr = explode('.', $file['name']);
         $fileName = uniqid('excel_', false).'.'.end($arr);
         $content = File::get($file['tmp_name']);
-        Storage::disk('excelFiles')->put($fileName, $content);
+//        Storage::disk('excelFiles')->put($fileName, $content);
         $info['file'] = asset('/storage/excelFiles/'.$fileName);
 
         // 将数据写入DB
