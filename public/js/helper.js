@@ -111,37 +111,41 @@ function excelDataCheck(arr1, arr2) {
     return R.concat(falseList, trueList);
 }
 
-// 动态生成数据验证结果html
-function excelData(data) {
-    let html = '';
-
-    data.forEach(e => {
-        if (e.status === true) {
-            html += '<tr class="table-success">';
-
-        } else {
-            html += '<tr class="table-danger">';
-        }
-        html += '<td>' + e.姓名 + '</td>';
-        html += '<td>' + e.保险编号 + '</td>';
-        html += '<td>' + e.银行卡号 + '</td>';
-        html += '<td>' + e.部门 + '</td>';
-        html += '<td style="width:15%">' + e.message + '</td>';
-        html += '</tr>';
-    });
-    return html;
-}
-
-// 校验结果是否存在失败的情况
-function checkResult(data) {
-    let checkResule = true;
-
-    for (let e of data) {
-        if (e.status === false) {
-            checkResule = false;
-            break;
+// 计算汇总记录数和汇总金额
+function countSalary(importData, filters)
+{
+    let res = {};
+    res.count = importData.length;
+    res.sumColumn = {};
+    for (let x of filters) {
+        res.sumColumn = R.assoc(x, 0, res.sumColumn);
+    }
+    for(let i of importData) {
+        for(let key in i){
+            if (key === '转储姓名' || key === '保险编号' || key === '发放日期') {
+            } else {
+                res.sumColumn[key] += i[key];
+            }
         }
     }
+    return res;
+}
 
-    return checkResule;
+// 动态生成数据汇总结果html
+function sumHtml(data) {
+    let html = '';
+    html += '<thead><tr>';
+    html += '<th>#</th>';
+    for(let key in data) {
+        html += '<th style="white-space: nowrap;">' + key + '</th>';
+    }
+    html += '</tr></thead>';
+
+    html += '<tbody><tr>';
+    html += '<td style="white-space: nowrap;">合计金额</td>';
+    for(let key in data) {
+        html += '<td style="white-space: nowrap;">' + data[key] + '</td>';
+    }
+    html += '</tr></tbody>';
+    return html;
 }

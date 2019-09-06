@@ -48,6 +48,7 @@ class DataProcess
             }
 
             $this->closePeriod();
+            sleep(1);   //避免两个周期首尾时间一致
             $this->newPeriod($period);
             DB::commit();
         } catch (\Exception $e) {
@@ -221,6 +222,10 @@ class DataProcess
 
         return $period->id;
     }
+
+
+
+
 
     /**
      * 根据用户ID、会计周期ID,查询收入总表，获取用户当期收入信息（对应工资条).

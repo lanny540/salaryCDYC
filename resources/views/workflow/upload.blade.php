@@ -29,13 +29,6 @@
         <div class="col-lg-12">
             <div class="ibox" id="wizardForm">
                 <div class="ibox-content">
-                    <div class="sk-spinner sk-spinner-wave">
-                        <div class="sk-rect1"></div>
-                        <div class="sk-rect2"></div>
-                        <div class="sk-rect3"></div>
-                        <div class="sk-rect4"></div>
-                        <div class="sk-rect5"></div>
-                    </div>
 
                     <h2>流程向导</h2>
                     {{ Form::open(['route' => 'wizard.submit', 'method' => 'post', 'id' => 'form', 'class' => 'wizard-big', 'files' => true]) }}
@@ -87,26 +80,27 @@
                     <h1>上传完成</h1>
                     <fieldset>
                         <h2>请确认本次上传信息</h2>
-                        <div style="margin-top: 60px">
+                        <div style="margin-top: 30px">
                             <div class="row">
-                                <input type="hidden" name="importData">
-                                <input type="hidden" name="published_at">
-                                <div class="col-lg-8">
-                                    <div class="form-group">
-                                        <label style="font-size: large">上传时间：</label>
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <label class="col-md-2" style="font-size: large">上传时间: </label>
+                                        <label class="col-md-10" style="font-size: large">{{ Carbon\Carbon::now() }}</label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-2" style="font-size: large">发放日期: </label>
+                                        <label class="col-md-10" style="font-size: large" id="published_date"></label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-2" style="font-size: large">记录条数: </label>
+                                        <label class="col-md-10" style="font-size: large" id="countSalary"></label>
                                     </div>
                                     <div class="form-group">
-                                        <label style="font-size: large">所属会计期：</label>
+                                        <label style="font-size: large">验证信息：</label>
                                     </div>
-                                    <div class="form-group">
-                                        <label style="font-size: large">上传记录数：</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="text-center">
-                                        <div style="margin-top: 20px">
-                                            <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
-                                        </div>
+                                    <div class="form-group" style="overflow:scroll;margin-top: 20px;">
+                                        <table id="sumInfo" class="table table-bordered table-striped text-center">
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -172,7 +166,6 @@
                 $.get({
                     url: '/getColumns/' + roleType,
                     success: function (data) {
-                        // console.log(data);
                         console.log('分类信息获取成功');
                         for (let x of data.permissions) {
                             x = R.pick(['description'], x);
@@ -188,11 +181,13 @@
             }
             if (currentIndex === 2 && priorIndex === 1)
             {
-                console.log(excel);
-                let jsonstr = JSON.stringify(excel);
-                $('input[name="importData"]').val(jsonstr);
-                $('input[name="published_at"]').val(excel[0]['发放日期']);
-                // console.log('tempdata: ', jsonstr);
+                // 表格初始化
+                let sumSalary = countSalary(excel, filters);
+                let html = sumHtml(sumSalary.sumColumn);
+                $('#sumInfo').append(html);
+
+                $('label[id="published_date"]').text(excel[0]['发放日期']);
+                $('label[id="countSalary"]').text(sumSalary.count);
             }
         },
         onFinishing: function (event, currentIndex)
@@ -203,7 +198,21 @@
         },
         onFinished: function (event, currentIndex)
         {
+            let jsonstr = JSON.stringify(excel);
             let form = $(this);
+            // 模拟提交
+            let published = document.createElement('input');
+            published.type = 'hidden';
+            published.name = 'published_at';
+            published.value = excel[0]['发放日期'];
+            form.append(published);
+
+            let importData = document.createElement('input');
+            importData.type = 'hidden';
+            importData.name = 'importData';
+            importData.value = jsonstr;
+            form.append(importData);
+
             form.submit();
         }
     }).validate({
