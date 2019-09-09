@@ -9,14 +9,16 @@
                 <div class="ibox product-detail">
                     <div class="ibox-title">
                         <h2 class="font-bold m-b-xs">
-                            2018 年 {{ $salaryId }} 月 薪酬明细
+                            {{ $published }} 薪酬明细
                         </h2>
                         <div class="ibox-tools">
-                            <select class="form-control">
-                                @for($i=1; $i<=12; $i++)
-                                    <option> {{ $i }} 月</option>
-                                @endfor
-                            </select>
+                            <label>
+                                <select name="periodId" class="form-control">
+                                    @foreach($periods as $p)
+                                        <option value="{{ $p->id }}"> {{ $p->published_at }} </option>
+                                    @endforeach
+                                </select>
+                            </label>
                         </div>
                     </div>
                     <div class="ibox-content">

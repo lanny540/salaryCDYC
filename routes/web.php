@@ -21,17 +21,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('uploadData', 'WorkFlowController@uploadIndex')->name('upload.index');
     // 根据角色获取对应表名以及字段名
     Route::get('getColumns/{roleId}', 'WorkFlowController@getColumns');
-    // 获取二级分类名
-    Route::get('getCatesName/{roleId}', 'WorkFlowController@getCatesName');
     // 向导表单提交
     Route::post('wizardSubmit', 'WorkFlowController@wizardSubmit')->name('wizard.submit');
-    // 获取人员信息,用于上传数据校验
-    Route::get('getProfiles', 'WorkFlowController@getProfiles');
 
-    // 薪酬计算页面
+    // 薪酬计算页面 --------暂时隐藏
     Route::get('calculation', 'salaryController@calculate')->name('salary.calculate');
-    Route::get('calSalary', 'salaryController@calSalary');
-    Route::post('settleAccount', 'salaryController@settleAccount');
 
     // 工资条页面
     Route::get('sheet', 'PrintController@sheetIndex')->name('sheet.index');

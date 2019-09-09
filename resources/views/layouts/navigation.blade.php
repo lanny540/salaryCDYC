@@ -29,9 +29,9 @@
             <li class="{{ Request::is('uploadData*') ? 'active' : '' }}">
                 <a href="{{ route('upload.index') }}"><i class="fa fa-gears"></i> <span class="nav-label">上传数据 </span></a>
             </li>
-            <li class="{{ Request::is('calculation*') ? 'active' : '' }}">
-                <a href="{{ route('salary.calculate') }}"><i class="fa fa-calculator"></i> <span class="nav-label">薪酬计算 </span></a>
-            </li>
+{{--            <li class="{{ Request::is('calculation*') ? 'active' : '' }}">--}}
+{{--                <a href="{{ route('salary.calculate') }}"><i class="fa fa-calculator"></i> <span class="nav-label">薪酬计算 </span></a>--}}
+{{--            </li>--}}
 
             <li class="nav nav-link">自助服务 </li>
             <li class="{{ Request::is('sheet*') ? 'active' : '' }}">

@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\DataProcess;
+use App\Models\Period;
+use App\Services\SalaryData;
 use Auth;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class SalaryController extends Controller
 {
-    protected $dataProcess;
+    protected $salaryData;
 
-    public function __construct(DataProcess $services)
+    public function __construct(SalaryData $services)
     {
-        $this->dataProcess = $services;
+        $this->salaryData = $services;
     }
 
     /**
-     * 薪酬计算视图.
+     * 薪酬计算视图.暂时隐藏.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -26,78 +27,39 @@ class SalaryController extends Controller
     }
 
     /**
-     * 当前会计期薪酬汇总计算.
-     *
-     * @return mixed
-     */
-    public function calSalary()
-    {
-        $res = '';
-        if (Auth::user()->hasRole('financial_manager')) {
-            $period_id = $this->dataProcess->getPeriodId();
-            $res = $this->dataProcess->statmonthlyIncome($period_id);
-        }
-
-        return $res;
-    }
-
-    /**
-     * 会计期结算.
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function settleAccount(Request $request)
-    {
-        if (Auth::user()->hasRole('financial_manager')) {
-            // 将汇总数据写入到数据库
-            $salaries = $request->get('salary');
-            $period = $this->dataProcess->getPeriodId();
-
-            // 关闭当前会计期
-            $old_period = $this->dataProcess->closePeriod();
-            // 新开会计期
-//            $new_period = $this->dataProcess->newPeriod();
-            // 返回消息
-            $text = '会计期已关闭,时间是'.$old_period->startdate.'到'.$old_period->enddate.' ! ';
-            $text .= '新会计期自动将于明天开启.';
-            $type = 'success';
-            $title = '已结算!';
-        } else {
-            $type = 'error';
-            $title = '错误!';
-            $text = '无权限结算会计期!请联系管理员.';
-        }
-
-        return response()->json([
-            'text' => $text,
-            'type' => $type,
-            'title' => $title,
-        ]);
-    }
-
-    /**
-     * 个人薪酬信息视图.
+     * 个人薪酬信息视图.此处只允许个人查看.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        return view('salary.index');
+        $year = Carbon::now()->year;
+        // 获取 去年的薪酬汇总数据
+        $preYearSalary = $this->salaryData->getYearSalary(Auth::id(), $year - 1);
+        // 获取 今年的薪酬汇总数据
+        $curSalary = $this->salaryData->getYearSalary(Auth::id(), $year);
+        // 转换成图标需要的数据
+        $chartData = $this->salaryData->chartData($preYearSalary, $curSalary, $year);
+
+        return view('salary.index')
+                ->with('cursalary', $curSalary)
+                ->with('chartdata', json_encode($chartData, JSON_NUMERIC_CHECK));
     }
 
     /**
      * 个人薪酬明细视图.
      *
-     * @param $salaryId
+     * @param int $period_id 会计期ID
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show($salaryId)
+    public function show($period_id)
     {
-        return view('salary.show')->with(['salaryId' => $salaryId]);
-//        $id = $this->dataProcess->getPeriodId('2019-12');
-//        return $id;
+        $periods = Period::select(['id', 'published_at'])
+                ->where('enddate', '<>', '')->orderByDesc('id')->get();
+        $publish = Period::find($period_id)->published_at;
+        return view('salary.show')
+                ->with('published', $publish)
+                ->with('periods', $periods);
     }
 }

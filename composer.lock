@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7fefa660a02c76da2e0abe3abcdc8fc9",
+    "content-hash": "ede4adb114598a02a3a3087307ef39ad",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -996,16 +996,16 @@
         },
         {
             "name": "laravelcollective/html",
-            "version": "v5.8.0",
+            "version": "v5.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LaravelCollective/html.git",
-                "reference": "0e360143d3476fe4141d267a260c140569fa207b"
+                "reference": "3a1c9974ea629eed96e101a24e3852ced382eb29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/0e360143d3476fe4141d267a260c140569fa207b",
-                "reference": "0e360143d3476fe4141d267a260c140569fa207b",
+                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/3a1c9974ea629eed96e101a24e3852ced382eb29",
+                "reference": "3a1c9974ea629eed96e101a24e3852ced382eb29",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1056,17 +1056,17 @@
             ],
             "authors": [
                 {
-                    "name": "Taylor Otwell",
-                    "email": "taylorotwell@gmail.com"
-                },
-                {
                     "name": "Adam Engebretson",
                     "email": "adam@laravelcollective.com"
+                },
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
                 }
             ],
             "description": "HTML and Form Builders for the Laravel Framework",
             "homepage": "https://laravelcollective.com",
-            "time": "2019-03-01T22:53:41+00:00"
+            "time": "2019-09-05T12:32:25+00:00"
         },
         {
             "name": "league/flysystem",
@@ -1230,16 +1230,16 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "3.1.15",
+            "version": "3.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-                "reference": "7d47c7af2ddcf93b4fee4f167e10702e918f69f1"
+                "reference": "bd377ad37b285d9bc25c9adca360e4392041dea6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/7d47c7af2ddcf93b4fee4f167e10702e918f69f1",
-                "reference": "7d47c7af2ddcf93b4fee4f167e10702e918f69f1",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/bd377ad37b285d9bc25c9adca360e4392041dea6",
+                "reference": "bd377ad37b285d9bc25c9adca360e4392041dea6",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1250,15 +1250,15 @@
             },
             "require": {
                 "ext-json": "*",
-                "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*",
+                "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0",
                 "opis/closure": "^3.1",
                 "php": "^7.0",
                 "phpoffice/phpspreadsheet": "^1.6"
             },
             "require-dev": {
                 "mockery/mockery": "^1.1",
-                "orchestra/database": "^3.8",
-                "orchestra/testbench": "^3.8",
+                "orchestra/database": "^4.0",
+                "orchestra/testbench": "^4.0",
                 "phpunit/phpunit": "^8.0",
                 "predis/predis": "^1.1"
             },
@@ -1300,7 +1300,7 @@
                 "php",
                 "phpspreadsheet"
             ],
-            "time": "2019-07-16T08:40:48+00:00"
+            "time": "2019-09-04T19:28:20+00:00"
         },
         {
             "name": "markbaker/complex",
@@ -1481,16 +1481,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.24.0",
+            "version": "1.25.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266"
+                "reference": "70e65a5470a42cfec1a7da00d30edb6e617e8dcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266",
-                "reference": "bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/70e65a5470a42cfec1a7da00d30edb6e617e8dcf",
+                "reference": "70e65a5470a42cfec1a7da00d30edb6e617e8dcf",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1561,7 +1561,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2018-11-05T09:00:11+00:00"
+            "time": "2019-09-06T13:49:17+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -4100,16 +4100,16 @@
         },
         {
             "name": "yajra/laravel-datatables-buttons",
-            "version": "v4.6.0",
+            "version": "v4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-buttons.git",
-                "reference": "291c129ab9db63e5ec5353336181e8c6a95e3e19"
+                "reference": "732c1cc2885622f6275560819fd41a6e0cfd24ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/291c129ab9db63e5ec5353336181e8c6a95e3e19",
-                "reference": "291c129ab9db63e5ec5353336181e8c6a95e3e19",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/732c1cc2885622f6275560819fd41a6e0cfd24ae",
+                "reference": "732c1cc2885622f6275560819fd41a6e0cfd24ae",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4119,7 +4119,7 @@
                 ]
             },
             "require": {
-                "illuminate/console": "^5.5",
+                "illuminate/console": "^5.5|^6.0",
                 "maatwebsite/excel": "^3.0",
                 "php": ">=7.0",
                 "yajra/laravel-datatables-html": "3.*|4.*",
@@ -4166,20 +4166,20 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-02-27T03:26:12+00:00"
+            "time": "2019-09-04T07:53:57+00:00"
         },
         {
             "name": "yajra/laravel-datatables-editor",
-            "version": "v1.10.1",
+            "version": "v1.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-editor.git",
-                "reference": "a20af94a25c1f1146d056e46c4af666da80217d3"
+                "reference": "33359f46328e68dc78ec61f1e2fdab3cb23ffdbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/a20af94a25c1f1146d056e46c4af666da80217d3",
-                "reference": "a20af94a25c1f1146d056e46c4af666da80217d3",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/33359f46328e68dc78ec61f1e2fdab3cb23ffdbe",
+                "reference": "33359f46328e68dc78ec61f1e2fdab3cb23ffdbe",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4189,10 +4189,10 @@
                 ]
             },
             "require": {
-                "illuminate/console": "5.5.*|5.6.*|5.7.*|5.8.*",
-                "illuminate/database": "5.5.*|5.6.*|5.7.*|5.8.*",
-                "illuminate/http": "5.5.*|5.6.*|5.7.*|5.8.*",
-                "illuminate/validation": "5.5.*|5.6.*|5.7.*|5.8.*",
+                "illuminate/console": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0",
+                "illuminate/database": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0",
+                "illuminate/http": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0",
+                "illuminate/validation": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0",
                 "php": ">=7.0",
                 "yajra/laravel-datatables-buttons": "3.*|4.*"
             },
@@ -4234,7 +4234,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-08-31T00:45:12+00:00"
+            "time": "2019-09-06T03:13:24+00:00"
         },
         {
             "name": "yajra/laravel-datatables-fractal",
@@ -4302,16 +4302,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.7.1",
+            "version": "v4.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "9d09be8200af1aa32ebeb4f394a93c187351029b"
+                "reference": "3999b1cb7054735be2366809d67abc5894a2a9bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/9d09be8200af1aa32ebeb4f394a93c187351029b",
-                "reference": "9d09be8200af1aa32ebeb4f394a93c187351029b",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/3999b1cb7054735be2366809d67abc5894a2a9bb",
+                "reference": "3999b1cb7054735be2366809d67abc5894a2a9bb",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4322,7 +4322,7 @@
             },
             "require": {
                 "ext-json": "*",
-                "laravelcollective/html": "^5.4",
+                "laravelcollective/html": "^5.4|^6.0",
                 "php": ">=7.0",
                 "yajra/laravel-datatables-oracle": "8.*|9.*"
             },
@@ -4364,7 +4364,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-08-31T07:23:20+00:00"
+            "time": "2019-09-04T08:38:30+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",
@@ -7307,7 +7307,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3"
+        "php": "^7.3",
+        "ext-json": "*"
     },
     "platform-dev": []
 }

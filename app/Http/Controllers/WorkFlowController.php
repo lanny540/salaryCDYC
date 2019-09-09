@@ -56,18 +56,6 @@ class WorkFlowController extends Controller
     }
 
     /**
-     * 从数据库获取人员信息用于校验.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getProfiles()
-    {
-        $infos = UserProfile::select(['userName', 'policyNumber', 'wageCard', 'bonusCard'])->get();
-
-        return response()->json($infos);
-    }
-
-    /**
      * 流程向导提交请求
      *
      * @param Request $request

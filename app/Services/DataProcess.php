@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Period;
 use App\Models\Salary\SalaryInfo;
 use App\Models\Salary\SalarySummary;
+use App\Models\Users\UserProfile;
 use Auth;
 use Carbon\Carbon;
 use DB;
@@ -222,8 +223,6 @@ class DataProcess
 
         return $period->id;
     }
-
-
 
 
 

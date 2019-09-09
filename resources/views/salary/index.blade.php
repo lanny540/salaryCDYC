@@ -19,14 +19,10 @@
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row p-w-md m-t-sm">
-        <div class="col-md-4">
-            <div class="profile-info">
-                <div>
-                    <h2>{{ Auth::user()->profile->userName }}</h2>
-                    <br/>
-                    <h4>{{ Auth::user()->profile->departmentName }}</h4>
-                </div>
-            </div>
+        <div class="col-md-5">
+            <h2 style="margin-top: 0">{{ Auth::user()->profile->userName }}</h2>
+            <h4>{{ Auth::user()->profile->department->name }}</h4>
+            <a href="{{ route('user.edit', auth::id()) }}" class="btn btn-primary btn-block">查看或修改详细个人信息</a>
         </div>
         <div class="col-md-6">
             <table class="table m-b-xs">
@@ -59,17 +55,13 @@
             </table>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4 offset-2">
-            <a href="{{ route('user.edit', auth::id()) }}" class="btn btn-primary btn-block">查看或修改详细个人信息</a>
-        </div>
-    </div>
+
     <hr/>
     <div class="p-w-md m-t-sm">
         <div class="row">
             <div class="col-lg-12">
                 <div>
-                    <canvas id="profile-chart" height="100"></canvas>
+                    <canvas id="salary-chart" height="120"></canvas>
                 </div>
             </div>
         </div>
@@ -79,24 +71,23 @@
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
-                        <th>会计期</th>
+                        <th>发放日期</th>
                         <th>工资</th>
-                        <th>奖金</th>
-                        <th>个税</th>
-                        <th width="5%"></th>
+                        <th>奖金合计</th>
+                        <th>工资薪金</th>
+                        <th style='width: 5%'></th>
                     </tr>
                     </thead>
                     <tbody>
-                    @for($i = 1; $i <= 12; $i ++)
+                    @foreach($cursalary as $s)
                         <tr>
-                            <td> 2018-{{ $i }}</td>
-                            <td> {{ rand(4500, 5000) }}</td>
-                            <td> {{ rand(2000, 4500) }}</td>
-                            <td> {{ rand(100, 300) }}</td>
-                            {{--<td class="client-status"><a href="{{ route('salary.show', $i) }}" target="_blank"> <span class="label label-primary">查看明细</span></a></td>--}}
-                            <td class="client-status"><a href="{{ route('salary.show', $i) }}"> <span class="label label-primary">查看明细</span></a></td>
+                            <td>{{ $s->published_at }}</td>
+                            <td>{{ $s->wage_total }}</td>
+                            <td>{{ $s->bonus_total }}</td>
+                            <td>{{ $s->salary_total }}</td>
+                            <td class="client-status"><a href="{{ route('salary.show', $s->period_id) }}"> <span class="label label-primary">查看明细</span></a></td>
                         </tr>
-                    @endfor
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -108,5 +99,44 @@
 @section('js')
 <!-- ChartJS-->
 <script src="{{ asset('js/plugins/chartJs/Chart.min.js') }}"></script>
-<script src="{{ asset('js/plugins/chartJs/Chart.demo.js') }}"></script>
+{{--<script src="{{ asset('js/plugins/chartJs/Chart.demo.js') }}"></script>--}}
+
+<script>
+    $(document).ready(function(){
+        let datas = <?php echo $chartdata; ?>;
+        let year = datas['cyear'];
+        let perv;
+        if (datas[year - 1] === undefined) {
+            perv = [];
+        } else {
+            perv = datas[year - 1];
+        }
+
+        let Options = {
+            responsive: true
+        };
+        let barData = {
+            labels: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+            datasets: [
+                {
+                    label: datas['pyear'] + '月度收入',
+                    data: perv,
+                    backgroundColor: 'rgba(255, 163, 58, 0.5)',
+                    pointBorderColor: "#fff",
+                },
+                {
+                    label: datas['cyear'] + '月度收入',
+                    data: datas[year],
+                    backgroundColor: 'rgba(26,179,148,0.5)',
+                    borderColor: "rgba(26,179,148,0.7)",
+                    pointBackgroundColor: "rgba(26,179,148,1)",
+                    pointBorderColor: "#fff",
+                },
+            ]
+        };
+
+        let salaryChart = document.getElementById("salary-chart").getContext("2d");
+        new Chart(salaryChart, {type: 'bar', data: barData, options:Options});
+    });
+</script>
 @stop

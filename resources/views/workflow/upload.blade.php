@@ -38,7 +38,7 @@
                             <div class="col-lg-7">
                                 <div class="form-group">
                                     <label for="roleType" >上传数据分类 *</label>
-                                    <select name="roleType" id="roleType" class="form-control" onchange="getLevel2(this)">
+                                    <select name="roleType" id="roleType" class="form-control">
                                         <option value="0">薪酬汇总</option>
                                         @foreach($roles as $k => $r)
                                             <option value="{{ $k }}">{{ $r }}</option>
@@ -47,9 +47,6 @@
                                 </div>
                                 <div class="form-group">
                                     <a href="#" class="col-form-label">下载数据模板</a>
-                                </div>
-                                <div class="form-group">
-                                    <div id="level2html"></div>
                                 </div>
                             </div>
                         </div>
@@ -135,7 +132,6 @@
     let wb;                 //excel数据
     let excel = [];         //处理后的数据
 
-
     $("#form").steps({
         bodyTag: "fieldset",
         onStepChanging: function (event, currentIndex, newIndex)
@@ -171,10 +167,6 @@
                             x = R.pick(['description'], x);
                             filters = R.append(x.description, filters);
                         }
-                        let level2 = $('#level2Name').find('option:selected').text();
-                        if (level2 !== '') {
-                            filters = R.append(level2, filters);
-                        }
                         // console.log(filters);  //显示需要抽取的字段
                     }
                 });
@@ -198,7 +190,6 @@
         },
         onFinished: function (event, currentIndex)
         {
-            let jsonstr = JSON.stringify(excel);
             let form = $(this);
             // 模拟提交
             let published = document.createElement('input');
@@ -207,6 +198,7 @@
             published.value = excel[0]['发放日期'];
             form.append(published);
 
+            let jsonstr = JSON.stringify(excel);
             let importData = document.createElement('input');
             importData.type = 'hidden';
             importData.name = 'importData';

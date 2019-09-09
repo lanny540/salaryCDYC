@@ -6,36 +6,6 @@ function getFileExtension(fileName) {
     return fileExtension;
 }
 
-// 获取二级分类信息
-function getLevel2(obj) {
-    // 如果有二级分类
-    const ids = ['10', '11', '12', '13', '14', '15', '16', '20', '21', '22'];
-    if (R.contains(obj.value, ids)) {
-        $.get({
-            url: 'getCatesName/' + obj.value,
-            success: function (data) {
-                // console.log(data);
-                document.getElementById('level2html').innerHTML = level2html(data);
-            }
-        });
-    } else {
-        document.getElementById('level2html').innerHTML = '';
-    }
-}
-
-// 动态生成二级分类html
-function level2html(data) {
-    let html = '';
-    html += '<label for="level2Name">二级分类 *</label>';
-    html += '<select name="level2Name" class="form-control" id="level2Name">';
-    data.forEach(e => {
-        html += '<option value="' + e.id + '">' + e.name + '</option>';
-    });
-    html += '</select>';
-
-    return html;
-}
-
 // excel文件上传
 function importf(obj) {
     excel = [];
@@ -83,37 +53,8 @@ function filterDate(arr1, temp) {
     return data;
 }
 
-// excel上传数据与数据库信息校验
-function excelDataCheck(arr1, arr2) {
-    const cmp1 = (x,y) => x.姓名 == y.userName && x.保险编号 == y.policyNumber && (x.银行卡号 == y.wageCard || x.银行卡号 == y.bonusCard);
-    const cmp2 = (x,y) => x.姓名 == y.userName && x.保险编号 == y.policyNumber;
-
-    let falseList = [];
-    let trueList = [];
-
-    let res1 = R.differenceWith(cmp1, arr1, arr2);
-
-    res1.forEach(e => {
-        e = R.assoc('status', false, e);
-        e = R.assoc('message', '校验失败', e);
-        falseList = R.append(e)(falseList);
-    });
-
-    let res3 = R.differenceWith(cmp2, arr1, res1);
-
-    res3.forEach(e => {
-        e = R.assoc('status', true, e);
-        e = R.assoc('message', '校验成功', e);
-        trueList = R.append(e)(trueList);
-    });
-    // console.log(res1);
-    // console.log(res3);
-    return R.concat(falseList, trueList);
-}
-
 // 计算汇总记录数和汇总金额
-function countSalary(importData, filters)
-{
+function countSalary(importData, filters) {
     let res = {};
     res.count = importData.length;
     res.sumColumn = {};
@@ -148,4 +89,32 @@ function sumHtml(data) {
     }
     html += '</tr></tbody>';
     return html;
+}
+
+// excel上传数据与数据库信息校验
+function excelDataCheck(arr1, arr2) {
+    const cmp1 = (x,y) => x.姓名 == y.userName && x.保险编号 == y.policyNumber && (x.银行卡号 == y.wageCard || x.银行卡号 == y.bonusCard);
+    const cmp2 = (x,y) => x.姓名 == y.userName && x.保险编号 == y.policyNumber;
+
+    let falseList = [];
+    let trueList = [];
+
+    let res1 = R.differenceWith(cmp1, arr1, arr2);
+
+    res1.forEach(e => {
+        e = R.assoc('status', false, e);
+        e = R.assoc('message', '校验失败', e);
+        falseList = R.append(e)(falseList);
+    });
+
+    let res3 = R.differenceWith(cmp2, arr1, res1);
+
+    res3.forEach(e => {
+        e = R.assoc('status', true, e);
+        e = R.assoc('message', '校验成功', e);
+        trueList = R.append(e)(trueList);
+    });
+    // console.log(res1);
+    // console.log(res3);
+    return R.concat(falseList, trueList);
 }
