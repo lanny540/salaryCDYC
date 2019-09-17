@@ -24,8 +24,22 @@ Route::group(['middleware' => 'auth'], function () {
     // 向导表单提交
     Route::post('wizardSubmit', 'WorkFlowController@wizardSubmit')->name('wizard.submit');
 
+    // 凭证汇总表查看页面
+    Route::get('vsheet', 'VoucherController@vsheetIndex')->name('vsheet.index');
+    // 提交汇总表数据存入数据库
+    Route::post('vsheet', 'VoucherController@vsheetSubmit')->name('vsheet.submit');
+
+    // 凭证列表
+    Route::get('vdata', 'VoucherController@vdataIndex')->name('vdata.index');
+    // 生成凭证页面
+    Route::get('vdata/{vid}', 'VoucherController@vdataShow')->name('vdata.show');
+    // 凭证提交页面
+    Route::post('vdata/{vid}', 'VoucherController@vdataStore')->name('vdata.store');
+
+    // 凭证CRUD
+
     // 薪酬计算页面 --------暂时隐藏
-    Route::get('calculation', 'salaryController@calculate')->name('salary.calculate');
+    Route::get('calculation', 'SalaryController@calculate')->name('salary.calculate');
 
     // 工资条页面
     Route::get('sheet', 'PrintController@sheetIndex')->name('sheet.index');

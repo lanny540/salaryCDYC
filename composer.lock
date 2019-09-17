@@ -4170,16 +4170,16 @@
         },
         {
             "name": "yajra/laravel-datatables-editor",
-            "version": "v1.14.1",
+            "version": "v1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-editor.git",
-                "reference": "bcf5c2c1156950f94d70738812d5ab2c13e55fd3"
+                "reference": "bd2c351d62a599bb62040a31e5c8ba4dbd2050e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/bcf5c2c1156950f94d70738812d5ab2c13e55fd3",
-                "reference": "bcf5c2c1156950f94d70738812d5ab2c13e55fd3",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/bd2c351d62a599bb62040a31e5c8ba4dbd2050e9",
+                "reference": "bd2c351d62a599bb62040a31e5c8ba4dbd2050e9",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4234,7 +4234,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-09-14T02:59:39+00:00"
+            "time": "2019-09-17T03:52:06+00:00"
         },
         {
             "name": "yajra/laravel-datatables-fractal",
@@ -4302,16 +4302,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.14.0",
+            "version": "v4.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "4c8ea734a264b1ba459a54e51bc546f6719e0295"
+                "reference": "db6c24d7ad64d4a344ab16d35bc0a9075a7c7c80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/4c8ea734a264b1ba459a54e51bc546f6719e0295",
-                "reference": "4c8ea734a264b1ba459a54e51bc546f6719e0295",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/db6c24d7ad64d4a344ab16d35bc0a9075a7c7c80",
+                "reference": "db6c24d7ad64d4a344ab16d35bc0a9075a7c7c80",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4364,7 +4364,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-09-16T05:29:20+00:00"
+            "time": "2019-09-17T03:21:41+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",

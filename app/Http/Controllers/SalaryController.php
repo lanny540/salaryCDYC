@@ -72,6 +72,5 @@ class SalaryController extends Controller
             ->with('summary', $summary)
             ->with('detail', $detail)
             ->with('chartdata', json_encode($chartData, JSON_NUMERIC_CHECK));
-//        return $detail['应发工资'];
     }
 }
