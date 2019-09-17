@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Period;
+use App\Models\Salary\SalarySummary;
 use App\Services\SalaryData;
 use Auth;
 use Carbon\Carbon;
@@ -42,8 +43,8 @@ class SalaryController extends Controller
         $chartData = $this->salaryData->chartData($preYearSalary, $curSalary, $year);
 
         return view('salary.index')
-                ->with('cursalary', $curSalary)
-                ->with('chartdata', json_encode($chartData, JSON_NUMERIC_CHECK));
+            ->with('cursalary', $curSalary)
+            ->with('chartdata', json_encode($chartData, JSON_NUMERIC_CHECK));
     }
 
     /**
@@ -51,15 +52,26 @@ class SalaryController extends Controller
      *
      * @param int $period_id 会计期ID
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return mixed
      */
     public function show($period_id)
     {
         $periods = Period::select(['id', 'published_at'])
-                ->where('enddate', '<>', '')->orderByDesc('id')->get();
-        $publish = Period::find($period_id)->published_at;
+            ->where('enddate', '<>', '')->orderByDesc('id')->get();
+        $period = Period::find($period_id);
+
+        $policy = $this->salaryData->getPolicyNumber(Auth::id());
+        $summary = SalarySummary::where('period_id', $period_id)
+            ->where('policyNumber', $policy)->firstOrFail();
+        $detail = $this->salaryData->getDetailSalary($period_id, Auth::id());
+        $chartData = $this->salaryData->getChartSalary($period_id, Auth::id());
+
         return view('salary.show')
-                ->with('published', $publish)
-                ->with('periods', $periods);
+            ->with('curPeriod', $period)
+            ->with('periods', $periods)
+            ->with('summary', $summary)
+            ->with('detail', $detail)
+            ->with('chartdata', json_encode($chartData, JSON_NUMERIC_CHECK));
+//        return $detail['应发工资'];
     }
 }

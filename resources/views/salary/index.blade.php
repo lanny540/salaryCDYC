@@ -72,7 +72,7 @@
                     <thead>
                     <tr>
                         <th>发放日期</th>
-                        <th>工资</th>
+                        <th>应发合计</th>
                         <th>奖金合计</th>
                         <th>工资薪金</th>
                         <th style='width: 5%'></th>
@@ -82,7 +82,7 @@
                     @foreach($cursalary as $s)
                         <tr>
                             <td>{{ $s->published_at }}</td>
-                            <td>{{ $s->wage_total }}</td>
+                            <td>{{ $s->should_total }}</td>
                             <td>{{ $s->bonus_total }}</td>
                             <td>{{ $s->salary_total }}</td>
                             <td class="client-status"><a href="{{ route('salary.show', $s->period_id) }}"> <span class="label label-primary">查看明细</span></a></td>
@@ -99,19 +99,18 @@
 @section('js')
 <!-- ChartJS-->
 <script src="{{ asset('js/plugins/chartJs/Chart.min.js') }}"></script>
-{{--<script src="{{ asset('js/plugins/chartJs/Chart.demo.js') }}"></script>--}}
 
 <script>
-    $(document).ready(function(){
-        let datas = <?php echo $chartdata; ?>;
-        let year = datas['cyear'];
-        let perv;
-        if (datas[year - 1] === undefined) {
-            perv = [];
-        } else {
-            perv = datas[year - 1];
-        }
+    let datas = <?php echo $chartdata; ?>;
+    let year = datas['cyear'];
+    let perv;
+    if (datas[year - 1] === undefined) {
+        perv = [];
+    } else {
+        perv = datas[year - 1];
+    }
 
+    $(document).ready(function () {
         let Options = {
             responsive: true
         };
