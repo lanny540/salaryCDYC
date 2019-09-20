@@ -26,6 +26,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // 凭证汇总表查看页面
     Route::get('vsheet', 'VoucherController@vsheetIndex')->name('vsheet.index');
+    // 根据周期生成凭证汇总表
+    Route::get('vsheet/{pid}', 'VoucherController@vsheetShow')->name('vsheet.show');
     // 提交汇总表数据存入数据库
     Route::post('vsheet', 'VoucherController@vsheetSubmit')->name('vsheet.submit');
 

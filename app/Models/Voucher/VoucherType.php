@@ -4,7 +4,7 @@ namespace App\Models\Voucher;
 
 use Illuminate\Database\Eloquent\Model;
 
-class VoucherData extends Model
+class VoucherType extends Model
 {
-    public $table = 'voucher_data';
+    public $table = 'voucher_type';
 }
