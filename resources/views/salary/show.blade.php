@@ -111,8 +111,8 @@
     <script src="{{ asset('js/plugins/ramda/ramda.min.js') }}"></script>
     <!-- Select2 -->
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-<!-- ECharts -->
-<script src="{{ asset('js/plugins/echarts/echarts.min.js') }}"></script>
+    <!-- ECharts -->
+    <script src="{{ asset('js/plugins/echarts/echarts.min.js') }}"></script>
 
     <script>
         $(".select2_periods").select2();

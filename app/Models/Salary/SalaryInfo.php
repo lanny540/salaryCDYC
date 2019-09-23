@@ -5,12 +5,12 @@ namespace App\Models\Salary;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Salary\SalaryInfo
+ * App\Models\Salary\SalaryInfo.
  *
  * @property int $id
- * @property int $period_id 会计期ID
- * @property int $user_id 上传人员ID
- * @property string $upload_file 上传文件路径
+ * @property int $period_id    会计期ID
+ * @property int $user_id      上传人员ID
+ * @property string $upload_file  上传文件路径
  * @property string $published_at 发放时间
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -31,6 +31,6 @@ class SalaryInfo extends Model
     protected $table = 'salary_info';
 
     protected $fillable = [
-        'period_id', 'user_id', 'upload_file', 'published_at'
+        'period_id', 'user_id', 'upload_file', 'published_at',
     ];
 }

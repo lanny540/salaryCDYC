@@ -58,13 +58,14 @@ class CreateVoucherTables extends Migration
             $table->integer('period_id')->index()->comment('会计期ID');
             $table->string('dwdm', 32)->comment('部门编码');
             $table->integer('sum_number')->comment('人数');
-            /**
+            /*
              * TODO: 需要财务确认字段
              * 岗位工资、保留工资、套级补差、中夜班费、加班工资、年功工资、基本养老金、增机、国家补贴、国家生活、国家小计、地方粮差、地方其他、地方物补、
              * 地方生活、地方小计、行业工龄、行业退补、行业其他、行业小计、企业粮差、企业工龄、企业书报、企业水电、企业生活、企业独子费、企业护理费、企业通讯费、
              * 企业规范增、企业工龄02、企业内退补、企业补发、企业小计、离退休补充、补偿、应发工资
              */
 //            $table->float('')->default(0)->comment('');
+            $table->timestamps();
         });
     }
 

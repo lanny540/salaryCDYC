@@ -1,9 +1,8 @@
 // 文件扩展名
 function getFileExtension(fileName) {
-    var pos = fileName.lastIndexOf(".");
-    var fileExtension = fileName.substring(pos, fileName.length);
+    let pos = fileName.lastIndexOf(".");
 
-    return fileExtension;
+    return fileName.substring(pos, fileName.length);
 }
 
 // excel文件上传

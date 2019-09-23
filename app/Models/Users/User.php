@@ -19,8 +19,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[]                           $permissions
  * @property \App\Models\Users\UserProfile                                                                             $profile
  * @property \App\Models\Users\UserRemitting                                                                           $remit
- * @property \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[]                                 $roles
- * @property \App\Models\Salary\SalaryLog[]|\Illuminate\Database\Eloquent\Collection                                   $salaryLog
+ * @property \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles          $salaryLog
  * @property \App\Models\Salary\SalarySummary[]|\Illuminate\Database\Eloquent\Collection                               $salarySummary
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User newQuery()
@@ -34,9 +33,9 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\User whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read int|null $notifications_count
- * @property-read int|null $permissions_count
- * @property-read int|null $roles_count
+ * @property int|null $notifications_count
+ * @property int|null $permissions_count
+ * @property int|null $roles_count
  */
 class User extends Authenticatable
 {

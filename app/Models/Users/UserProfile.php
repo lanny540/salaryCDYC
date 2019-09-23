@@ -53,7 +53,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile whereWageCard($value)
  * @mixin \Eloquent
  * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Salary\SalarySummary[] $salaries
- * @property-read int|null $salaries_count
+ * @property int|null $salaries_count
  */
 class UserProfile extends Model
 {

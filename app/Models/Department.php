@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int $pid 父节点ID
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department wherePid($value)
- * @property-read int|null $users_count
+ * @property int|null $users_count
  */
 class Department extends Model
 {

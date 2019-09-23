@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Users\UserProfile;
 use App\Services\DataProcess;
 use Auth;
 use File;
