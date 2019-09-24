@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Period;
 use App\Models\Voucher\VoucherStatistic;
 use App\Services\VoucherService;
+use DB;
 use Illuminate\Http\Request;
 
 class VoucherController extends Controller
@@ -43,14 +44,15 @@ class VoucherController extends Controller
     {
         // 是否重新计算. 0 否 1 是 .
         $status = $request->get('calculate', 1);
-        if ($status === 0) {
+        if (0 === $status) {
             $data = VoucherStatistic::where('period_id', $period_id)->get();
         } else {
-            // 计算该会计期的凭证汇总表
-            $data = $this->vs->saveToVoucherSheet($period_id);
+            // 先删除再计算
+            $this->vs->deleteSheet($period_id);
+            $data = $this->vs->generateSheet($period_id);
         }
+
         return response()->json([
-            'pid' => $period_id,
             'status' => $status,
             'sheet' => $data,
         ]);
@@ -59,10 +61,18 @@ class VoucherController extends Controller
     /**
      * 提交汇总表数据存入数据库.
      *
-     * @return string
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function vsheetSubmit()
+    public function vsheetSubmit(Request $request)
     {
-        return 'vsheetSubmit';
+        $data = $request->only('sheet');
+        $result = DB::table('voucher_statistic')->insert($data);
+
+        return response()->json([
+            'status' => $result,
+            'msg' => '保存成功!',
+        ]);
     }
 }
