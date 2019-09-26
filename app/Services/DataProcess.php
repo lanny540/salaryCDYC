@@ -19,8 +19,8 @@ class DataProcess
      * @param string $period 发放日期
      *
      * @return bool|\Illuminate\Http\RedirectResponse
-     * @throws \Exception
      *
+     * @throws \Exception
      */
     public function dataToDb(array $info, string $period)
     {
@@ -76,8 +76,6 @@ class DataProcess
     /**
      * 根据日期返回会计周期ID.
      *
-     * @param $date
-     *
      * @return int
      */
     public function getPeriodId(): int
@@ -94,7 +92,7 @@ class DataProcess
     /**
      * 关闭当前会计周期
      *
-     * @return null|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
     public function closePeriod()
     {
@@ -109,14 +107,14 @@ class DataProcess
     /**
      * 新开会计周期
      *
-     * @param string $published_at 发放日期
+     * @param string $publishedAt 发放日期
      *
      * @return int 会计周期ID
      */
-    public function newPeriod(string $published_at = ''): int
+    public function newPeriod(string $publishedAt = ''): int
     {
         $period = Period::create([
-            'published_at' => '' === $published_at ? date('Y.m') : $published_at,
+            'published_at' => '' === $publishedAt ? date('Y.m') : $publishedAt,
             'startdate' => Carbon::now(),
         ]);
 
@@ -133,12 +131,12 @@ class DataProcess
     private function commonColumn(array $insertData): array
     {
         $data = [];
-        $period_id = $this->getPeriodId();
+        $periodId = $this->getPeriodId();
         $date = Carbon::now();
 
         $data['username'] = $insertData['转储姓名'];
         $data['policyNumber'] = $insertData['保险编号'];
-        $data['period_id'] = $period_id;
+        $data['period_id'] = $periodId;
         $data['created_at'] = $date;
         $data['updated_at'] = $date;
 

@@ -10,11 +10,11 @@ class VoucherService
     /**
      * 计算当前凭证汇总数据.
      *
-     * @param int $period_id 会计期ID
+     * @param $periodId
      *
      * @return array
      */
-    public function generateSheet($period_id)
+    public function generateSheet($periodId)
     {
         // TODO: 字段需要改成英文，方便直接插入汇总表
         $sqlstring = 'select d.dwdm, d.name, count(u.user_id) as sum_number, count(u.user_id) as sum_number, ';
@@ -26,7 +26,7 @@ class VoucherService
         $sqlstring .= 'IFNULL(sum(w.qydzf),0) as 企业独子费, IFNULL(sum(w.qyxj),0) as 企业小计, ';
         $sqlstring .= 'IFNULL(sum(w.ltxbc),0) as 离退休补充, IFNULL(sum(w.wage_total),0) as 应发工资, ';
         // 月奖（特殊情况）
-        $sqlstring .= 'IFNULL(sum(b.month_bonus),0) as 月奖, ';
+        $sqlstring .= 'IFNULL(sum(tb.month_bonus),0) as 月奖, ';
         // 补贴
         $sqlstring .= 'IFNULL(sum(s.communication),0) as 通讯补贴, IFNULL(sum(s.traffic),0) as 交通费, ';
         $sqlstring .= 'IFNULL(sum(s.housing),0) as 住房补贴, IFNULL(sum(s.single),0) as 独子费, ';
@@ -45,7 +45,6 @@ class VoucherService
         $sqlstring .= 'IFNULL(sum(de.xy_water),0) as 鑫源水费, IFNULL(sum(de.xy_electric),0) as 鑫源电费, ';
         $sqlstring .= 'IFNULL(sum(de.garage_water),0) as 车库水费, IFNULL(sum(de.garage_electric),0) as 车库电费, ';
         $sqlstring .= 'IFNULL(sum(de.back_water),0) as 退补水费, IFNULL(sum(de.back_electric),0) as 退补电费, ';
-        $sqlstring .= 'IFNULL(sum(de.back_water),0) as 退补水费, IFNULL(sum(de.back_electric),0) as 退补电费, ';
         $sqlstring .= 'IFNULL(sum(de.water_electric),0) as 水电, IFNULL(sum(de.property_fee),0) as 物管费, ';
         $sqlstring .= 'IFNULL(sum(de.union_deduction),0) as 扣工会会费, IFNULL(sum(de.car_fee),0) as 公车费用, ';
         $sqlstring .= 'IFNULL(sum(de.fixed_deduction),0) as 固定扣款, IFNULL(sum(de.temp_deduction),0) as 临时扣款, IFNULL(sum(de.other_deduction),0) as 其他扣款, ';
@@ -58,7 +57,7 @@ class VoucherService
         $sqlstring .= 'from departments d ';
         $sqlstring .= 'left join userprofile u on d.id = u.department_id ';
         $sqlstring .= 'left join wage w on u.policyNumber = w.policyNumber and w.period_id = :pid1 ';
-        $sqlstring .= 'left join tempbonus b on u.policyNumber = b.policyNumber ';  // 临时奖金表没有会计期
+        $sqlstring .= 'left join tempbonus tb on d.dwdm = tb.dwdm ';  // 临时奖金表没有会计期.dwdm可能会与基础数据不一致.
         $sqlstring .= 'left join subsidy s on u.policyNumber = s.policyNumber and s.period_id = :pid3 ';
         $sqlstring .= 'left join reissue r on u.policyNumber = r.policyNumber and r.period_id = :pid4 ';
         $sqlstring .= 'left join insurances i on u.policyNumber = i.policyNumber and i.period_id = :pid5 ';
@@ -68,12 +67,12 @@ class VoucherService
         $sqlstring .= 'group by d.dwdm, d.name';
 
         $data = DB::select($sqlstring, [
-            ':pid1' => $period_id,
-            ':pid3' => $period_id,
-            ':pid4' => $period_id,
-            ':pid5' => $period_id,
-            ':pid6' => $period_id,
-            ':pid7' => $period_id,
+            ':pid1' => $periodId,
+            ':pid3' => $periodId,
+            ':pid4' => $periodId,
+            ':pid5' => $periodId,
+            ':pid6' => $periodId,
+            ':pid7' => $periodId,
         ]);
 
         return $data;
@@ -82,13 +81,13 @@ class VoucherService
     /**
      * 删除该会计期的凭证汇总数据.
      *
-     * @param int $period_id 会计期ID
+     * @param $periodId
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteSheet($period_id)
+    public function deleteSheet($periodId)
     {
-        $data = VoucherStatistic::where('period_id', $period_id)->delete();
+        $data = VoucherStatistic::where('period_id', $periodId)->delete();
 
         return response()->json([
             'status' => $data,

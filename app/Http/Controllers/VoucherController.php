@@ -12,6 +12,11 @@ class VoucherController extends Controller
 {
     protected $vs;
 
+    /**
+     * VoucherController constructor.
+     *
+     * @param VoucherService $services 凭证相关数据处理服务
+     */
     public function __construct(VoucherService $services)
     {
         $this->vs = $services;
@@ -36,20 +41,19 @@ class VoucherController extends Controller
      * 根据周期生成汇总表.
      *
      * @param Request $request
-     * @param int $period_id 会计期
-     *
+     * @param $periodId
      * @return mixed
      */
-    public function vsheetShow(Request $request, $period_id)
+    public function vsheetShow(Request $request, $periodId)
     {
         // 是否重新计算. 0 否 1 是 .
         $status = $request->get('calculate', 1);
         if (0 === $status) {
-            $data = VoucherStatistic::where('period_id', $period_id)->get();
+            $data = VoucherStatistic::where('period_id', $periodId)->get();
         } else {
             // 先删除再计算
-            $this->vs->deleteSheet($period_id);
-            $data = $this->vs->generateSheet($period_id);
+            $this->vs->deleteSheet($periodId);
+            $data = $this->vs->generateSheet($periodId);
         }
 
         return response()->json([
