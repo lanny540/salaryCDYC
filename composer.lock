@@ -4302,16 +4302,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.18.0",
+            "version": "v4.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "af9c29640c979a60ac71dc2a9571e50589f83a19"
+                "reference": "f9a7bbe664b269211add70ed34ee40ac4bddfb3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/af9c29640c979a60ac71dc2a9571e50589f83a19",
-                "reference": "af9c29640c979a60ac71dc2a9571e50589f83a19",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/f9a7bbe664b269211add70ed34ee40ac4bddfb3e",
+                "reference": "f9a7bbe664b269211add70ed34ee40ac4bddfb3e",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4364,20 +4364,20 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-09-23T04:08:35+00:00"
+            "time": "2019-09-25T06:58:55+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",
-            "version": "v9.6.0",
+            "version": "v9.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables.git",
-                "reference": "d8a965ab91662216956288cafcc4c60306af7b3f"
+                "reference": "42cba7ffae2e7b41981dacf7257c681f00aee1a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/d8a965ab91662216956288cafcc4c60306af7b3f",
-                "reference": "d8a965ab91662216956288cafcc4c60306af7b3f",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/42cba7ffae2e7b41981dacf7257c681f00aee1a5",
+                "reference": "42cba7ffae2e7b41981dacf7257c681f00aee1a5",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4441,7 +4441,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2019-09-04T05:02:17+00:00"
+            "time": "2019-09-26T08:35:02+00:00"
         }
     ],
     "packages-dev": [

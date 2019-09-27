@@ -6,7 +6,9 @@ use App\Models\Period;
 use App\Models\Voucher\VoucherStatistic;
 use App\Services\VoucherService;
 use DB;
+use Exception;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class VoucherController extends Controller
 {
@@ -43,6 +45,7 @@ class VoucherController extends Controller
      * @param Request $request
      * @param $periodId
      * @return mixed
+     * @throws Exception
      */
     public function vsheetShow(Request $request, $periodId)
     {
@@ -56,10 +59,7 @@ class VoucherController extends Controller
             $data = $this->vs->generateSheet($periodId);
         }
 
-        return response()->json([
-            'status' => $status,
-            'sheet' => $data,
-        ]);
+        return DataTables::of($data)->make(true);
     }
 
     /**

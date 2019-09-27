@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-<link href="{{ asset('css/plugins/dataTables/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/dataTables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 @stop
 
 @section('breadcrumbs')
@@ -57,8 +57,8 @@
 @stop
 
 @section('js')
-{{--  datatables  --}}
-<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <!--  datatables  -->
+    <script src="{{ asset('js/plugins/dataTables/jquery.dataTables.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/datatables.config.js') }}"></script>
 
@@ -94,5 +94,5 @@
             //$(open('/profile/' + data.id + '/edit'))
         });
     })
-</script>    
+</script>
 @stop
