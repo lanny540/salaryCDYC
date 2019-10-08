@@ -25,7 +25,7 @@ class VoucherController extends Controller
     }
 
     /**
-     * 汇总表查看页面.
+     * 凭证基础表查看页面.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -40,22 +40,22 @@ class VoucherController extends Controller
     }
 
     /**
-     * 根据周期生成汇总表.
+     * 根据周期生成凭证基础表.
      *
      * @param Request $request
      * @param $periodId
+     *
      * @return mixed
+     *
      * @throws Exception
      */
     public function vsheetShow(Request $request, $periodId)
     {
         // 是否重新计算. 0 否 1 是 .
         $status = $request->get('calculate', 1);
-        if (0 === $status) {
+        if (0 == $status) {
             $data = VoucherStatistic::where('period_id', $periodId)->get();
         } else {
-            // 先删除再计算
-            $this->vs->deleteSheet($periodId);
             $data = $this->vs->generateSheet($periodId);
         }
 
@@ -63,20 +63,26 @@ class VoucherController extends Controller
     }
 
     /**
-     * 提交汇总表数据存入数据库.
+     * 提交凭证基础表数据存入数据库.
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function vsheetSubmit(Request $request)
     {
-        $data = $request->only('sheet');
+        $data = json_decode($request->get('sheet'), true);
+        $periodId = $request->get('periodId');
+
+        // 先删除再保存
+        $this->vs->deleteSheet($periodId);
+
         $result = DB::table('voucher_statistic')->insert($data);
 
-        return response()->json([
-            'status' => $result,
-            'msg' => '保存成功!',
-        ]);
+        if ($result) {
+            return redirect()->route('vsheet.index')->with('success', '数据保存成功!');
+        }
+
+        return redirect()->route('vsheet.index')->with('error', '数据保存失败!请重新尝试或联系管理员!');
     }
 }

@@ -16,11 +16,11 @@ class VoucherService
      */
     public function generateSheet($periodId)
     {
-        // TODO: 字段需要改成英文，方便直接插入汇总表
         $sqlstring = 'select d.dwdm, d.name, count(u.user_id) as sum_number, count(u.user_id) as sum_number, ';
         // 工资部分
-        $sqlstring .= 'IFNULL(sum(w.wage),0) as wage, IFNULL(sum(w.retained_wage),0) as retained_wage, IFNULL(sum(w.compensation),0) as compensation, ';
-        $sqlstring .= 'IFNULL(sum(w.night_shift),0) as night_shift, IFNULL(sum(w.overtime_wage),0) as overtime_wage, IFNULL(sum(w.seniority_wage),0) as seniority_wage, ';
+        $sqlstring .= 'IFNULL(sum(w.wage),0) as wage, IFNULL(sum(w.retained_wage),0) as retained_wage, ';
+        $sqlstring .= 'IFNULL(sum(w.compensation),0) as compensation, IFNULL(sum(w.night_shift),0) as night_shift, ';
+        $sqlstring .= 'IFNULL(sum(w.overtime_wage),0) as overtime_wage, IFNULL(sum(w.seniority_wage),0) as seniority_wage, ';
         $sqlstring .= 'IFNULL(sum(w.jbylj),0) as jbylj, IFNULL(sum(w.zj),0) as zj, ';
         $sqlstring .= 'IFNULL(sum(w.gjxj),0) as gjxj, IFNULL(sum(w.dfxj),0) as dfxj, IFNULL(sum(w.hyxj),0) as hyxj, ';
         $sqlstring .= 'IFNULL(sum(w.qydzf),0) as qydzf, IFNULL(sum(w.qyxj),0) as qyxj, ';

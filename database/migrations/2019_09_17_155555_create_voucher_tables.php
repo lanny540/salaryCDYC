@@ -56,6 +56,7 @@ class CreateVoucherTables extends Migration
             $table->bigIncrements('id');
             $table->integer('period_id')->index()->comment('会计期ID');
             $table->string('dwdm', 32)->comment('部门编码');
+            $table->string('name', 50)->comment('部门名称');
             $table->integer('sum_number')->comment('人数');
             /*
              * 工资
@@ -146,8 +147,6 @@ class CreateVoucherTables extends Migration
             $table->float('bank_salary')->default(0)->comment('银行发放');
             $table->float('debt_salary')->default(0)->comment('余欠款');
             $table->float('court_salary')->default(0)->comment('法院转提');
-
-            $table->timestamps();
         });
     }
 

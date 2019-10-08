@@ -32,12 +32,16 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
-                <div class="ibox">
+                <div class="ibox" id="ibox">
                     <div class="ibox-content">
+                        <div class="sk-spinner sk-spinner-double-bounce">
+                            <div class="sk-double-bounce1"></div>
+                            <div class="sk-double-bounce2"></div>
+                        </div>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label" for="period">发放日期 </label>
-                            <div class="col-sm-6">
-                                <select class="form-control select2_types" id="period" style="width: 300px;">
+                            <div class="col-sm-4">
+                                <select class="form-control select2_types" id="period" size="12" style="width: 200px;">
                                     <option></option>
                                     @foreach($periods as $p)
                                         <option value="{{ $p->id }}">{{ $p->published_at }}</option>
@@ -45,17 +49,25 @@
                                 </select>
                             </div>
                             <div class="col-sm-2">
-                                <button class="btn btn-block btn-primary" id="vsheetSubmit">生成</button>
+                                <button class="btn btn-block btn-primary" id="vsheetGenerate">生成汇总表</button>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-block btn-success" id="vsheetSubmit" disabled>提交保存</button>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-block btn-info" id="vsheetExport" disabled>导出Excel</button>
                             </div>
                         </div>
                         <div class="row">
                             <div class="table-responsive">
-                                <table id="sheets-dataTables" class="table table-striped table-bordered table-hover"
-                                       style="white-space: nowrap;">
+                                <table id="sheets-dataTables"
+                                       class="table table-striped table-bordered table-hover"
+                                       style="white-space: nowrap;"
+                                >
                                     <thead>
                                     <tr>
                                         <th>dwdm</th>
-                                        <th>name</th>
+                                        <th>部门名称</th>
                                         <th>人数</th>
 
                                         <th>岗位工资</th>
@@ -137,6 +149,8 @@
 @stop
 
 @section('js')
+    <!-- ramda -->
+    <script src="{{ asset('js/plugins/ramda/ramda.min.js') }}"></script>
     <!-- Select2 -->
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
     <!-- Sweet alert -->
@@ -148,6 +162,8 @@
     <script src="{{ asset('js/plugins/dataTables/fixedColumns.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/datatables.config.js') }}"></script>
 
+    <script src="{{ asset('js/helper.js') }}"></script>
+
     <script>
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}});
 
@@ -157,11 +173,14 @@
         });
 
         $(document).ready(function () {
-            let sheets = <?php echo $sheets;?>;
+            let sheets = <?php echo $sheets; ?>;
+            let sheetData;
 
-            $('#vsheetSubmit').click(function () {
+            $('#vsheetGenerate').on('click', function () {
+                $('#ibox').children('.ibox-content').toggleClass('sk-loading');
                 let pid = $('#period').val();
-                if (pid !== '') {
+
+                if (pid > 0) {
                     if (sheets[pid - 1] && sheets[pid - 1].id === parseInt(pid)) {
                         swal({
                             title: "你确定重新生成汇总表吗?",
@@ -171,8 +190,8 @@
                             confirmButtonColor: "#DD6B55",
                             confirmButtonText: "是的, 重新生成!",
                             cancelButtonText: "不, 立即查看!",
-                            closeOnConfirm: false,
-                            closeOnCancel: false
+                            closeOnConfirm: true,
+                            closeOnCancel: true,
                         }, function (isConfirm) {
                             if (isConfirm) {
                                 calulateSheet(pid, 1);
@@ -183,22 +202,56 @@
                     } else {
                         calulateSheet(pid, 1);
                     }
+
+                    setTimeout(function () {
+                        $('#ibox').children('.ibox-content').toggleClass('sk-loading');
+                        sheetData = $('#sheets-dataTables').DataTable().data();
+                    }, 5000);
+                } else {
+                    swal({
+                        title: "出错了!",
+                        text: "没有选择会计期!",
+                        type: "error"
+                    });
+                    $('#ibox').children('.ibox-content').toggleClass('sk-loading');
                 }
+            });
+
+            $('#vsheetSubmit').on('click', function () {
+                let temp = getTableDatas();
+                let periodId = $('#period').val();
+                let data = [];
+
+                temp.forEach((item, i) => {
+                    data[i] = R.assoc('period_id', periodId, item);
+                });
+
+                let params = {
+                    sheet: JSON.stringify(data),
+                    periodId: periodId,
+                    _token: '{{ csrf_token() }}',
+                };
+
+                Post("vsheet", params);
             });
         });
 
         // 生成凭证汇总数据
         function calulateSheet(pid, calculate) {
+            if (calculate === 1) {
+                $('#vsheetSubmit').removeAttr('disabled');
+            }
             let url = '/vsheet/' + pid + '?calculate=' + calculate;
-
-            let sheetsTable = $('#sheets-dataTables').dataTable();
-            if ($('#sheets-dataTables').hasClass('dataTable')) {
+            // console.log(url);
+            let tabledom = $('#sheets-dataTables');
+            let sheetsTable = tabledom.dataTable();
+            if (tabledom.hasClass('dataTable')) {
                 sheetsTable.fnClearTable(); //清空table
                 sheetsTable.fnDestroy(); //还原初始化的datatable
             }
             sheetsTable.show();
 
-            $('#sheets-dataTables').DataTable({
+            tabledom.DataTable({
                 scrollY: "500px",
                 scrollX: true,
                 scrollCollapse: true,

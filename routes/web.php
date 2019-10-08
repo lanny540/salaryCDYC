@@ -38,8 +38,6 @@ Route::group(['middleware' => 'auth'], function () {
     // 凭证提交页面
     Route::post('vdata/{vid}', 'VoucherController@vdataStore')->name('vdata.store');
 
-    // 凭证CRUD
-
     // 薪酬计算页面 --------暂时隐藏
     Route::get('calculation', 'SalaryController@calculate')->name('salary.calculate');
 
@@ -70,6 +68,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getDepartments', 'DepartmentController@getDepartments');
     Route::get('departments/{depId}', 'DepartmentController@show')->name('department.show');
     Route::post('departments', 'DepartmentController@store')->name('department.store');
+    // 凭证模板管理
 
     // 个税计算器页面
     Route::get('tax', 'HelpController@taxIndex')->name('tax');

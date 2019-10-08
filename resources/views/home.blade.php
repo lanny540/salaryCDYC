@@ -108,7 +108,7 @@
     <script src="{{ asset('js/plugins/chartJs/Chart.min.js') }}"></script>
 
     <script>
-        var barData = {
+        let barData = {
             labels: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
             datasets: [
                 {
@@ -122,11 +122,11 @@
             ]
         };
 
-        var barOptions = {
+        let barOptions = {
             responsive: true
         };
 
-        var ctx2 = document.getElementById("dashboard-chart").getContext("2d");
+        let ctx2 = document.getElementById("dashboard-chart").getContext("2d");
         new Chart(ctx2, {type: 'bar', data: barData, options:barOptions});
 
         $(document).ready(function() {

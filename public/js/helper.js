@@ -8,12 +8,12 @@ function getFileExtension(fileName) {
 // excel文件上传
 function importf(obj) {
     excel = [];
-    if(!obj.files) {
+    if (!obj.files) {
         return;
     }
 
     let suffix = obj.files[0].name.split(".")[1];
-    if(suffix !== 'xls' && suffix !== 'xlsx'){
+    if (suffix !== 'xls' && suffix !== 'xlsx') {
         alert('导入的文件格式不正确!');
         return;
     }
@@ -25,7 +25,7 @@ function importf(obj) {
 
     let f = obj.files[0];
     let reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         let data = e.target.result;
         wb = XLSX.read(data, {
             type: 'binary'
@@ -60,8 +60,8 @@ function countSalary(importData, filters) {
     for (let x of filters) {
         res.sumColumn = R.assoc(x, 0, res.sumColumn);
     }
-    for(let i of importData) {
-        for(let key in i){
+    for (let i of importData) {
+        for (let key in i) {
             if (key === '转储姓名' || key === '保险编号' || key === '发放日期') {
             } else {
                 res.sumColumn[key] += i[key];
@@ -76,14 +76,14 @@ function sumHtml(data) {
     let html = '';
     html += '<thead><tr>';
     html += '<th>#</th>';
-    for(let key in data) {
+    for (let key in data) {
         html += '<th style="white-space: nowrap;">' + key + '</th>';
     }
     html += '</tr></thead>';
 
     html += '<tbody><tr>';
     html += '<td style="white-space: nowrap;">合计金额</td>';
-    for(let key in data) {
+    for (let key in data) {
         html += '<td style="white-space: nowrap;">' + data[key] + '</td>';
     }
     html += '</tr></tbody>';
@@ -116,4 +116,36 @@ function excelDataCheck(arr1, arr2) {
     // console.log(res1);
     // console.log(res3);
     return R.concat(falseList, trueList);
+}
+
+// 模拟form提交
+function Post(URL, PARAMTERS) {
+    //创建form表单
+    let temp_form = document.createElement("form");
+    temp_form.action = URL;
+    //如需打开新窗口，form的target属性要设置为'_blank'
+    temp_form.target = "_self";
+    temp_form.method = "post";
+    temp_form.style.display = "none";
+    //添加参数
+    for (let item in PARAMTERS) {
+        let opt = document.createElement("input");
+        opt.name = item;
+        opt.value = PARAMTERS[item];
+        temp_form.appendChild(opt);
+    }
+    document.body.appendChild(temp_form);
+    //提交数据
+    temp_form.submit();
+}
+
+// 获取datatables数据
+function getTableDatas() {
+    let sheetTable = new $.fn.dataTable.Api('#sheets-dataTables');
+    let length = sheetTable.rows().data().length;
+    let list = [];
+    for (let i = 0; i < length; i++) {
+        list.push(sheetTable.rows().data()[i]);
+    }
+    return list;
 }
