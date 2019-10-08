@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
+    <!-- Select2 -->
     <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
     <!-- Sweet Alert -->
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">

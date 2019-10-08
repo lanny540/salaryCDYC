@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
+<!-- Steps -->
 <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
 @stop
 
@@ -31,7 +32,7 @@
                 <div class="ibox-content">
 
                     <h2>流程向导</h2>
-                    {{ Form::open(['route' => 'wizard.submit', 'method' => 'post', 'id' => 'form', 'class' => 'wizard-big', 'files' => true]) }}
+                    {{ Form::open(['route' => 'wizard.submit', 'method' => 'post', 'id' => 'form', 'class' => 'wizard', 'files' => true]) }}
                     <h1>选择分类</h1>
                     <fieldset>
                         <div class="row">
@@ -140,7 +141,7 @@
                 return true;
             }
 
-            var form = $(this);
+            let form = $(this);
 
             // Clean up if user went backward before
             if (currentIndex < newIndex) {

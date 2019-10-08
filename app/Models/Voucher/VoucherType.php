@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\Voucher\VoucherType.
  *
- * @property int $id
- * @property string $tname          凭证类型名称
- * @property string $tdescription   凭证类型描述
+ * @property int                                                                        $id
+ * @property string                                                                     $tname          凭证类型名称
+ * @property string                                                                     $tdescription   凭证类型描述
  * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Voucher\VoucherInfo[] $vouchers
- * @property int|null $vouchers_count
+ * @property int|null                                                                   $vouchers_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Voucher\VoucherType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Voucher\VoucherType newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Voucher\VoucherType query()

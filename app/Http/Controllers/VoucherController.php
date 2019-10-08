@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Period;
+use App\Models\Voucher\VoucherData;
 use App\Models\Voucher\VoucherStatistic;
+use App\Models\Voucher\VoucherType;
 use App\Services\VoucherService;
 use DB;
 use Exception;
@@ -84,5 +86,57 @@ class VoucherController extends Controller
         }
 
         return redirect()->route('vsheet.index')->with('error', '数据保存失败!请重新尝试或联系管理员!');
+    }
+
+    /**
+     * 生成凭证列表.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function vdataIndex()
+    {
+        $periods = Period::select(['id', 'published_at'])->get()->sortByDesc('id');
+        $vouchers = VoucherType::with('vouchers')->get();
+
+        return view('voucher.vlist')
+            ->with('periods', $periods)
+            ->with('types', $vouchers);
+    }
+
+    /**
+     * 查询凭证数据是否存在.
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function vdataHas(Request $request)
+    {
+        $pid = $request->get('periodId');
+        $vid = $request->get('vid');
+
+        $count = VoucherData::where('vid', $vid)
+                    ->where('period_id', $pid)
+                    ->get()->count();
+
+        if (0 === $count) {
+            $msg = '数据库中无该凭证数据!';
+            $status = '生成';
+        } else {
+            $msg = '数据库中有该凭证数据!';
+            $status = '查看';
+        }
+
+        return response()->json([
+            'msg' => $msg,
+            'status' => $status,
+        ]);
+    }
+
+    public function vdataShow(Request $request)
+    {
+//        return $request->all();
+
+        return view('voucher.vdata');
     }
 }

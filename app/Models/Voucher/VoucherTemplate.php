@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * App\Models\Voucher\VoucherTemplate.
  *
- * @property int $id
- * @property int $vid                 凭证ID
- * @property string $subject_name        科目名称
- * @property string $subject_no          科目编码
- * @property int $isLoan              借贷标识.借 0 贷 1.
- * @property string $subject_description 科目描述
- * @property string $subject_method      计算方法.暂时不用
+ * @property int                             $id
+ * @property int                             $vid                 凭证ID
+ * @property string                          $subject_name        科目名称
+ * @property string                          $subject_no          科目编码
+ * @property int                             $isLoan              借贷标识.借 0 贷 1.
+ * @property string                          $subject_description 科目描述
+ * @property string                          $subject_method      计算方法.暂时不用
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at

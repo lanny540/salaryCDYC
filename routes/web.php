@@ -33,8 +33,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     // 凭证列表
     Route::get('vdata', 'VoucherController@vdataIndex')->name('vdata.index');
+    // 查询凭证数据是否存在
+    Route::get('vdatahas', 'VoucherController@vdataHas')->name('vdata.has');
     // 生成凭证页面
-    Route::get('vdata/{vid}', 'VoucherController@vdataShow')->name('vdata.show');
+    Route::post('vdata', 'VoucherController@vdataShow')->name('vdata.show');
     // 凭证提交页面
     Route::post('vdata/{vid}', 'VoucherController@vdataStore')->name('vdata.store');
 

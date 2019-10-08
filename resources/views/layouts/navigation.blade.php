@@ -32,9 +32,9 @@
             <li class="{{ Request::is('vsheet*') ? 'active' : '' }}">
                 <a href="{{ route('vsheet.index') }}"><i class="fa fa-table"></i> <span class="nav-label">凭证基础表 </span></a>
             </li>
-            {{--            <li class="{{ Request::is('vdata*') ? 'active' : '' }}">--}}
-            {{--                <a href="{{ route('vdata.index') }}"><i class="fa fa-retweet"></i> <span class="nav-label">生成凭证 </span></a>--}}
-            {{--            </li>--}}
+            <li class="{{ Request::is('vdata*') ? 'active' : '' }}">
+                <a href="{{ route('vdata.index') }}"><i class="fa fa-retweet"></i> <span class="nav-label">生成凭证 </span></a>
+            </li>
 {{--            <li class="{{ Request::is('calculation*') ? 'active' : '' }}">--}}
 {{--                <a href="{{ route('salary.calculate') }}"><i class="fa fa-calculator"></i> <span class="nav-label">薪酬计算 </span></a>--}}
 {{--            </li>--}}
