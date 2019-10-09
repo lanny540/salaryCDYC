@@ -32,7 +32,6 @@
         <div class="col-lg-12">
             <div class="ibox" id="wizardForm">
                 <div class="ibox-content">
-
                     <h2>凭证数据查看/生成向导</h2>
                     {{ Form::open(['route' => 'vdata.show', 'method' => 'post', 'id' => 'form', 'class' => 'wizard']) }}
 
@@ -47,7 +46,7 @@
                             <div class="row">
                                 @foreach($t->vouchers as $v)
                                     <div class="col-md-3">
-                                        <div class="radio">
+                                        <div class="radio radio-danger">
                                             <input type="radio" name="vid" id="radio{{ $v->id }}" value="{{ $v->id }}" class="required">
                                             <label for="radio{{ $v->id }}">
                                                 {{ $v->name }}

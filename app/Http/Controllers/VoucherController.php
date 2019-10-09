@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Period;
+use App\Models\Subject;
 use App\Models\Voucher\VoucherData;
 use App\Models\Voucher\VoucherStatistic;
 use App\Models\Voucher\VoucherType;
 use App\Services\VoucherService;
+use Auth;
+use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -45,7 +48,7 @@ class VoucherController extends Controller
      * 根据周期生成凭证基础表.
      *
      * @param Request $request
-     * @param $periodId
+     * @param int     $periodId 会计期ID
      *
      * @return mixed
      *
@@ -135,8 +138,43 @@ class VoucherController extends Controller
 
     public function vdataShow(Request $request)
     {
-//        return $request->all();
+        $pid = $request->get('periodId');
+        $vid = $request->get('vid');
 
-        return view('voucher.vdata');
+        // 编码分类
+        $subjects['segment2'] = Subject::where('subject_type', 2)->get();
+        $subjects['segment3'] = Subject::where('subject_type', 3)->get();
+        $subjects['segment4'] = Subject::where('subject_type', 4)->get();
+        $subjects['segment5'] = Subject::where('subject_type', 5)->get();
+        $subjects['segment6'] = Subject::where('subject_type', 6)->get();
+
+        $vdata = [];
+        $data = VoucherData::where('vid', $vid)
+            ->where('period_id', $pid)
+            ->get()->toArray();
+        // 如果没有数据，则重新计算；否则直接读取数据库数据
+        if (0 == sizeof($data)) {
+            $vdata['vid'] = $vid;
+            $vdata['period_id'] = $pid;
+            $vdata['vname'] = 'XXX';
+            $vdata['vcategory'] = '银行凭证';
+            $vdata['vuser'] = Auth::user()->profile->userName;
+            $vdata['cdate'] = Carbon::now();
+            $vdata['period'] = Carbon::now()->month.'-'.Carbon::now()->day;
+            $vdata['cgroup'] = '临时批组';
+            $vdata['vdescription'] = '临时描述';
+            $vdata['vdata'] = [];
+        } else {
+            $vdata = $data;
+        }
+
+        return view('voucher.vdata')
+                ->with('vdata', $vdata)
+                ->with('subjects', $subjects);
+    }
+
+    public function vdataStore(Request $request)
+    {
+        return $request->all();
     }
 }

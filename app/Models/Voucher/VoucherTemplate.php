@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int                             $id
  * @property int                             $vid                 凭证ID
- * @property string                          $subject_name        科目名称
  * @property string                          $subject_no          科目编码
  * @property int                             $isLoan              借贷标识.借 0 贷 1.
  * @property string                          $subject_description 科目描述

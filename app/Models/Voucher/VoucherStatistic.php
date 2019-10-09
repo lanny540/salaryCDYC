@@ -72,7 +72,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float  $bank_salary             银行发放
  * @property float  $debt_salary             余欠款
  * @property float  $court_salary            法院转提
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Voucher\VoucherStatistic newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Voucher\VoucherStatistic newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Voucher\VoucherStatistic query()

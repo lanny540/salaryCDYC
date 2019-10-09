@@ -38,7 +38,7 @@ Route::group(['middleware' => 'auth'], function () {
     // 生成凭证页面
     Route::post('vdata', 'VoucherController@vdataShow')->name('vdata.show');
     // 凭证提交页面
-    Route::post('vdata/{vid}', 'VoucherController@vdataStore')->name('vdata.store');
+    Route::post('vdatastore', 'VoucherController@vdataStore')->name('vdata.store');
 
     // 薪酬计算页面 --------暂时隐藏
     Route::get('calculation', 'SalaryController@calculate')->name('salary.calculate');

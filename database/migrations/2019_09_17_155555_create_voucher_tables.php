@@ -26,8 +26,7 @@ class CreateVoucherTables extends Migration
         Schema::create('voucher_template', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('vid')->index()->comment('凭证ID');
-            $table->string('subject_name')->comment('科目名称');
-            $table->string('subject_no')->comment('科目编码');
+            $table->string('subject_no', 64)->comment('科目编码');
             $table->tinyInteger('isLoan')->default(0)->comment('借贷标识.借 0 贷 1.');
             $table->string('subject_description')->default('')->comment('科目描述');
             $table->string('subject_method')->default('')->comment('计算方法.暂时不用');
