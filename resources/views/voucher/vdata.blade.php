@@ -3,6 +3,8 @@
 @section('css')
 <!-- Select2 -->
 <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+<!-- FooTable -->
+<link href="{{ asset('css/plugins/footable/footable.core.css') }}" rel="stylesheet">
 @stop
 
 @section('breadcrumbs')
@@ -90,9 +92,10 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-content">
-                    <table class="table table-striped">
+                    <table class="footable table table-responsive toggle-arrow-tiny" data-page-size="30">
                         <thead>
                         <tr>
+                            <th data-toggle="true">ID</th>
                             <th>公司</th>
                             <th>责任中心段</th>
                             <th>科目段</th>
@@ -101,93 +104,121 @@
                             <th>参考段</th>
                             <th>借方金额</th>
                             <th>贷方金额</th>
-                            <th>凭证摘要</th>
+                            <th data-hide="all">名称</th>
+                            <th data-hide="all">凭证摘要</th>
                             <th class="text-right">操作</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                <label>
-                                    <select class="form-control select2_category" name="code1[]">
-                                        <option value="540">成钞公司</option>
-                                    </select>
-                                </label>
-                            </td>
-                            <td>
-                                <label>
-                                    <select class="form-control select2_category" name="code2[]">
-                                        @foreach($subjects['segment2'] as $s)
-                                            <option value="{{ $s->subject_no }}">{{ $s->subject_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </label>
-                            </td>
-                            <td>
-                                <label>
-                                    <select class="form-control select2_category" name="code3[]">
-                                        @foreach($subjects['segment3'] as $s)
-                                            <option value="{{ $s->subject_no }}">{{ $s->subject_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </label>
-                            </td>
-                            <td>
-                                <label>
-                                    <select class="form-control select2_category" name="code4[]">
-                                        @foreach($subjects['segment4'] as $s)
-                                            <option value="{{ $s->subject_no }}">
-                                                {{ $s->subject_name }} -- {{ $s->subject_no }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </label>
-                            </td>
-                            <td>
-                                <label>
-                                    <select class="form-control select2_category" name="code5[]">
-                                        @foreach($subjects['segment5'] as $s)
-                                            <option value="{{ $s->subject_no }}">
-                                                {{ $s->subject_name }} -- {{ $s->subject_no }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </label>
-                            </td>
-                            <td>
-                                <label>
-                                    <select class="form-control select2_category" name="code6[]">
-                                        @foreach($subjects['segment6'] as $s)
-                                            <option value="{{ $s->subject_no }}">
-                                                {{ $s->subject_name }} -- {{ $s->subject_no }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </label>
-                            </td>
-                            <td>
-                                <label>
-                                    <input value="0" class="form-control form-control-sm" name="debit[]">
-                                </label>
-                            </td>
-                            <td>
-                                <label>
-                                    <input value="0" class="form-control form-control-sm" name="credit[]">
-                                </label>
-                            </td>
-                            <td>
-                                <label>
-                                    <input value="成钞公司" class="form-control form-control-sm" name="description[]">
-                                </label>
-                            </td>
-                            <td class="text-right">
-                                <button class="btn-danger btn btn-sm">Delete</button>
-                            </td>
-                        </tr>
-                        @foreach($vdata['vdata'] as $vd)
-
+                        <tbody id="vdata-list">
+                        @foreach($vdata['vdata'] as $k => $vd)
+                            <tr id="vdata{{ $vd->id }}">
+                                <td>{{ $vd->id }}</td>
+                                <td>
+                                    <label>
+{{--                                        <select class="form-control select2_category" name="code1[]">--}}
+{{--                                            <option value="540">--}}
+{{--                                                成钞公司--}}
+{{--                                            </option>--}}
+{{--                                        </select>--}}
+                                        <input value="{{ $code[$k][0] }}" name="code1[]" class="form-control form-control-sm" readonly>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+{{--                                        <select class="form-control select2_category" name="code2[]">--}}
+{{--                                            @foreach($subjects['segment2'] as $s)--}}
+{{--                                                <option value="{{ $s->subject_no }}" @if($code[$k][1] == $s->subject_no) selected @endif>--}}
+{{--                                                    {{ $s->subject_name }}--}}
+{{--                                                </option>--}}
+{{--                                            @endforeach--}}
+{{--                                        </select>--}}
+                                        <input value="{{ $code[$k][1] }}" name="code2[]" class="form-control form-control-sm" readonly>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+{{--                                        <select class="form-control select2_category" name="code3[]">--}}
+{{--                                            @foreach($subjects['segment3'] as $s)--}}
+{{--                                                <option value="{{ $s->subject_no }}" @if($code[$k][2] == $s->subject_no) selected @endif>--}}
+{{--                                                    {{ $s->subject_name }}--}}
+{{--                                                </option>--}}
+{{--                                            @endforeach--}}
+{{--                                        </select>--}}
+                                        <input value="{{ $code[$k][2] }}" name="code3[]" class="form-control form-control-sm" readonly>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+{{--                                        <select class="form-control select2_category" name="code4[]">--}}
+{{--                                            @foreach($subjects['segment4'] as $s)--}}
+{{--                                                <option value="{{ $s->subject_no }}" @if($code[$k][3] == $s->subject_no) selected @endif>--}}
+{{--                                                    {{ $s->subject_name }} -- {{ $s->subject_no }}--}}
+{{--                                                </option>--}}
+{{--                                            @endforeach--}}
+{{--                                        </select>--}}
+                                        <input value="{{ $code[$k][3] }}" name="code4[]" class="form-control form-control-sm" readonly>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+{{--                                        <select class="form-control select2_category" name="code5[]">--}}
+{{--                                            @foreach($subjects['segment5'] as $s)--}}
+{{--                                                <option value="{{ $s->subject_no }}" @if($code[$k][4] == $s->subject_no) selected @endif>--}}
+{{--                                                    {{ $s->subject_name }} -- {{ $s->subject_no }}--}}
+{{--                                                </option>--}}
+{{--                                            @endforeach--}}
+{{--                                        </select>--}}
+                                        <input value="{{ $code[$k][4] }}" name="code5[]" class="form-control form-control-sm" readonly>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+{{--                                        <select class="form-control select2_category" name="code6[]">--}}
+{{--                                            @foreach($subjects['segment6'] as $s)--}}
+{{--                                                <option value="{{ $s->subject_no }}" @if($code[$k][5] == $s->subject_no) selected @endif>--}}
+{{--                                                    {{ $s->subject_name }} -- {{ $s->subject_no }}--}}
+{{--                                                </option>--}}
+{{--                                            @endforeach--}}
+{{--                                        </select>--}}
+                                        <input value="{{ $code[$k][5] }}" name="code6[]" class="form-control form-control-sm" readonly>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input value="0" class="form-control form-control-sm" name="debit[]" readonly>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input value="0" class="form-control form-control-sm" name="credit[]" readonly>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input value="{{ $vd->name }}" class="form-control form-control-sm" name="name[]" style="width: 600px;" readonly>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input value="成钞公司" class="form-control form-control-sm" name="description[]" style="width: 600px;" readonly>
+                                    </label>
+                                </td>
+                                <td class="text-right">
+                                    <div class="btn-group">
+                                        <button class="btn-info btn btn-sm edit" value="{{ $vd->id }}">Edit</button>
+                                        <button class="btn-danger btn btn-sm delete" value="{{ $vd->id }}">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
                         @endforeach
                         </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="12">
+                                <ul class="pagination float-right"></ul>
+                            </td>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -198,15 +229,21 @@
     <input type="hidden" value="{{ $vdata['period_id'] }}" name="period_id">
     {{ Form::submit() }}
     {{ Form::close() }}
+
+    @include('voucher._modals')
 </div>
 @stop
 
 @section('js')
 <!-- Select2 -->
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<!-- FooTable -->
+<script src="{{ asset('js/plugins/footable/footable.all.min.js') }}"></script>
 
 <script>
     $(".select2_category").select2();
+    $('.footable').footable();
+
     $(document).ready(function() {
 
     });

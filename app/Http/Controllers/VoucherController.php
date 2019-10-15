@@ -6,6 +6,7 @@ use App\Models\Period;
 use App\Models\Subject;
 use App\Models\Voucher\VoucherData;
 use App\Models\Voucher\VoucherStatistic;
+use App\Models\Voucher\VoucherTemplate;
 use App\Models\Voucher\VoucherType;
 use App\Services\VoucherService;
 use Auth;
@@ -148,6 +149,13 @@ class VoucherController extends Controller
         $subjects['segment5'] = Subject::where('subject_type', 5)->get();
         $subjects['segment6'] = Subject::where('subject_type', 6)->get();
 
+        // 分解编码
+        $code = [];
+        $templates = VoucherTemplate::where('vid', $vid)->get();
+        foreach ($templates as $k => $t) {
+            $code[$k] = explode('.', $t->subject_no);
+        }
+
         $vdata = [];
         $data = VoucherData::where('vid', $vid)
             ->where('period_id', $pid)
@@ -163,14 +171,19 @@ class VoucherController extends Controller
             $vdata['period'] = Carbon::now()->month.'-'.Carbon::now()->day;
             $vdata['cgroup'] = '临时批组';
             $vdata['vdescription'] = '临时描述';
-            $vdata['vdata'] = [];
+            // TODO: 将模板数据读出，结合凭证基础数据表，形成凭证数据
+            $vdata['vdata'] = $this->vs->transformData($templates, $pid);
         } else {
             $vdata = $data;
         }
 
         return view('voucher.vdata')
+                ->with('code', $code)
+                ->with('templates', $templates)
                 ->with('vdata', $vdata)
                 ->with('subjects', $subjects);
+
+//        return $code;
     }
 
     public function vdataStore(Request $request)

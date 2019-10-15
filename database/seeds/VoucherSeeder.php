@@ -17,7 +17,6 @@ class VoucherSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         VoucherType::truncate();
         VoucherInfo::truncate();
-        VoucherTemplate::truncate();
         VoucherData::truncate();
 
         $types = [
@@ -39,11 +38,5 @@ class VoucherSeeder extends Seeder
         ];
 
         VoucherInfo::insert($vouchers);
-
-//        $templates = [
-//            ['vid' => 1, 'subject_name' => '', 'subject_no' => '', 'isLoan' => 1, 'subject_description' => '', 'created_at' => $date, 'updated_at' => $date],
-//        ];
-//
-//        VoucherTemplate::insert($templates);
     }
 }

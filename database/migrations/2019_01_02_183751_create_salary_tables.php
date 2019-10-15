@@ -113,7 +113,7 @@ class CreateSalaryTables extends Migration
             $table->float('party_reward')->default(0)->comment('党员奖励');
             $table->float('union_paying')->default(0)->comment('工会发放');
             $table->float('other_reward')->default(0)->comment('其他奖励');
-            $table->float('bonus_total')->default(0)->comment('奖金合计.奖金合计=月奖+工会发放+专项奖+课酬+劳动竞赛+节日慰问费+党员奖励+其他奖励  ');
+            $table->float('bonus_total')->default(0)->comment('奖金合计.奖金合计=月奖+工会发放+专项奖+课酬+劳动竞赛+节日慰问费+党员奖励+其他奖励');
         });
         // 其他费用表（稿酬、特许使用权、劳务报酬）
         Schema::create('other', function (Blueprint $table) {

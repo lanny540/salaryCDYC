@@ -94,4 +94,10 @@ class VoucherService
             'msg' => '所选会计期的凭证汇总表数据已删除!',
         ]);
     }
+
+    public function transformData($data, $pid)
+    {
+        $statistic = VoucherStatistic::where('period_id', $pid)->get()->toArray();
+        return $data;
+    }
 }
