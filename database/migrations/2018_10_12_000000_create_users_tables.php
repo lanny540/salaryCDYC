@@ -42,7 +42,6 @@ class CreateUsersTables extends Migration
             $table->tinyInteger('handicapped')->default(0)->comment('是否残疾人. 0 否 1 是');
             $table->float('tax_rebates')->default(0)->comment('减免税率');
             $table->timestamps();
-            $table->foreign('department_id')->references('id')->on('departments')->onUpdate('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
         });
     }

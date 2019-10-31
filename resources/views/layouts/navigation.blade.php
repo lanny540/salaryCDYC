@@ -27,7 +27,10 @@
 
             <li class="nav nav-link">业务办理 </li>
             <li class="{{ Request::is('uploadData*') ? 'active' : '' }}">
-                <a href="{{ route('upload.index') }}"><i class="fa fa-gears"></i> <span class="nav-label">上传数据 </span></a>
+                <a href="{{ route('upload.index') }}"><i class="fa fa-gears"></i> <span class="nav-label">上传分表数据 </span></a>
+            </li>
+            <li class="{{ Request::is('calculation*') ? 'active' : '' }}">
+                <a href="{{ route('salary.calculate') }}"><i class="fa fa-calculator"></i> <span class="nav-label">计算薪酬汇总数据 </span></a>
             </li>
             <li class="{{ Request::is('vsheet*') ? 'active' : '' }}">
                 <a href="{{ route('vsheet.index') }}"><i class="fa fa-table"></i> <span class="nav-label">凭证基础表 </span></a>
@@ -35,9 +38,7 @@
             <li class="{{ Request::is('vdata*') ? 'active' : '' }}">
                 <a href="{{ route('vdata.index') }}"><i class="fa fa-retweet"></i> <span class="nav-label">生成凭证 </span></a>
             </li>
-{{--            <li class="{{ Request::is('calculation*') ? 'active' : '' }}">--}}
-{{--                <a href="{{ route('salary.calculate') }}"><i class="fa fa-calculator"></i> <span class="nav-label">薪酬计算 </span></a>--}}
-{{--            </li>--}}
+
 
             <li class="nav nav-link">自助服务 </li>
             <li class="{{ Request::is('sheet*') ? 'active' : '' }}">

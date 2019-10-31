@@ -68,11 +68,6 @@ class Extra extends Model
 {
     protected $table = 'extra';
 
-    protected $fillable = [
-        'username', 'policyNumber', 'period_id',
-        'extra_column1', 'extra_column2', 'extra_column3', 'extra_column4', 'extra_column5',
-        'extra_column6', 'extra_column7', 'extra_column8', 'extra_column9', 'extra_column10',
-        'extra_column11', 'extra_column12', 'extra_column13', 'extra_column14', 'extra_column15',
-        'extra_column16', 'extra_column17', 'extra_column18', 'extra_column19', 'extra_column20',
-    ];
+    // 所有字段都可以批量赋值
+    protected $guarded = [];
 }

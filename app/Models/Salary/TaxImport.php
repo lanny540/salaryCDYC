@@ -65,17 +65,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereUsername($value)
  * @mixin \Eloquent
+ * @property float $personal_tax 个人所得税
+ * @property float $tax_diff 税差
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport wherePersonalTax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereTaxDiff($value)
  */
 class TaxImport extends Model
 {
     protected $table = 'taxImport';
 
-    protected $fillable = [
-        'username', 'policyNumber', 'period_id',
-        'income', 'deduct_expenses', 'special_deduction',
-        'tax_child', 'tax_old', 'tax_edu', 'tax_loan', 'tax_rent', 'tax_other_deduct',
-        'deduct_donate', 'tax_income', 'taxrate', 'quick_deduction', 'taxable', 'tax_reliefs',
-        'should_deducted_tax', 'have_deducted_tax', 'should_be_tax',
-        'reduce_tax', 'prior_had_deducted_tax', 'declare_tax',
-    ];
+    // 所有字段都可以批量赋值
+    protected $guarded = [];
 }

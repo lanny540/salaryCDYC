@@ -3,7 +3,7 @@
 @section('css')
 <!-- Steps -->
 <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
-@stop
+@endsection
 
 @section('breadcrumbs')
     <div class="row wrapper border-bottom white-bg page-heading">
@@ -22,7 +22,7 @@
             </ol>
         </div>
     </div>
-@stop
+@endsection
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -36,18 +36,36 @@
                     <h1>选择分类</h1>
                     <fieldset>
                         <div class="row">
-                            <div class="col-lg-7">
+                            <div class="col-lg-8">
                                 <div class="form-group">
-                                    <label for="roleType" >上传数据分类 *</label>
-                                    <select name="roleType" id="roleType" class="form-control">
-                                        <option value="0">薪酬汇总</option>
+                                    <label for="uploadType"><strong>上传数据分类: *</strong></label>
+                                    <select name="uploadType" id="uploadType" class="form-control" style="width: 80%;" onchange="selectUploadType();">
+{{--                                        <option value="0">薪酬汇总</option>--}}
+                                        <option value="">请选择一个分表</option>
                                         @foreach($roles as $k => $r)
                                             <option value="{{ $k }}">{{ $r }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+                            </div>
+                            <div class="col-lg-4">
                                 <div class="form-group">
-                                    <a href="#" class="col-form-label">下载数据模板</a>
+                                    <label><strong>数据模板：</strong></label>
+                                    <p><a href="#" class="col-form-label">点击下载</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <p style="color: red; font-size: 16px;"><strong>请确认下方字段是否包含在Excel文件字段中。系统将只会抽取下方列表字段的数据值！</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label><strong>Excel抽取字段: </strong></label>
+                                    <div id="importColumns" style="font-size: 18px;"></div>
                                 </div>
                             </div>
                         </div>
@@ -86,10 +104,6 @@
                                         <label class="col-md-10" style="font-size: large">{{ Carbon\Carbon::now() }}</label>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-md-2" style="font-size: large">发放日期: </label>
-                                        <label class="col-md-10" style="font-size: large" id="published_date"></label>
-                                    </div>
-                                    <div class="form-group row">
                                         <label class="col-md-2" style="font-size: large">记录条数: </label>
                                         <label class="col-md-10" style="font-size: large" id="countSalary"></label>
                                     </div>
@@ -110,7 +124,7 @@
         </div>
     </div>
 </div>
-@stop
+@endsection
 
 @section('js')
 <!-- ramda -->
@@ -158,28 +172,21 @@
         {
             if (currentIndex === 1 && priorIndex === 0)
             {
-                filters = [];
-                let roleType = $('#roleType').val();
-                $.get({
-                    url: '/getColumns/' + roleType,
-                    success: function (data) {
-                        console.log('分类信息获取成功');
-                        for (let x of data.permissions) {
-                            x = R.pick(['description'], x);
-                            filters = R.append(x.description, filters);
-                        }
-                        // console.log(filters);  //显示需要抽取的字段
-                    }
-                });
+                // console.log(filters);  //显示需要抽取的字段
             }
             if (currentIndex === 2 && priorIndex === 1)
             {
+                let uploadType = $("#uploadType option:selected").val();
+                // 计算部分合计字段
+                let calData = calculationData(excel, filters, uploadType);
+                console.log(calData);
                 // 表格初始化
-                let sumSalary = countSalary(excel, filters);
+                let sumSalary = countSalary(calData.excel, calData.filters);
                 let html = sumHtml(sumSalary.sumColumn);
-                $('#sumInfo').append(html);
+                let table = $('#sumInfo');
+                table.html('');
+                table.append(html);
 
-                $('label[id="published_date"]').text(excel[0]['发放日期']);
                 $('label[id="countSalary"]').text(sumSalary.count);
             }
         },
@@ -227,5 +234,27 @@
         });
     });
 
+    // 选择上传分类，显示读取的字段
+    function selectUploadType() {
+        let options=$("#uploadType option:selected");
+
+        if(options.val() > 0) {
+            filters = [];
+            $.get({
+                url: '/getColumns/' + options.val(),
+                success: function (data) {
+                    let arr = Object.keys(data);
+                    if (arr.length > 0) {
+                        filters = getObjectValues(data);
+                        document.getElementById("importColumns").innerHTML = filters.join("——");
+                    } else {
+                        document.getElementById("importColumns").innerHTML = '字段列表获取失败！';
+                    }
+                    filters = R.append('保险编号', filters);
+                }
+            });
+        }
+    }
+
 </script>
-@stop
+@endsection

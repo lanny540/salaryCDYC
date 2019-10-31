@@ -24,6 +24,11 @@ Route::group(['middleware' => 'auth'], function () {
     // 向导表单提交
     Route::post('wizardSubmit', 'WorkFlowController@wizardSubmit')->name('wizard.submit');
 
+    // 薪酬计算页面
+    Route::get('calculation', 'SalaryController@calculate')->name('salary.calculate');
+    // 薪酬计算
+    Route::get('calSalary', 'SalaryController@calSalary');
+
     // 凭证汇总表查看页面
     Route::get('vsheet', 'VoucherController@vsheetIndex')->name('vsheet.index');
     // 根据周期生成凭证汇总表
@@ -39,9 +44,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('vdata', 'VoucherController@vdataShow')->name('vdata.show');
     // 凭证提交页面
     Route::post('vdatastore', 'VoucherController@vdataStore')->name('vdata.store');
-
-    // 薪酬计算页面 --------暂时隐藏
-    Route::get('calculation', 'SalaryController@calculate')->name('salary.calculate');
 
     // 工资条页面
     Route::get('sheet', 'PrintController@sheetIndex')->name('sheet.index');

@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserRemitting whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserRemitting whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\Users\UserProfile $profile
  */
 class UserRemitting extends Model
 {
@@ -40,4 +41,10 @@ class UserRemitting extends Model
         'user_id', 'remit_card_no', 'remit_name', 'remit_bank', 'remit_bank_no',
         'remit_province', 'remit_city',
     ];
+
+    //一对一。一个用户对应一个用户信息
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class, 'user_id', 'user_id');
+    }
 }

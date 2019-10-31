@@ -50,7 +50,8 @@ class UsersSeeder extends Seeder
 
         //将admin用户分配到管理员角色
         $user = User::findOrFail(1);
-        $role = Role::findOrFail(1);
+        $role = Role::where('id', 1)->Orwhere('typeId', 9)->get();
+//        $role = Role::findOrFail(1);
         $user->roles()->sync($role);
 
         // 以下为测试数据

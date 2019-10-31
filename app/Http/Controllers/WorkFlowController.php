@@ -6,17 +6,18 @@ use App\Services\DataProcess;
 use Auth;
 use File;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Storage;
+use App\Services\ImportColumn;
 
 class WorkFlowController extends Controller
 {
     protected $dataProcess;
+    protected $importColumns;
 
-    public function __construct(DataProcess $services)
+    public function __construct(DataProcess $services, ImportColumn $importColumn)
     {
         $this->dataProcess = $services;
+        $this->importColumns = $importColumn;
     }
 
     /**
@@ -26,32 +27,24 @@ class WorkFlowController extends Controller
      */
     public function uploadIndex()
     {
-        $roles = Auth::user()->roles()->where('typeId', 2)->pluck('description', 'id');
+        $roles = Auth::user()->roles()
+            ->where('typeId', 9)
+            ->pluck('description', 'id');
 
-        return view('workflow.upload')->with(['roles' => $roles]);
+        return view('workflow.upload')
+                ->with(['roles' => $roles]);
     }
 
     /**
      * 根据角色获取对应表名以及字段名.
      *
-     * @param $roleId
+     * @param int $roleId
      *
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|Role|null
+     * @return \Illuminate\Support\Collection
      */
     public function getColumns($roleId)
     {
-        // 如果 0，则选择所有字段
-        if (0 == $roleId) {
-            $permissionAll = Permission::where('typeId', '>=', 2)
-                ->where('description', '<>', '')->get();
-
-            return response()->json([
-                'permissions' => $permissionAll,
-            ]);
-        }
-        // 非 0，则选择该角色下的所有字段
-        return Role::with('permissions')
-            ->select(['id', 'target_table'])->where('id', $roleId)->first();
+        return $this->importColumns->getImportConfig($roleId);
     }
 
     /**
@@ -65,12 +58,10 @@ class WorkFlowController extends Controller
      */
     public function wizardSubmit(Request $request)
     {
-        // 发放日期
-        $published_at = $request->get('published_at');
         // 获取最新的会计期ID
         $info['period'] = $this->dataProcess->getPeriodId();
-        // 角色ID
-        $info['roleId'] = $request->get('roleType');
+        // 上传数据分类
+        $info['uploadType'] = $request->get('uploadType');
         // 格式化待插入的数据
         $info['importData'] = json_decode($request->get('importData'), true);
 
@@ -81,9 +72,9 @@ class WorkFlowController extends Controller
         $content = File::get($file['tmp_name']);
 //        Storage::disk('excelFiles')->put($fileName, $content);
         $info['file'] = asset('/storage/excelFiles/'.$fileName);
-
+//
         // 将数据写入DB
-        $result = $this->dataProcess->dataToDb($info, $published_at);
+        $result = $this->dataProcess->dataToDb($info);
 
         // 写入失败
         if (!$result) {

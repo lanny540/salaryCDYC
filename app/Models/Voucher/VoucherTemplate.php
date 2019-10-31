@@ -36,6 +36,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Voucher\VoucherTemplate withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Voucher\VoucherTemplate withoutTrashed()
  * @mixin \Eloquent
+ * @property string $name 名称
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Voucher\VoucherTemplate whereName($value)
  */
 class VoucherTemplate extends Model
 {

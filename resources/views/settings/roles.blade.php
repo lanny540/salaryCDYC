@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('css')
-    <!-- Toastr style -->
-    <link href="{{ asset('css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
-    <style>
-        .notclick {
-            pointer-events: none;
-        }
-    </style>
-@stop
+<!-- Toastr style -->
+<link href="{{ asset('css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
+<style>
+    .notclick {
+        pointer-events: none;
+    }
+</style>
+@endsection
 
 @section('breadcrumbs')
     <div class="row wrapper border-bottom white-bg page-heading">
@@ -28,7 +28,7 @@
             </ol>
         </div>
     </div>
-@stop
+@endsection
 
 @section('content')
     <div class="wrapper wrapper-content">
@@ -39,28 +39,16 @@
                         <div class="file-manager">
                             <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#createRoleModal">新增角色</button>
                             <div class="space-25"></div>
-                            <h5>系统角色</h5>
-                            <ul class="folder-list m-b-md" style="padding: 0">
-                                @foreach($roles as $role)
-                                    @if($role->typeId === 0)
-                                        <li><a href="javascript:;" id="{{ $role->id }}" class="roleList"><i class="fa fa-circle text-navy"></i> {{ $role->description }} <span class="label label-danger float-right">{{ $role->permissions->count() }}</span></a></li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                            <h5>流程角色</h5>
-                            <ul class="folder-list m-b-md" style="padding: 0">
-                                @foreach($roles as $role)
-                                    @if($role->typeId === 1)
-                                        <li><a href="javascript:;" id="{{ $role->id }}" class="roleList"><i class="fa fa-circle text-warning"></i> {{ $role->description }} <span class="label label-danger float-right">{{ $role->permissions->count() }}</span></a></li>
-                                    @endif
-                                @endforeach
-                            </ul>
                             <h5>业务角色</h5>
                             <ul class="folder-list m-b-md" style="padding: 0">
                                 @foreach($roles as $role)
-                                    @if($role->typeId === 2)
-                                        <li><a href="javascript:;" id="{{ $role->id }}" class="roleList"><i class="fa fa-circle text-info"></i> {{ $role->description }} <span class="label label-danger float-right">{{ $role->permissions->count() }}</span></a></li>
-                                    @endif
+                                    <li>
+                                        <a href="javascript:;" id="{{ $role->id }}" class="roleList">
+                                            <i class="fa fa-circle text-info"></i>
+                                            {{ $role->description }}
+                                            <span class="label label-danger float-right">{{ $role->permissions->count() }}</span>
+                                        </a>
+                                    </li>
                                 @endforeach
                             </ul>
                             <div class="clearfix"></div>
@@ -89,40 +77,6 @@
                 <div class="mail-box">
                     <div class="mail-body notclick" id="permissionsList">
                         <input type="hidden" id="role_id" name="role_id" value="0">
-                        <h3><i class="fa fa-gear"></i> 系统权限</h3>
-                        <div class="forum-item">
-                            <div class="row">
-                                @foreach($permissions as $p)
-                                    @if($p->typeId === 0)
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <div class="checkbox checkbox-primary">
-                                                    <input id="role{{ $p->id }}" name="permissions[]" type="checkbox" value="{{ $p->id }}">
-                                                    <label for="role{{ $p->id }}">{{ $p->description }}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
-                        <h3><i class="fa fa-user"></i> 用户权限</h3>
-                        <div class="forum-item">
-                            <div class="row">
-                                @foreach($permissions as $p)
-                                    @if($p->typeId === 1)
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <div class="checkbox checkbox-primary">
-                                                    <input id="role{{ $p->id }}" name="permissions[]" type="checkbox" value="{{ $p->id }}">
-                                                    <label for="role{{ $p->id }}">{{ $p->description }}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
                         <h3><i class="fa fa-shield"></i> 业务权限</h3>
                         <div class="forum-item">
                             @foreach($datas as $k => $data)
@@ -154,7 +108,10 @@
             <div class="modal-dialog">
                 <div class="modal-content animated bounceInRight">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
                         <i class="fa fa-cloud modal-icon"></i>
                         <h4 class="modal-title">新 增 角 色</h4>
                     </div>
@@ -170,23 +127,7 @@
                         <div class="form-group">
                             <label>角色分类</label>
                             <select class="role_type form-control" name="role_type">
-                                <option value="0">系统角色</option>
-                                <option value="1">流程角色</option>
-                                <option value="2">业务角色</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>期望目标表</label>
-                            <select class="role_table_name form-control" name="role_table_name">
-                                <option value="0">无</option>
-                                <option value="wage">工资</option>
-                                <option value="bonus">奖金</option>
-                                <option value="other">其他费用</option>
-                                <option value="insurances">社保</option>
-                                <option value="subsidy">补贴</option>
-                                <option value="reissue">补发</option>
-                                <option value="deduction">扣款</option>
-                                <option value="taxImport">专项税务</option>
+                                <option value="9">业务角色</option>
                             </select>
                         </div>
                     </div>
@@ -198,7 +139,7 @@
             </div>
         </div>
     </div>
-@stop
+@endsection
 
 @section('js')
 <!-- Toastr -->
@@ -263,4 +204,4 @@
         });
     });
 </script>
-@stop
+@endsection

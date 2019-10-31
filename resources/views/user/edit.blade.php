@@ -280,7 +280,7 @@
                         <div class="forum-item">
                             <div class="row">
                                 @foreach($roles as $r)
-                                    @if($r->typeId === 2)
+                                    @if($r->typeId === 9)
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <div class="checkbox checkbox-primary">

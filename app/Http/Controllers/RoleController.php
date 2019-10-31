@@ -16,25 +16,29 @@ class RoleController extends Controller
     public function index()
     {
         $data = [
-            2 => '工资',
-            3 => '奖金',
-            4 => '其他费用',
-            5 => '社保',
-            6 => '补贴',
-            7 => '补发',
-            8 => '扣款',
-            9 => '专项税务',
-            10 => '新增读取',
+            10 => '基础数据',
+            11 => '工资',
+            12 => '奖金',
+            13 => '其他费用',
+            14 => '社保',
+            15 => '补贴',
+            16 => '补发',
+            17 => '扣款',
+            18 => '专项税务',
+            19 => '特殊字段',
+            20 => '新增读取',
         ];
         // 查询列
         $columns = ['id', 'description', 'typeId'];
 
         $roles = Role::with('permissions')
             ->select($columns)
-            ->where('id', '<>', 1)
-            ->get()
-        ;
-        $permissions = Permission::select($columns)->get();
+            ->where('typeId', '=', 9)
+            ->where('id', '<>', 8)
+            ->get();
+        $permissions = Permission::select($columns)
+            ->where('typeId', '>=', 10)
+            ->get();
 
         return view('settings.roles')->with(['roles' => $roles, 'permissions' => $permissions, 'datas' => $data]);
     }

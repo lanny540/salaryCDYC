@@ -194,11 +194,9 @@ class UserController extends Controller
     public function getUsersData()
     {
         $users = User::with(['profile' => function ($query) {
-            $query->select('user_id', 'userName', 'department_id')
+            $query->select(['user_id', 'userName', 'department_id'])
                 ->with(['department' => function ($q) {
-                    $q->select('id', 'name', 'level', 'weight')
-                        ->where('level', 5)
-                    ;
+                    $q->select(['id', 'name']);
                 }])
             ;
         }])->select('users.id', 'users.name');

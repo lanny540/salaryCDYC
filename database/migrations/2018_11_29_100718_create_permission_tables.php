@@ -18,7 +18,7 @@ class CreatePermissionTables extends Migration
             $table->increments('id');
             $table->string('name', 40);
             $table->string('description', 50)->nullable()->comment('权限描述');
-            $table->tinyInteger('typeId')->comment('权限分类:0 系统权限 1 用户设置权限 2 业务权限');
+            $table->tinyInteger('typeId')->comment('权限分类:0 系统权限 1 用户设置权限 >=2 业务权限');
             $table->string('guard_name');
             $table->timestamps();
         });
@@ -27,8 +27,7 @@ class CreatePermissionTables extends Migration
             $table->increments('id');
             $table->string('name', 40);
             $table->string('description', 50)->nullable()->comment('角色描述');
-            $table->tinyInteger('typeId')->comment('角色分类:0 系统角色 1 流程角色 2 业务角色');
-            $table->string('target_table', 32)->nullable()->comment('目标表名');
+            $table->tinyInteger('typeId')->comment('角色分类:0 系统角色 1 流程角色 9 上传分表数据角色');
             $table->string('guard_name');
             $table->timestamps();
         });

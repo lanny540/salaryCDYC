@@ -15,8 +15,8 @@ class SalaryData
     /**
      * 根据年份获取年收入概况.
      *
-     * @param int $userId 用户ID
-     * @param string $year 年份
+     * @param int    $userId 用户ID
+     * @param string $year   年份
      *
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Query\Builder[]|\Illuminate\Support\Collection
      */
@@ -68,7 +68,7 @@ class SalaryData
         $currentYear = Carbon::now()->year;
         $y = '' === $year ? $currentYear : $year;
 
-        return Period::where('published_at', 'like', $y . '%')
+        return Period::where('published_at', 'like', $y.'%')
             ->get()->pluck('id');
     }
 
@@ -88,7 +88,7 @@ class SalaryData
      * 获取明细数据.
      *
      * @param int $periodId 会计期ID
-     * @param int $userId 用户ID
+     * @param int $userId   用户ID
      *
      * @return array
      */
@@ -131,8 +131,8 @@ class SalaryData
     /**
      * 查询应发工资.
      *
-     * @param int $periodId 会计期ID
-     * @param string $policy 保险编号
+     * @param int    $periodId 会计期ID
+     * @param string $policy   保险编号
      *
      * @return array
      */
@@ -143,19 +143,19 @@ class SalaryData
 
         if ('' !== $policy) {
             return DB::select(
-                'select ' . $sqlstring . ' from wage where period_id = ? AND policyNumber = ?',
+                'select '.$sqlstring.' from wage where period_id = ? AND policyNumber = ?',
                 [$periodId, $policy]
             );
         }
 
-        return DB::select('select ' . $sqlstring . ' from wage where period_id = ?', [$periodId]);
+        return DB::select('select '.$sqlstring.' from wage where period_id = ?', [$periodId]);
     }
 
     /**
      * 查询奖金合计
      *
-     * @param int $periodId 会计期ID
-     * @param string $policy 保险编号
+     * @param int    $periodId 会计期ID
+     * @param string $policy   保险编号
      *
      * @return array
      */
@@ -167,19 +167,19 @@ class SalaryData
 
         if ('' !== $policy) {
             return DB::select(
-                'select ' . $sqlstring . ' from bonus where period_id = ? AND policyNumber = ?',
+                'select '.$sqlstring.' from bonus where period_id = ? AND policyNumber = ?',
                 [$periodId, $policy]
             );
         }
 
-        return DB::select('select ' . $sqlstring . ' from bonus where period_id = ?', [$periodId]);
+        return DB::select('select '.$sqlstring.' from bonus where period_id = ?', [$periodId]);
     }
 
     /**
      * 查询补贴.
      *
-     * @param int $periodId 会计期ID
-     * @param string $policy 保险编号
+     * @param int    $periodId 会计期ID
+     * @param string $policy   保险编号
      *
      * @return array
      */
@@ -189,19 +189,19 @@ class SalaryData
         $sqlstring .= 'housing AS 住房补贴, single AS 独子费, subsidy_total AS 补贴合计';
         if ('' !== $policy) {
             return DB::select(
-                'select ' . $sqlstring . ' from subsidy where period_id = ? AND policyNumber = ?',
+                'select '.$sqlstring.' from subsidy where period_id = ? AND policyNumber = ?',
                 [$periodId, $policy]
             );
         }
 
-        return DB::select('select ' . $sqlstring . ' from subsidy where period_id = ?', [$periodId]);
+        return DB::select('select '.$sqlstring.' from subsidy where period_id = ?', [$periodId]);
     }
 
     /**
      * 查询补发.
      *
-     * @param int $periodId 会计期ID
-     * @param string $policy 保险编号
+     * @param int    $periodId 会计期ID
+     * @param string $policy   保险编号
      *
      * @return array
      */
@@ -211,19 +211,19 @@ class SalaryData
         $sqlstring .= 'reissue_other AS 补发其他, reissue_total AS 补发合计';
         if ('' !== $policy) {
             return DB::select(
-                'select ' . $sqlstring . ' from reissue where period_id = ? AND policyNumber = ?',
+                'select '.$sqlstring.' from reissue where period_id = ? AND policyNumber = ?',
                 [$periodId, $policy]
             );
         }
 
-        return DB::select('select ' . $sqlstring . ' from reissue where period_id = ?', [$periodId]);
+        return DB::select('select '.$sqlstring.' from reissue where period_id = ?', [$periodId]);
     }
 
     /**
      * 查询企业超合计.
      *
-     * @param int $periodId 会计期ID
-     * @param string $policy 保险编号
+     * @param int    $periodId 会计期ID
+     * @param string $policy   保险编号
      *
      * @return array
      */
@@ -234,18 +234,18 @@ class SalaryData
         $sqlstring .= 'unemployment_out_range AS 失业企超标, enterprise_out_total AS 企业超合计';
         if ('' !== $policy) {
             return DB::select(
-                'select ' . $sqlstring . ' from insurances where period_id = ? AND policyNumber = ?',
+                'select '.$sqlstring.' from insurances where period_id = ? AND policyNumber = ?',
                 [$periodId, $policy]
             );
         }
 
-        return DB::select('select ' . $sqlstring . ' from insurances where period_id = ?', [$periodId]);
+        return DB::select('select '.$sqlstring.' from insurances where period_id = ?', [$periodId]);
     }
 
     /**
      * 查询社保相关.
      *
-     * @param int $periodId 会计期ID
+     * @param int    $periodId 会计期ID
      * @param string $policy
      *
      * @return array
@@ -260,18 +260,18 @@ class SalaryData
         $sqlstring .= 'injury_enterprise AS 工伤企业缴, birth_enterprise AS 生育企业缴';
         if ('' !== $policy) {
             return DB::select(
-                'select ' . $sqlstring . ' from insurances where period_id = ? AND policyNumber = ?',
+                'select '.$sqlstring.' from insurances where period_id = ? AND policyNumber = ?',
                 [$periodId, $policy]
             );
         }
 
-        return DB::select('select ' . $sqlstring . ' from insurances where period_id = ?', [$periodId]);
+        return DB::select('select '.$sqlstring.' from insurances where period_id = ?', [$periodId]);
     }
 
     /**
      * 查询专项税务相关.
      *
-     * @param int $periodId 会计期ID
+     * @param int    $periodId 会计期ID
      * @param string $policy
      *
      * @return array
@@ -285,19 +285,19 @@ class SalaryData
         $sqlstring .= 'have_deducted_tax AS 累计申扣税, should_be_tax AS 累计应补税, prior_had_deducted_tax AS 上月已扣税';
         if ('' !== $policy) {
             return DB::select(
-                'select ' . $sqlstring . ' from taximport where period_id = ? AND policyNumber = ?',
+                'select '.$sqlstring.' from taximport where period_id = ? AND policyNumber = ?',
                 [$periodId, $policy]
             );
         }
 
-        return DB::select('select ' . $sqlstring . ' from taximport where period_id = ?', [$periodId]);
+        return DB::select('select '.$sqlstring.' from taximport where period_id = ?', [$periodId]);
     }
 
     /**
      * 获取图表数据.
      *
      * @param int $periodId 会计期ID
-     * @param int $userId 用户ID
+     * @param int $userId   用户ID
      *
      * @return array
      */
@@ -313,8 +313,8 @@ class SalaryData
     /**
      * 返回内环所需要的数据.
      *
-     * @param int $periodId 会计期ID
-     * @param string $policy 保险编号
+     * @param int    $periodId 会计期ID
+     * @param string $policy   保险编号
      *
      * @return array
      */
@@ -329,8 +329,8 @@ class SalaryData
     /**
      * 返回外环所需要的数据.
      *
-     * @param int $periodId 会计期ID
-     * @param string $policy 保险编号
+     * @param int    $periodId 会计期ID
+     * @param string $policy   保险编号
      *
      * @return array
      */

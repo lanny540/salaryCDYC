@@ -3,15 +3,20 @@
 namespace App\Services;
 
 use App\Models\Period;
-use App\Models\Salary\SalaryInfo;
-use Auth;
+use App\Models\Salary\Wage;
+use App\Repository\SalaryRepository;
 use Carbon\Carbon;
 use DB;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class DataProcess
 {
+    protected $salary;
+
+    public function __construct(SalaryRepository $salaryRepository)
+    {
+        $this->salary = $salaryRepository;
+    }
+
     /**
      * 数据写入DB.
      *
@@ -22,55 +27,23 @@ class DataProcess
      *
      * @throws \Exception
      */
-    public function dataToDb(array $info, string $period)
+    public function dataToDb(array $info)
     {
         DB::beginTransaction();
 
         try {
-            // 将基础信息写入salary_info表
-            SalaryInfo::create([
-                'period_id' => $info['period'],
-                'user_id' => Auth::id(),
-                'upload_file' => $info['file'],
-                'published_at' => $period,
-            ]);
+            $this->salary->saveToTable($info['period'], $info['uploadType'], $info['importData']);
 
-            if (0 === $info['roleId']) {
-                // 将数据存入合计表
-                $this->insertToSalarySummary($info['importData']);
-                // 将数据存入各类分表
-                for ($i = 7; $i <= 15; ++$i) {
-                    $this->insertToTable($i, $info['importData']);
-                }
-            } else {
-                $this->insertToTable($info['roleId'], $info['importData']);
-            }
-
-            $this->closePeriod();
-            sleep(1);   //避免两个周期首尾时间一致
-            $this->newPeriod($period);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
 
-            return false;
+//            return false;
             // 调试用代码
-//            return redirect()->back()->withErrors($e->getMessage());
+            return redirect()->back()->withErrors($e->getMessage());
         }
 
         return true;
-    }
-
-    /**
-     * 根据角色ID返回插入表名.
-     *
-     * @param int $roleId 角色ID
-     *
-     * @return string 插入表名
-     */
-    public function getInsertTableName(int $roleId): string
-    {
-        return Role::where('id', $roleId)->first()->target_table;
     }
 
     /**
@@ -92,12 +65,15 @@ class DataProcess
     /**
      * 关闭当前会计周期
      *
+     * @param string $publishedAt
+     *
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function closePeriod()
+    public function closePeriod(string $publishedAt = '')
     {
         $period = Period::latest('id')->first();
 
+        $period->published_at = $publishedAt;
         $period->enddate = Carbon::now();
         $period->save();
 
@@ -107,14 +83,12 @@ class DataProcess
     /**
      * 新开会计周期
      *
-     * @param string $publishedAt 发放日期
-     *
      * @return int 会计周期ID
      */
-    public function newPeriod(string $publishedAt = ''): int
+    public function newPeriod(): int
     {
         $period = Period::create([
-            'published_at' => '' === $publishedAt ? date('Y.m') : $publishedAt,
+            'published_at' => '',
             'startdate' => Carbon::now(),
         ]);
 
@@ -122,103 +96,128 @@ class DataProcess
     }
 
     /**
-     * 处理常规字段.
+     * 计算合计字段.
      *
-     * @param array $insertData 单行需要插入的数据
-     *
-     * @return array
-     */
-    private function commonColumn(array $insertData): array
-    {
-        $data = [];
-        $periodId = $this->getPeriodId();
-        $date = Carbon::now();
-
-        $data['username'] = $insertData['转储姓名'];
-        $data['policyNumber'] = $insertData['保险编号'];
-        $data['period_id'] = $periodId;
-        $data['created_at'] = $date;
-        $data['updated_at'] = $date;
-
-        return $data;
-    }
-
-    /**
-     * 将数据写入汇总表.
-     *
-     * @param array $insertData
-     *
+     * @param int $period
      * @return bool
      */
-    private function insertToSalarySummary(array $insertData)
+    public function calSummary(int $period): bool
     {
-        $data = [];
-        $length = \count($insertData);
+        //避免数据部分更新，采用事务处理
+        DB::beginTransaction();
 
-        for ($i = 0; $i < $length; ++$i) {
-            $data[$i] = $this->commonColumn($insertData[$i]);
-            $data[$i]['wage_total'] = $insertData[$i]['应发工资'];
-            $data[$i]['bonus_total'] = $insertData[$i]['奖金合计'];
-            $data[$i]['subsidy_total'] = $insertData[$i]['补贴合计'];
-            $data[$i]['reissue_total'] = $insertData[$i]['补发合计'];
-            $data[$i]['should_total'] = $insertData[$i]['应发合计'];
-            $data[$i]['enterprise_out_total'] = $insertData[$i]['企业超合计'];
-            $data[$i]['salary_total'] = $insertData[$i]['工资薪金'];
+        try {
+            // 工资
+            $this->calWage($period);
+            // 奖金
+            $this->calBonus($period);
+            // 补贴
+            $this->calSubsidy($period);
+            // 社保
+            $this->calInsurances($period);
+            // 补发
+            $this->calReissue($period);
+            // 其他费用——稿费
+            $this->calOther($period);
+            // 扣款
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+//            return false;
+            // 调试用代码
+            return redirect()->back()->withErrors($e->getMessage());
         }
-
-        DB::table('summary')->insert($data);
 
         return true;
     }
 
     /**
-     * 将数据写入各类分表.
+     * 计算工资合计字段
      *
-     * @param int $roleId 角色ID
-     * @param array $insertData 插入数据
-     *
-     * @return bool
+     * @param int $period
      */
-    private function insertToTable(int $roleId, array $insertData)
+    private function calWage(int $period)
     {
-        $data = [];
-        $length = \count($insertData);
-
-        // 如果额外读取列 没有对应字段，则跳过
-        if (16 === $roleId) {
-            $count = Permission::where('typeId', 11)->where('description', '<>', '')
-                ->select(['name', 'description', 'typeId'])->count();
-            if (0 === $count) {
-                return false;
-            }
+        $wage = Wage::where('period_id', $period)->get();
+        foreach ($wage as $w) {
+            Wage::updateOrCreate(
+                ['period_id' => $period, 'policyNumber' => $w->policyNumber],
+                [
+                    'annual' => $w->annual,
+                    'wage' => $w->wage,
+                    'retained_wage' => $w->retained_wage,
+                    'compensation' => $w->compensation,
+                    'night_shift' => $w->night_shift,
+                    'overtime_wage' => $w->overtime_wage,
+                    'seniority_wage' => $w->seniority_wage,
+                    'tcxj' => $w->tcxj,
+                    'qyxj' => $w->qyxj,
+                    'ltxbc' => $w->ltxbc,
+                    'bc' => $w->bc,
+                    //d
+                    'wage_total' => 0,
+                    'yfct' => 0,
+                    'yfnt' => 0,
+                ]
+            );
         }
-
-        $tableName = $this->getInsertTableName($roleId);
-        $columns = $this->getInsertColumns($roleId);
-
-        for ($i = 0; $i < $length; ++$i) {
-            $data[$i] = $this->commonColumn($insertData[$i]);
-            foreach ($columns as $column) {
-                // 对应字段不为空，则字段有效
-                if ('' !== $column->description) {
-                    $data[$i][$column->name] = $insertData[$i][$column->description];
-                }
-            }
-        }
-        DB::table($tableName)->insert($data);
-
-        return true;
     }
 
     /**
-     * 根据角色ID返回插入表的字段名.
+     * 计算奖金合计字段
      *
-     * @param int $roleId
-     *
-     * @return mixed
+     * @param int $period
      */
-    private function getInsertColumns(int $roleId)
+    private function calBonus(int $period)
     {
-        return Permission::where('typeId', $roleId - 5)->select(['name', 'description', 'typeId'])->get();
+        $sqlstring = 'UPDATE bonus SET bonus_total = month_bonus + special + competition + class_reward + holiday';
+        $sqlstring .= ' + party_reward + union_paying + other_reward WHERE period_id = ?';
+        DB::update($sqlstring, [$period]);
+    }
+
+    /**
+     * 计算补贴合计字段.
+     *
+     * @param int $period
+     */
+    private function calSubsidy(int $period)
+    {
+        $sqlstring = 'UPDATE subsidy SET subsidy_total= traffic + single + housing + communication WHERE period_id = ?';
+        DB::update($sqlstring, [$period]);
+    }
+
+    /**
+     * 计算社保合计字段.
+     *
+     * @param int $period
+     */
+    private function calInsurances(int $period)
+    {
+        $sqlstring = 'UPDATE insurances SET enterprise_out_total = gjj_out_range + annuity_out_range + retire_out_range + medical_out_range + unemployment_out_range,';
+        $sqlstring .= ' specail_deduction = gjj_deduction + retire_deduction + medical_deduction + unemployment_deduction WHERE period_id = ?';
+        DB::update($sqlstring, [$period]);
+    }
+
+    /**
+     * 计算补发合计字段.
+     *
+     * @param int $period
+     */
+    private function calReissue(int $period)
+    {
+        $sqlstring = 'UPDATE reissue SET reissue_total=reissue_wage+reissue_subsidy+reissue_other WHERE period_id = ?';
+        DB::update($sqlstring, [$period]);
+    }
+
+    /**
+     * 计算其他费用——稿费合计字段
+     *
+     * @param int $period
+     */
+    private function calOther(int $period)
+    {
+        $sqlstring = 'UPDATE other SET article_fee = finance_article + union_article WHERE period_id = ?';
+        DB::update($sqlstring, [$period]);
     }
 }

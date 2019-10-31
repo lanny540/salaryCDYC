@@ -8,7 +8,7 @@
 <!-- dataTables -->
 <link href="{{ asset('css/plugins/dataTables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 <link href="{{ asset('css/plugins/dataTables/fixedColumns.bootstrap4.min.css') }}" rel="stylesheet">
-@stop
+@endsection
 
 @section('breadcrumbs')
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -27,7 +27,7 @@
         </ol>
     </div>
 </div>
-@stop
+@endsection
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">

@@ -2,7 +2,7 @@
 
 @section('css')
     <link href="{{ asset('css/plugins/dataTables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-@stop
+@endsection
 
 @section('breadcrumbs')
     <div class="row wrapper border-bottom white-bg page-heading">
@@ -21,7 +21,7 @@
             </ol>
         </div>
     </div>
-@stop
+@endsection
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -57,8 +57,8 @@
 @stop
 
 @section('js')
-    <!--  datatables  -->
-    <script src="{{ asset('js/plugins/dataTables/jquery.dataTables.js') }}"></script>
+<!--  datatables  -->
+<script src="{{ asset('js/plugins/dataTables/jquery.dataTables.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/datatables.config.js') }}"></script>
 
