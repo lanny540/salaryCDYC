@@ -5,7 +5,7 @@
 <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
 
 <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
-@stop
+@endsection
 
 @section('breadcrumbs')
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -24,7 +24,7 @@
         </ol>
     </div>
 </div>
-@stop
+@endsection
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -85,7 +85,7 @@
         </div>
     </div>
 </div>
-@stop
+@endsection
 
 @section('js')
 <!-- Steps -->
@@ -153,4 +153,4 @@
         },
     });
 </script>
-@stop
+@endsection

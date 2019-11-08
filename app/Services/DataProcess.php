@@ -32,7 +32,7 @@ class DataProcess
         DB::beginTransaction();
 
         try {
-            $this->salary->saveToTable($info['period'], $info['uploadType'], $info['importData']);
+            $this->salary->saveToTable($info['period'], $info['uploadType'], $info['importData'], $info['isReset']);
 
             DB::commit();
         } catch (\Exception $e) {
@@ -99,7 +99,9 @@ class DataProcess
      * 计算合计字段.
      *
      * @param int $period
+     *
      * @return bool
+     * @throws \Exception
      */
     public function calSummary(int $period): bool
     {
@@ -133,9 +135,9 @@ class DataProcess
     }
 
     /**
-     * 计算工资合计字段
+     * 计算工资合计字段.
      *
-     * @param int $period
+     * @param int $period 会计期ID
      */
     private function calWage(int $period)
     {
@@ -165,7 +167,7 @@ class DataProcess
     }
 
     /**
-     * 计算奖金合计字段
+     * 计算奖金合计字段.
      *
      * @param int $period
      */
@@ -211,7 +213,7 @@ class DataProcess
     }
 
     /**
-     * 计算其他费用——稿费合计字段
+     * 计算其他费用——稿费合计字段.
      *
      * @param int $period
      */

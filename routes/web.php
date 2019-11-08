@@ -24,6 +24,10 @@ Route::group(['middleware' => 'auth'], function () {
     // 向导表单提交
     Route::post('wizardSubmit', 'WorkFlowController@wizardSubmit')->name('wizard.submit');
 
+    // 专项税务导入导出
+    Route::get('special', 'SpecialController@index')->name('special.index');
+    Route::post('taxExport', 'SpecialController@taxExport');
+
     // 薪酬计算页面
     Route::get('calculation', 'SalaryController@calculate')->name('salary.calculate');
     // 薪酬计算

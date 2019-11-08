@@ -62,6 +62,8 @@ class WorkFlowController extends Controller
         $info['period'] = $this->dataProcess->getPeriodId();
         // 上传数据分类
         $info['uploadType'] = $request->get('uploadType');
+        // TODO:更新或重传数据
+        $info['isReset'] = $request->get('isReset', 1);
         // 格式化待插入的数据
         $info['importData'] = json_decode($request->get('importData'), true);
 
@@ -72,7 +74,7 @@ class WorkFlowController extends Controller
         $content = File::get($file['tmp_name']);
 //        Storage::disk('excelFiles')->put($fileName, $content);
         $info['file'] = asset('/storage/excelFiles/'.$fileName);
-//
+
         // 将数据写入DB
         $result = $this->dataProcess->dataToDb($info);
 

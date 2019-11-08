@@ -286,6 +286,12 @@ class PermissionsSeeder extends Seeder
             // 特殊相关
             ['name' => 'had_debt', 'description' => '已销欠款', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'tax_import', 'description' => '专项导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'salary_export_1', 'description' => '工资薪金导出1', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'salary_export_2', 'description' => '工资薪金导出2', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'article_export_1', 'description' => '稿费导出1', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'article_export_2', 'description' => '稿费导出2', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'franchise_export_1', 'description' => '特许权导出1', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'franchise_export_2', 'description' => '特许权导出2', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
         ];
         Role::insert($roles);
 

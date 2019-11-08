@@ -16,181 +16,283 @@ class SalaryRepository
 {
     /**
      * 插入或更新数据.
-     * TODO: 考虑多次上传的情况:新增或更新.
      *
      * @param int   $periodId   会计期ID
      * @param int   $uploadType 数据上传类型
      * @param array $data       数据
+     * @param int   $reset      是否重置数据
      */
-    public function saveToTable($periodId, $uploadType, $data)
+    public function saveToTable($periodId, $uploadType, $data, $reset = 1)
     {
         switch ($uploadType) {
             case 7: //减免税率
+                if (1 == $reset) {
+                    $this->resetTaxRebates();
+                }
                 foreach ($data as $d) {
                     $this->taxRebates($d);
                 }
                 break;
             case 9: //职工工资在岗
+                if (1 == $reset) {
+                    $this->resetEmployeesWage($periodId);
+                }
                 foreach ($data as $d) {
                     $this->employeesWage($periodId, $d);
                 }
                 break;
             case 10: //离岗休养
+                if (1 == $reset) {
+                    $this->resetLgxy($periodId);
+                }
                 foreach ($data as $d) {
                     $this->lgxy($periodId, $d);
                 }
                 break;
             case 11: // 退休数据
+                if (1 == $reset) {
+                    $this->resetTxsj($periodId);
+                }
                 foreach ($data as $d) {
                     $this->txsj($periodId, $d);
                 }
                 break;
             case 12: //月奖
+                if (1 == $reset) {
+                    $this->resetMonthBonus($periodId);
+                }
                 foreach ($data as $d) {
                     $this->monthBonus($periodId, $d);
                 }
                 break;
             case 13: //专项奖
+                if (1 == $reset) {
+                    $this->resetSpecialBonus($periodId);
+                }
                 foreach ($data as $d) {
                     $this->specialBonus($periodId, $d);
                 }
                 break;
             case 14: //劳动竞赛
+                if (1 == $reset) {
+                    $this->resetCompetitionBonus($periodId);
+                }
                 foreach ($data as $d) {
                     $this->competitionBonus($periodId, $d);
                 }
                 break;
             case 15: //课酬
+                if (1 == $reset) {
+                    $this->resetClassRewardBonus($periodId);
+                }
                 foreach ($data as $d) {
                     $this->classRewardBonus($periodId, $d);
                 }
                 break;
             case 16: //节日慰问费
+                if (1 == $reset) {
+                    $this->resetHolidayBonus($periodId);
+                }
                 foreach ($data as $d) {
                     $this->holidayBonus($periodId, $d);
                 }
                 break;
             case 17: //党员奖励
+                if (1 == $reset) {
+                    $this->resetPartyRewardBonus($periodId);
+                }
                 foreach ($data as $d) {
                     $this->partyRewardBonus($periodId, $d);
                 }
                 break;
             case 18: //工会发放
+                if (1 == $reset) {
+                    $this->resetUnionPayingBonus($periodId);
+                }
                 foreach ($data as $d) {
                     $this->unionPayingBonus($periodId, $d);
                 }
                 break;
             case 19: //其他奖励
+                if (1 == $reset) {
+                    $this->resetOtherRewardBonus($periodId);
+                }
                 foreach ($data as $d) {
                     $this->otherRewardBonus($periodId, $d);
                 }
                 break;
             case 20: //住房补贴
+                if (1 == $reset) {
+                    $this->resHousing($periodId);
+                }
                 foreach ($data as $d) {
                     $this->housing($periodId, $d);
                 }
                 break;
             case 21: //独子费
+                if (1 == $reset) {
+                    $this->resetSingle($periodId);
+                }
                 foreach ($data as $d) {
                     $this->single($periodId, $d);
                 }
                 break;
             case 22: //公积金
+                if (1 == $reset) {
+                    $this->resetGjj($periodId);
+                }
                 foreach ($data as $d) {
                     $this->gjj($periodId, $d);
                 }
                 break;
             case 23: //社保
+                if (1 == $reset) {
+                    $this->resetInsurances($periodId);
+                }
                 foreach ($data as $d) {
                     $this->insurances($periodId, $d);
                 }
                 break;
             case 24: //车库
+                if (1 == $reset) {
+                    $this->resetGarage($periodId);
+                }
                 foreach ($data as $d) {
                     $this->garage($periodId, $d);
                 }
                 break;
             case 25: //成钞水电
+                if (1 == $reset) {
+                    $this->resetCcWater($periodId);
+                }
                 foreach ($data as $d) {
                     $this->ccWater($periodId, $d);
                 }
                 break;
             case 26: //成钞物管
+                if (1 == $reset) {
+                    $this->resetCcProperty($periodId);
+                }
                 foreach ($data as $d) {
                     $this->ccProperty($periodId, $d);
                 }
                 break;
             case 27: //鑫源
+                if (1 == $reset) {
+                    $this->resetXyDeduction($periodId);
+                }
                 foreach ($data as $d) {
                     $this->xyDeduction($periodId, $d);
                 }
                 break;
             case 28: //水电物管退补
+                if (1 == $reset) {
+                    $this->resetBackDeduction($periodId);
+                }
                 foreach ($data as $d) {
                     $this->backDeduction($periodId, $d);
                 }
                 break;
             case 29: //公车补扣除
+                if (1 == $reset) {
+                    $this->resetCarDeduction($periodId);
+                }
                 foreach ($data as $d) {
                     $this->carDeduction($periodId, $d);
                 }
                 break;
             case 30: //公车费用
+                if (1 == $reset) {
+                    $this->resetCarFee($periodId);
+                }
                 foreach ($data as $d) {
                     $this->carFee($periodId, $d);
                 }
                 break;
             case 31: //它项扣除
+                if (1 == $reset) {
+                    $this->resetRestDeduction($periodId);
+                }
                 foreach ($data as $d) {
                     $this->restDeduction($periodId, $d);
                 }
                 break;
             case 32: //固定扣款
+                if (1 == $reset) {
+                    $this->resetFixedDeduction($periodId);
+                }
                 foreach ($data as $d) {
                     $this->fixedDeduction($periodId, $d);
                 }
                 break;
             case 33: //临时扣款
+                if (1 == $reset) {
+                    $this->resetTempDeduction($periodId);
+                }
                 foreach ($data as $d) {
                     $this->tempDeduction($periodId, $d);
                 }
                 break;
             case 34: //其他扣款
+                if (1 == $reset) {
+                    $this->resetOtherDeduction($periodId);
+                }
                 foreach ($data as $d) {
                     $this->otherDeduction($periodId, $d);
                 }
                 break;
             case 35: //扣工会会费
+                if (1 == $reset) {
+                    $this->resetUnionDeduction($periodId);
+                }
                 foreach ($data as $d) {
                     $this->unionDeduction($periodId, $d);
                 }
                 break;
             case 36: //捐赠
+                if (1 == $reset) {
+                    $this->resetDonate($periodId);
+                }
                 foreach ($data as $d) {
                     $this->donate($periodId, $d);
                 }
                 break;
             case 37: //财务发稿酬
+                if (1 == $reset) {
+                    $this->resetFinanceArticle($periodId);
+                }
                 foreach ($data as $d) {
                     $this->financeArticle($periodId, $d);
                 }
                 break;
             case 38: //工会发稿酬
+                if (1 == $reset) {
+                    $this->resetUnionArticle($periodId);
+                }
                 foreach ($data as $d) {
                     $this->unionArticle($periodId, $d);
                 }
                 break;
             case 39: //特许使用权
+                if (1 == $reset) {
+                    $this->resetFranchise($periodId);
+                }
                 foreach ($data as $d) {
                     $this->franchise($periodId, $d);
                 }
                 break;
             case 40: //已销欠款
+                if (1 == $reset) {
+                    $this->resetHadDebt($periodId);
+                }
                 foreach ($data as $d) {
                     $this->hadDebt($periodId, $d);
                 }
                 break;
             case 41: //专项税务
+                if (1 == $reset) {
+                    $this->resetTaxImport($periodId);
+                }
                 foreach ($data as $d) {
                     $this->taxImport($periodId, $d);
                 }
@@ -215,12 +317,20 @@ class SalaryRepository
     }
 
     /**
+     * 重置减免税率.
+     */
+    private function resetTaxRebates()
+    {
+        UserProfile::update(['tax_rebates' => 0]);
+    }
+
+    /**
      * 在岗职工工资.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function employeesWage($period, $data)
+    private function employeesWage(int $period, $data)
     {
         Wage::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -261,12 +371,46 @@ class SalaryRepository
     }
 
     /**
+     * 重置在岗职工工资.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetEmployeesWage(int $period)
+    {
+        Wage::where('period_id', $period)->update([
+            'annual_standard' => 0,
+            'wage_standard' => 0,
+            'wage_daily' => 0,
+            'sick_sub' => 0,
+            'leave_sub' => 0,
+            'baby_sub' => 0,
+            'retained_wage' => 0,
+            'compensation' => 0,
+            'night_shift' => 0,
+            'overtime_wage' => 0,
+            'seniority_wage' => 0,
+            // 计算字段
+            'annual' => 0,
+            'wage' => 0,
+        ]);
+        Reissue::where('period_id', $period)->update([
+            'reissue_wage' => 0,
+            'reissue_subsidy' => 0,
+        ]);
+        Subsidy::where('period_id', $period)->update([
+            'traffic_standard' => 0,
+            'traffic_add' => 0,
+            'traffic' => 0,
+        ]);
+    }
+
+    /**
      * 离岗休养.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function lgxy($period, $data)
+    private function lgxy(int $period, $data)
     {
         Wage::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -276,9 +420,25 @@ class SalaryRepository
                 'lgzj' => $data['内增加'],
                 'lgng' => $data['年功工资'],
                 // 计算字段
-                'jbylj' => $data['基本养老金'],
+                'jbylj' => 0,
             ]
         );
+    }
+
+    /**
+     * 重置当期离岗休养.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetLgxy(int $period)
+    {
+        Wage::where('period_id', $period)->update([
+            'lggw' => 0,
+            'lgbl' => 0,
+            'lgzj' => 0,
+            'lgng' => 0,
+            'jbylj' => 0,
+        ]);
     }
 
     /**
@@ -287,7 +447,7 @@ class SalaryRepository
      * @param int $period 会计期ID
      * @param $data
      */
-    private function txsj($period, $data)
+    private function txsj(int $period, $data)
     {
         Wage::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -328,12 +488,54 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期退休数据.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetTxsj(int $period)
+    {
+        Wage::where('period_id', $period)->update([
+            'jbylj' => 0,
+            'zj' => 0,
+            'gjbt' => 0,
+            'gjsh' => 0,
+            'dflc' => 0,
+            'dfqt' => 0,
+            'dfwb' => 0,
+            'dfsh' => 0,
+            'hygl' => 0,
+            'hytb' => 0,
+            'hyqt' => 0,
+            'qylc' => 0,
+            'qygl' => 0,
+            'qysb' => 0,
+            'qysd' => 0,
+            'qysh' => 0,
+            'qydzf' => 0,
+            'qyhlf' => 0,
+            'qytxf' => 0,
+            'qygfz' => 0,
+            'qygl2' => 0,
+            'qyntb' => 0,
+            'qybf' => 0,
+            'ltxbc' => 0,
+            'bc' => 0,
+            // 计算字段
+            'gjxj' => 0,
+            'dfxj' => 0,
+            'hyxj' => 0,
+            'tcxj' => 0,
+            'qyxj' => 0,
+        ]);
+    }
+
+    /**
      * 月奖.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function monthBonus($period, $data)
+    private function monthBonus(int $period, $data)
     {
         Bonus::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -344,12 +546,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期月奖.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetMonthBonus(int $period)
+    {
+        Bonus::where('period_id', $period)->update([
+            'month_bonus' => 0,
+        ]);
+    }
+
+    /**
      * 专项奖.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function specialBonus($period, $data)
+    private function specialBonus(int $period, $data)
     {
         Bonus::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -360,12 +574,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当前专项奖.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetSpecialBonus(int $period)
+    {
+        Bonus::where('period_id', $period)->update([
+            'special' => 0,
+        ]);
+    }
+
+    /**
      * 劳动竞赛.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function competitionBonus($period, $data)
+    private function competitionBonus(int $period, $data)
     {
         Bonus::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -376,12 +602,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当前劳动竞赛.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetCompetitionBonus(int $period)
+    {
+        Bonus::where('period_id', $period)->update([
+            'competition' => 0,
+        ]);
+    }
+
+    /**
      * 课酬.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function classRewardBonus($period, $data)
+    private function classRewardBonus(int $period, $data)
     {
         Bonus::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -392,12 +630,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期课酬.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetClassRewardBonus(int $period)
+    {
+        Bonus::where('period_id', $period)->update([
+            'class_reward' => 0,
+        ]);
+    }
+
+    /**
      * 节日慰问费.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function holidayBonus($period, $data)
+    private function holidayBonus(int $period, $data)
     {
         Bonus::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -408,12 +658,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期课酬.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetHolidayBonus(int $period)
+    {
+        Bonus::where('period_id', $period)->update([
+            'holiday' => 0,
+        ]);
+    }
+
+    /**
      * 党员奖励.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function partyRewardBonus($period, $data)
+    private function partyRewardBonus(int $period, $data)
     {
         Bonus::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -424,12 +686,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期党员奖励.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetPartyRewardBonus(int $period)
+    {
+        Bonus::where('period_id', $period)->update([
+            'party_reward' => 0,
+        ]);
+    }
+
+    /**
      * 工会发放.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function unionPayingBonus($period, $data)
+    private function unionPayingBonus(int $period, $data)
     {
         Bonus::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -440,12 +714,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期工会发放.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetUnionPayingBonus(int $period)
+    {
+        Bonus::where('period_id', $period)->update([
+            'union_paying' => 0,
+        ]);
+    }
+
+    /**
      * 其他奖励.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function otherRewardBonus($period, $data)
+    private function otherRewardBonus(int $period, $data)
     {
         Bonus::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -456,12 +742,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期工会发放.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetOtherRewardBonus(int $period)
+    {
+        Bonus::where('period_id', $period)->update([
+            'other_reward' => 0,
+        ]);
+    }
+
+    /**
      * 住房补贴.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function housing($period, $data)
+    private function housing(int $period, $data)
     {
         Subsidy::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -472,12 +770,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期住房补贴.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resHousing(int $period)
+    {
+        Subsidy::where('period_id', $period)->update([
+            'housing' => 0,
+        ]);
+    }
+
+    /**
      * 独子费.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function single($period, $data)
+    private function single(int $period, $data)
     {
         Subsidy::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -490,12 +800,26 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期独子费.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetSingle(int $period)
+    {
+        Subsidy::where('period_id', $period)->update([
+            'single_standard' => 0,
+            'single_add' => 0,
+            'single' => 0,
+        ]);
+    }
+
+    /**
      * 公积金.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function gjj($period, $data)
+    private function gjj(int $period, $data)
     {
         Insurances::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -512,12 +836,29 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期公积金.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetGjj(int $period)
+    {
+        Subsidy::where('period_id', $period)->update([
+            'gjj_classic' => 0,
+            'gjj_add' => 0,
+            'gjj_enterprise' => 0,
+            'gjj_person' => 0,
+            'gjj_deduction' => 0,
+            'gjj_out_range' => 0,
+        ]);
+    }
+
+    /**
      * 社保.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function insurances($period, $data)
+    private function insurances(int $period, $data)
     {
         Insurances::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -554,12 +895,50 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期社保.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetInsurances(int $period)
+    {
+        Subsidy::where('period_id', $period)->update([
+            'annuity_classic' => 0,
+            'annuity_add' => 0,
+            'annuity_enterprise' => 0,
+            'retire_classic' => 0,
+            'retire_add' => 0,
+            'retire_enterprise' => 0,
+            'medical_classic' => 0,
+            'medical_add' => 0,
+            'medical_enterprise' => 0,
+            'unemployment_classic' => 0,
+            'unemployment_add' => 0,
+            'unemployment_enterprise' => 0,
+            'injury_enterprise' => 0,
+            'birth_enterprise' => 0,
+            // 计算字段
+            'annuity_person' => 0,
+            'annuity_deduction' => 0,
+            'annuity_out_range' => 0,
+            'retire_person' => 0,
+            'retire_deduction' => 0,
+            'retire_out_range' => 0,
+            'medical_person' => 0,
+            'medical_deduction' => 0,
+            'medical_out_range' => 0,
+            'unemployment_person' => 0,
+            'unemployment_deduction' => 0,
+            'unemployment_out_range' => 0,
+        ]);
+    }
+
+    /**
      * 车库.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function garage($period, $data)
+    private function garage(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -572,12 +951,26 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期车库.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetGarage(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'garage_water' => 0,
+            'garage_electric' => 0,
+            'garage_property' => 0,
+        ]);
+    }
+
+    /**
      * 成钞水电.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function ccWater($period, $data)
+    private function ccWater(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -589,12 +982,25 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期成钞水电.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetCcWater(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'cc_water' => 0,
+            'cc_electric' => 0,
+        ]);
+    }
+
+    /**
      * 成钞物管.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function ccProperty($period, $data)
+    private function ccProperty(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -605,12 +1011,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期成钞物管.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetCcProperty(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'cc_property' => 0,
+        ]);
+    }
+
+    /**
      * 鑫源费用.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function xyDeduction($period, $data)
+    private function xyDeduction(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -623,12 +1041,26 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期鑫源费用.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetXyDeduction(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'xy_water' => 0,
+            'xy_electric' => 0,
+            'xy_property' => 0,
+        ]);
+    }
+
+    /**
      * 退补费用.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function backDeduction($period, $data)
+    private function backDeduction(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -641,12 +1073,26 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期退补费用.
+     *
+     * @param int $period 会计期间ID
+     */
+    private function resetBackDeduction(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'back_water' => 0,
+            'back_electric' => 0,
+            'back_property' => 0,
+        ]);
+    }
+
+    /**
      * 公车补扣除.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function carDeduction($period, $data)
+    private function carDeduction(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -658,12 +1104,25 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期公车补扣除.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetCarDeduction(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'car_deduction' => 0,
+            'car_deduction_comment' => '',
+        ]);
+    }
+
+    /**
      * 公车费用.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function carFee($period, $data)
+    private function carFee(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -674,12 +1133,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期公车费用.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetCarFee(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'car_fee' => 0,
+        ]);
+    }
+
+    /**
      * 它项扣除.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function restDeduction($period, $data)
+    private function restDeduction(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -691,12 +1162,25 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期它项扣除.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetRestDeduction(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'rest_deduction' => 0,
+            'rest_deduction_comment' => '',
+        ]);
+    }
+
+    /**
      * 固定扣款.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function fixedDeduction($period, $data)
+    private function fixedDeduction(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -707,12 +1191,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期固定扣款.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetFixedDeduction(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'fixed_deduction' => 0,
+        ]);
+    }
+
+    /**
      * 临时扣款.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function tempDeduction($period, $data)
+    private function tempDeduction(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -723,12 +1219,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期临时扣款.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetTempDeduction(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'temp_deduction' => 0,
+        ]);
+    }
+
+    /**
      * 其他扣款.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function otherDeduction($period, $data)
+    private function otherDeduction(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -739,12 +1247,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期其他扣款.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetOtherDeduction(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'other_deduction' => 0,
+        ]);
+    }
+
+    /**
      * 扣工会会费.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function unionDeduction($period, $data)
+    private function unionDeduction(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -755,12 +1275,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期扣工会会费.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetUnionDeduction(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'union_deduction' => 0,
+        ]);
+    }
+
+    /**
      * 捐赠.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function donate($period, $data)
+    private function donate(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -771,12 +1303,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期捐赠.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetDonate(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'donate' => 0,
+        ]);
+    }
+
+    /**
      * 财务发稿酬.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function financeArticle($period, $data)
+    private function financeArticle(int $period, $data)
     {
         Other::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -787,12 +1331,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期财务发稿酬.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetFinanceArticle(int $period)
+    {
+        Other::where('period_id', $period)->update([
+            'finance_article' => 0,
+        ]);
+    }
+
+    /**
      * 工会发稿酬.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function unionArticle($period, $data)
+    private function unionArticle(int $period, $data)
     {
         Other::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -803,12 +1359,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期工会发稿酬.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetUnionArticle(int $period)
+    {
+        Other::where('period_id', $period)->update([
+            'union_article' => 0,
+        ]);
+    }
+
+    /**
      * 特许使用权.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function franchise($period, $data)
+    private function franchise(int $period, $data)
     {
         Other::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -819,12 +1387,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期特许使用权.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetFranchise(int $period)
+    {
+        Other::where('period_id', $period)->update([
+            'franchise' => 0,
+        ]);
+    }
+
+    /**
      * 已销欠款.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function hadDebt($period, $data)
+    private function hadDebt(int $period, $data)
     {
         Deduction::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -835,12 +1415,24 @@ class SalaryRepository
     }
 
     /**
+     * 重置当期已销欠款.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetHadDebt(int $period)
+    {
+        Deduction::where('period_id', $period)->update([
+            'had_debt' => 0,
+        ]);
+    }
+
+    /**
      * 专项税务.
      *
      * @param int $period 会计期ID
      * @param $data
      */
-    private function taxImport($period, $data)
+    private function taxImport(int $period, $data)
     {
         TaxImport::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['保险编号']],
@@ -865,5 +1457,34 @@ class SalaryRepository
                 'should_be_tax' => $data['累计应补(退)税额'],
             ]
         );
+    }
+
+    /**
+     * 重置当期专项税务.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetTaxImport(int $period)
+    {
+        TaxImport::where('period_id', $period)->update([
+            'income' => 0,
+            'deduct_expenses' => 0,
+            'special_deduction' => 0,
+            'tax_child' => 0,
+            'tax_old' => 0,
+            'tax_edu' => 0,
+            'tax_loan' => 0,
+            'tax_rent' => 0,
+            'tax_other_deduct' => 0,
+            'deduct_donate' => 0,
+            'tax_income' => 0,
+            'taxrate' => 0,
+            'quick_deduction' => 0,
+            'taxable' => 0,
+            'tax_reliefs' => 0,
+            'should_deducted_tax' => 0,
+            'have_deducted_tax' => 0,
+            'should_be_tax' => 0,
+        ]);
     }
 }
