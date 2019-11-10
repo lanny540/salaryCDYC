@@ -292,6 +292,9 @@ class PermissionsSeeder extends Seeder
             ['name' => 'article_export_2', 'description' => '稿费导出2', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'franchise_export_1', 'description' => '特许权导出1', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'franchise_export_2', 'description' => '特许权导出2', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'salary_import', 'description' => '税务计算_工资薪金导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'article_import', 'description' => '税务计算_稿酬导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'franchise_import', 'description' => '税务计算_特许权导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
         ];
         Role::insert($roles);
 
@@ -371,6 +374,9 @@ class PermissionsSeeder extends Seeder
             ['id' => 39, 'columns' => ['特许使用权']],
             ['id' => 40, 'columns' => ['已销欠款']],
             ['id' => 41, 'columns' => $columns41],
+            ['id' => 48, 'columns' => ['累计应补税']],
+            ['id' => 49, 'columns' => ['稿酬应补税']],
+            ['id' => 50, 'columns' => ['特权应补税']],
         ];
 
         foreach ($data as $d) {

@@ -11,6 +11,7 @@ use App\Models\Salary\Subsidy;
 use App\Models\Salary\TaxImport;
 use App\Models\Salary\Wage;
 use App\Models\Users\UserProfile;
+use DB;
 
 class SalaryRepository
 {
@@ -297,7 +298,35 @@ class SalaryRepository
                     $this->taxImport($periodId, $d);
                 }
                 break;
+            case 48: // 专项计算——工资薪金导入
+                if (1 == $reset) {
+                    $this->resetSalaryImport($periodId);
+                }
+                foreach ($data as $d) {
+                    $this->salaryImport($periodId, $d);
+                }
+                $this->calSalaryTax($periodId);
+                break;
+            case 49: // 专项计算——稿酬导入
+                if (1 == $reset) {
+                    $this->resetArticleImport($periodId);
+                }
+                foreach ($data as $d) {
+                    $this->articleImport($periodId, $d);
+                }
+                $this->calArticeTax($periodId);
+                break;
+            case 50: // 专项计算——特许权导入
+                if (1 == $reset) {
+                    $this->resetFranchiseImport($periodId);
+                }
+                foreach ($data as $d) {
+                    $this->franchiseImport($periodId, $d);
+                }
+                $this->calFranchiseTax($periodId);
+                break;
             default:
+                // TODO: 是否需要重置当期全部数据
         }
     }
 
@@ -1486,5 +1515,125 @@ class SalaryRepository
             'have_deducted_tax' => 0,
             'should_be_tax' => 0,
         ]);
+    }
+
+    /**
+     * 税务计算_工资薪金导入.
+     *
+     * @param int $period 会计期ID
+     * @param $data
+     */
+    private function salaryImport(int $period, $data)
+    {
+        taxImport::updateOrCreate(
+            ['period_id' => $period, 'policyNumber' => $data['工号']],
+            [
+            ]
+        );
+    }
+
+    /**
+     * 重置当期工资薪金导入.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetSalaryImport(int $period)
+    {
+        taxImport::where('period_id', $period)->update([
+        ]);
+    }
+
+
+    private function calSalaryTax(int $period)
+    {
+        $sqlstring = '';
+        $sqlstring .= '';
+        DB::update($sqlstring, [$period]);
+    }
+
+    /**
+     * 税务计算_稿酬导入.
+     *
+     * @param int $period 会计期ID
+     * @param $data
+     */
+    private function articleImport(int $period, $data)
+    {
+        Other::updateOrCreate(
+            ['period_id' => $period, 'policyNumber' => $data['工号']],
+            [
+                'article_add_tax' => $data['累计应补(退)税额'],
+            ]
+        );
+    }
+
+    /**
+     * 重置当期稿酬导入.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetArticleImport(int $period)
+    {
+        Other::where('period_id', $period)->update([
+            'article_add_tax' => 0,
+            'article_sub_tax' => 0,
+        ]);
+    }
+
+    /**
+     * 计算当期稿酬减免税.
+     * @param int $period 会计期ID
+     */
+    private function calArticeTax(int $period)
+    {
+        $sqlstring = 'UPDATE other o';
+        $sqlstring .= ' LEFT JOIN userprofile up ON o.policyNumber = up.policyNumber ';
+        $sqlstring .= ' AND o.period_id = ?';
+        $sqlstring .= ' SET o.article_sub_tax = o.article_add_tax * up.tax_rebates';
+        $sqlstring .= ' WHERE o.policyNumber = up.policyNumber';
+        DB::update($sqlstring, [$period]);
+    }
+
+    /**
+     * 税务计算_特许权导入.
+     *
+     * @param int $period 会计期ID
+     * @param $data
+     */
+    private function franchiseImport(int $period, $data)
+    {
+        Other::updateOrCreate(
+            ['period_id' => $period, 'policyNumber' => $data['工号']],
+            [
+                'franchise_add_tax' => $data['累计应补(退)税额'],
+            ]
+        );
+    }
+
+    /**
+     * 重置当期特许权导入..
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetFranchiseImport(int $period)
+    {
+        Other::where('period_id', $period)->update([
+            'franchise_add_tax' => 0,
+            'franchise_sub_tax' => 0,
+        ]);
+    }
+
+    /**
+     * 计算当期特权减免税.
+     * @param int $period 会计期ID
+     */
+    private function calFranchiseTax(int $period)
+    {
+        $sqlstring = 'UPDATE other o';
+        $sqlstring .= ' LEFT JOIN userprofile up ON o.policyNumber = up.policyNumber ';
+        $sqlstring .= ' AND o.period_id = ?';
+        $sqlstring .= ' SET o.franchise_sub_tax = o.franchise_add_tax * up.tax_rebates';
+        $sqlstring .= ' WHERE o.policyNumber = up.policyNumber';
+        DB::update($sqlstring, [$period]);
     }
 }

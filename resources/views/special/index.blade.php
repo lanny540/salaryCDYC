@@ -44,16 +44,17 @@
             <hr/>
             <h3>税务系统数据导入</h3>
             <div class="form-group row">
-                <label class="col-md-2 col-form-label text-center" for="uploadType">选择导入类型：</label>
-                <div class="col-md-3 text-left">
-                    <select class="form-control" id="uploadType">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
+                <label class="col-md-1 col-form-label text-center" for="uploadType">导入类型</label>
+                <div class="col-md-4 text-left">
+                    <select class="form-control" id="uploadType" onchange="selectUploadType();">
+                        <option value="0">请选择...</option>
+                        <option value="48">税务计算_工资薪金导入</option>
+                        <option value="49">税务计算_稿酬导入</option>
+                        <option value="50">税务计算_特许权导入</option>
                     </select>
                 </div>
-                <label class="col-md-2 col-form-label text-center">选择文件: </label>
-                <div class="col-md-3 form-group custom-file text-left">
+                <label class="col-md-1 col-form-label text-center">上传文件</label>
+                <div class="col-md-4 form-group custom-file text-left">
                         <input type="file" id="excel" class="custom-file-input form-control onlyExcel" onchange="importf(this)">
                         <label for="excel" class="custom-file-label">Choose file...</label>
                 </div>
@@ -75,35 +76,83 @@
                 </div>
             </div>
             <hr/>
-            <h3>{{ Carbon\Carbon::now()->year.Carbon\Carbon::now()->month.'_税款计算_工资薪金一次导出.xls' }}</h3>
         </div>
     </div>
 </div>
 @endsection
 
 @section('js')
+<!-- ramda -->
+<script src="{{ asset('js/plugins/ramda/ramda.min.js') }}"></script>
+<!-- SheetJs -->
+<script src="{{ asset('js/plugins/Sheetjs/xlsx.core.min.js') }}"></script>
+
 <script src="{{ asset('js/helper.js') }}"></script>
 
 <script>
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}});
 
+    let filters = [];
+    let wb;                 //excel数据
+    let excel = [];         //处理后的数据
+
     $(document).ready(function () {
+        $('.custom-file-input').on('change', function() {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+
         $(document).on("click", "button", function () {
             $('#ibox').children('.ibox-content').toggleClass('sk-loading');
 
             let exportTypeString = $(this)[0].getAttribute('id');
             let exportType = getExportType(exportTypeString);
 
-            let params = {
-                exportType: exportType,
-                _token: '{{ csrf_token() }}',
-            };
+            if (exportType === 0) {
+                // 导入处理
+
+                //创建form表单
+                let form = document.createElement("form");
+                form.action = 'specialImport';
+                //如需打开新窗口，form的target属性要设置为'_blank'
+                form.target = "_self";
+                form.method = "post";
+                form.style.display = "none";
+
+                let _token = document.createElement('input');
+                _token.type = 'hidden';
+                _token.name = '_token';
+                _token.value = '{{ csrf_token() }}';
+                form.append(_token);
+
+                let uploadType = document.createElement('input');
+                uploadType.type = 'hidden';
+                uploadType.name = 'uploadType';
+                uploadType.value = $("#uploadType option:selected").val();
+                form.append(uploadType);
+
+                let jsonstr = JSON.stringify(excel);
+                let importData = document.createElement('input');
+                importData.type = 'hidden';
+                importData.name = 'importData';
+                importData.value = jsonstr;
+                form.append(importData);
+
+                document.body.appendChild(form);
+                form.submit();
+            } else {
+                // 导出处理
+                let params = {
+                    exportType: exportType,
+                    _token: '{{ csrf_token() }}',
+                };
+
+                Post('specialExport', params);
+            }
 
             setTimeout(function () {
-                Post('taxExport', params);
                 $('#ibox').children('.ibox-content').toggleClass('sk-loading');
             }, 2000);
-
         });
     });
 
@@ -133,6 +182,25 @@
                 exportType = 0;
         }
         return exportType;
+    }
+
+    // 选择上传分类，显示读取的字段
+    function selectUploadType() {
+        let options=$("#uploadType option:selected");
+        if(options.val() > 0) {
+            filters = [];
+            $.get({
+                url: '/getColumns/' + options.val(),
+                success: function (data) {
+                    let arr = Object.keys(data);
+                    if (arr.length > 0) {
+                        filters = getObjectValues(data);
+                    }
+                    filters = R.append('工号', filters);
+                }
+            });
+        }
+
     }
 </script>
 @endsection

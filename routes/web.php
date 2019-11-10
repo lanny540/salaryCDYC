@@ -26,7 +26,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // 专项税务导入导出
     Route::get('special', 'SpecialController@index')->name('special.index');
-    Route::post('taxExport', 'SpecialController@taxExport');
+    Route::post('specialExport', 'SpecialController@taxExport');
+    Route::post('specialImport', 'SpecialController@taxImport');
 
     // 薪酬计算页面
     Route::get('calculation', 'SalaryController@calculate')->name('salary.calculate');
