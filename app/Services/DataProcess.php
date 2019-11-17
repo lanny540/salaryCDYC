@@ -68,7 +68,7 @@ class DataProcess
      *
      * @param string $publishedAt 发布日期
      *
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     * @return null|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
      */
     public function closePeriod(string $publishedAt = '')
     {
@@ -101,7 +101,6 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      *
-     * @return bool
      * @throws \Exception
      */
     public function calTotal(int $period): bool
@@ -136,8 +135,6 @@ class DataProcess
             DB::rollBack();
 
             return false;
-            // 调试用代码
-//            return redirect()->back()->withErrors($e->getMessage());
         }
 
         return true;
@@ -581,8 +578,6 @@ class DataProcess
 
         // 先清空当期合计表数据
         SalarySummary::where('period_id', $period)->update([
-            'policyNumber' => 0,
-            'period_id' => 0,
             'wage_total' => 0,
             'bonus_total' => 0,
             'subsidy_total' => 0,
@@ -592,36 +587,33 @@ class DataProcess
             'salary_total' => 0,
         ]);
         // 再更新
-        $sqlstring = 'SELECT u.policyNumber, wage.period_id, ';
+        $sqlstring = 'SELECT up.policyNumber, ';
         $sqlstring .= '(wage.wage_total + wage.yfct + wage.yfnt) as wage_total, ';
-        $sqlstring .= 'bonus.bonus_total,subsidy.subsidy_total,reissue.reissue_total,insurances.enterprise_out_total, ';
+        $sqlstring .= 'bonus.bonus_total as bonus_total,subsidy.subsidy_total as subsidy_total,';
+        $sqlstring .= 'reissue.reissue_total as reissue_total,insurances.enterprise_out_total as enterprise_out_total,';
         $sqlstring .= '(wage_total + subsidy.subsidy_total + reissue.reissue_total) as should_total, ';
         $sqlstring .= '(wage_total + bonus.bonus_total + insurances.enterprise_out_total) as salary_total ';
-        $sqlstring .= 'FROM userprofile u ';
-        $sqlstring .= 'LEFT JOIN wage ON u.policyNumber = wage.policyNumber ';
-        $sqlstring .= 'LEFT JOIN bonus ON u.policyNumber = bonus.policyNumber ';
-        $sqlstring .= 'LEFT JOIN subsidy ON u.policyNumber = subsidy.policyNumber ';
-        $sqlstring .= 'LEFT JOIN reissue ON u.policyNumber = reissue.policyNumber  ';
-        $sqlstring .= 'LEFT JOIN insurances ON u.policyNumber = insurances.policyNumber ';
-        $sqlstring .= 'WHERE wage.period_id = ?';
-        $summary = DB::select($sqlstring, [$period]);
+        $sqlstring .= 'FROM userprofile up ';
+        $sqlstring .= 'LEFT JOIN wage ON up.policyNumber = wage.policyNumber AND wage.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN bonus ON up.policyNumber = bonus.policyNumber AND bonus.period_id = ?  ';
+        $sqlstring .= 'LEFT JOIN subsidy ON up.policyNumber = subsidy.policyNumber AND subsidy.period_id = ?  ';
+        $sqlstring .= 'LEFT JOIN reissue ON up.policyNumber = reissue.policyNumber AND reissue.period_id = ?   ';
+        $sqlstring .= 'LEFT JOIN insurances ON up.policyNumber = insurances.policyNumber AND insurances.period_id = ? ';
+        $summary = DB::select($sqlstring, [
+            $period, $period, $period, $period, $period,
+        ]);
 
         foreach ($summary as $s) {
-            $data[] = [
-                'policyNumber' => $s->policyNumber,
-                'period_id' => $s->period_id,
-                'wage_total' => $s->wage_total,
-                'bonus_total' => $s->bonus_total,
-                'subsidy_total' => $s->subsidy_total,
-                'reissue_total' => $s->reissue_total,
-                'enterprise_out_total' => $s->enterprise_out_total,
-                'should_total' => $s->should_total,
-                'salary_total' => $s->salary_total,
-                'created_at' => $date,
-                'updated_at' => $date,
-            ];
+            SalarySummary::updateOrCreate(['period_id' => $period, 'policyNumber' => $s->policyNumber], [
+                'wage_total' => isset($s->wage_total) ?: 0,
+                'bonus_total' => isset($s->bonus_total) ?: 0,
+                'subsidy_total' => isset($s->subsidy_total) ?: 0,
+                'reissue_total' => isset($s->reissue_total) ?: 0,
+                'enterprise_out_total' => isset($s->enterprise_out_total) ?: 0,
+                'should_total' => isset($s->should_total) ?: 0,
+                'salary_total' => isset($s->salary_total) ?: 0,
+            ]);
         }
-        SalarySummary::insert($data);
     }
 
     /**

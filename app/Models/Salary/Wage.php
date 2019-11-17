@@ -178,7 +178,8 @@ class Wage extends Model
     {
         $policy = $this->attributes['policyNumber'];
 
-        $dwdm = UserProfile::where('policyNumber', $policy)->first()->department->dwdm;
+        $department = UserProfile::where('policyNumber', $policy)->first()->department;
+        $dwdm = isset($department->dwdm) ? $department->dwdm : '0101';
 
         if ('01020201' == $dwdm) {
             $this->attributes['yfct'] = $this->attributes['wage_total'];
@@ -196,7 +197,8 @@ class Wage extends Model
     {
         $policy = $this->attributes['policyNumber'];
 
-        $dwdm = UserProfile::where('policyNumber', $policy)->first()->department->dwdm;
+        $department = UserProfile::where('policyNumber', $policy)->first()->department;
+        $dwdm = isset($department->dwdm) ? $department->dwdm : '0101';
 
         if ('01020202' == $dwdm) {
             $this->attributes['yfnt'] = $this->attributes['wage_total'];

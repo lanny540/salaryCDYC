@@ -91,12 +91,15 @@ class SalaryController extends Controller
      */
     public function calSalary()
     {
+        $data = [];
         $period = $this->dataProcess->getPeriodId();
 //        // 计算合计字段
-        $this->dataProcess->calTotal($period);
+        $res = $this->dataProcess->calTotal($period);
 
-        // 对所有字段进行求和，并输出
-        $data = $this->dataProcess->getTotal($period);
+        if ($res) {
+            // 对所有字段进行求和，并输出
+            $data = $this->dataProcess->getTotal($period);
+        }
 
         return $data;
     }

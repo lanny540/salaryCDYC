@@ -91,7 +91,7 @@
         progressBar: true,
         positionClass: 'toast-top-right',
         showMethod: 'slideDown',
-        timeOut: 3000,
+        timeOut: 30000,
     };
 
     $(document).ready(function() {
@@ -101,12 +101,12 @@
             $('#statistForm').children('.ibox-content').toggleClass('sk-loading');
             $.get('/calSalary', function (data) {
                 if (data.length === 0) {
-                    toastr.error('没有权限计算!请联系管理员.');
+                    toastr.error('计算错误!请联系管理员.');
                 } else {
                     // 输出结果
                     let html = allColumnsHtml(data[0]);
                     $('#summaryTable').html(html);
-                    toastr.success('当前汇总计算完成！');
+                    toastr.success('汇总计算完成！');
                 }
                 $('#statistForm').children('.ibox-content').toggleClass('sk-loading');
             });
@@ -115,12 +115,6 @@
         // 导出数据
         $('.salaryExport').click(function () {
             $('#statistForm').children('.ibox-content').toggleClass('sk-loading');
-            toastr.options = {
-                progressBar: true,
-                positionClass: 'toast-top-right',
-                showMethod: 'slideDown',
-                timeOut: 30000,
-            };
             toastr.info('正在导出！请耐心等待.');
             let params = {
                 _token: '{{ csrf_token() }}',
