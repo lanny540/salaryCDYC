@@ -3,9 +3,7 @@
 @section('css')
 <!-- Data picker -->
 <link href="{{ asset('css/plugins/datepicker/bootstrap-datepicker3.min.css') }}" rel="stylesheet">
-@stop
-
-@section('title', '工资条打印')
+@endsection
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -149,5 +147,5 @@
             window.open('/sheetPrint?ids=6');
         });
     });
-</script>    
+</script>
 @stop

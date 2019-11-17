@@ -399,3 +399,47 @@ function getObjectValues(object)
     }
     return values;
 }
+
+// 输出所有字段求和数据的html
+function allColumnsHtml(data) {
+    let keys = getObjectKeys(data);
+    let tempLength = keys.length;
+    let html = '';
+    let tableTitle = '';
+    let tableData = '';
+
+    for (let i=0; i < tempLength; ++i)
+    {
+        if (i % 6 === 0) {
+            tableTitle += `
+                <tr class="row mx-0 bg-success">
+                    <td class="col-2 text-center"><strong>${keys[i]}</strong></td>
+            `;
+            tableData += `
+                <tr class="row mx-0">
+                    <td class="col-2 text-center">${data[keys[i]]}</td>
+            `;
+        } else if (i % 6 === 5 || i === tempLength - 1) {
+            tableTitle += `
+                    <td class="col-2 text-center"><strong>${keys[i]}</strong></td>
+                </tr>
+            `;
+            tableData += `
+                    <td class="col-2 text-center">${data[keys[i]]}</td>
+                </tr>
+            `;
+            html += tableTitle + tableData;
+            tableTitle = '';
+            tableData = '';
+        } else {
+            tableTitle += `
+                <td class="col-2 text-center"><strong>${keys[i]}</strong></td>
+            `;
+            tableData += `
+                <td class="col-2 text-center">${data[keys[i]]}</td>
+            `;
+        }
+    }
+
+    return html;
+}

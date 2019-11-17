@@ -18,7 +18,7 @@
             </ol>
         </div>
     </div>
-@stop
+@endsection
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -104,7 +104,7 @@
             </div>
         </div>
     </div>
-@stop
+@endsection
 
 @section('js')
     <!-- ramda -->
@@ -237,4 +237,4 @@
             return datas;
         }
     </script>
-@stop
+@endsection

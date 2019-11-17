@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class SpecailExport implements FromCollection, WithHeadings, WithStrictNullComparison
+class SalaryExport implements FromCollection, WithHeadings, WithStrictNullComparison
 {
     use Exportable;
 

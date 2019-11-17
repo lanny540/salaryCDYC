@@ -59,7 +59,7 @@
                         <label for="excel" class="custom-file-label">Choose file...</label>
                 </div>
                 <div class="col-md-2 text-center">
-                    <button class="btn btn-success">导入</button>
+                    <button class="btn btn-success" id="importData" disabled>导入</button>
                 </div>
             </div>
             <hr/>
@@ -189,6 +189,8 @@
         let options=$("#uploadType option:selected");
         if(options.val() > 0) {
             filters = [];
+
+            document.getElementById("importData").disabled = false;
             $.get({
                 url: '/getColumns/' + options.val(),
                 success: function (data) {
@@ -199,6 +201,8 @@
                     filters = R.append('工号', filters);
                 }
             });
+        } else {
+            document.getElementById("importData").disabled = true;
         }
 
     }

@@ -27,303 +27,340 @@ class SalaryRepository
     {
         switch ($uploadType) {
             case 7: //减免税率
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetTaxRebates();
                 }
                 foreach ($data as $d) {
                     $this->taxRebates($d);
                 }
+
                 break;
             case 9: //职工工资在岗
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetEmployeesWage($periodId);
                 }
                 foreach ($data as $d) {
                     $this->employeesWage($periodId, $d);
                 }
+
                 break;
             case 10: //离岗休养
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetLgxy($periodId);
                 }
                 foreach ($data as $d) {
                     $this->lgxy($periodId, $d);
                 }
+
                 break;
             case 11: // 退休数据
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetTxsj($periodId);
                 }
                 foreach ($data as $d) {
                     $this->txsj($periodId, $d);
                 }
+
                 break;
             case 12: //月奖
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetMonthBonus($periodId);
                 }
                 foreach ($data as $d) {
                     $this->monthBonus($periodId, $d);
                 }
+
                 break;
             case 13: //专项奖
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetSpecialBonus($periodId);
                 }
                 foreach ($data as $d) {
                     $this->specialBonus($periodId, $d);
                 }
+
                 break;
             case 14: //劳动竞赛
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetCompetitionBonus($periodId);
                 }
                 foreach ($data as $d) {
                     $this->competitionBonus($periodId, $d);
                 }
+
                 break;
             case 15: //课酬
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetClassRewardBonus($periodId);
                 }
                 foreach ($data as $d) {
                     $this->classRewardBonus($periodId, $d);
                 }
+
                 break;
             case 16: //节日慰问费
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetHolidayBonus($periodId);
                 }
                 foreach ($data as $d) {
                     $this->holidayBonus($periodId, $d);
                 }
+
                 break;
             case 17: //党员奖励
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetPartyRewardBonus($periodId);
                 }
                 foreach ($data as $d) {
                     $this->partyRewardBonus($periodId, $d);
                 }
+
                 break;
             case 18: //工会发放
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetUnionPayingBonus($periodId);
                 }
                 foreach ($data as $d) {
                     $this->unionPayingBonus($periodId, $d);
                 }
+
                 break;
             case 19: //其他奖励
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetOtherRewardBonus($periodId);
                 }
                 foreach ($data as $d) {
                     $this->otherRewardBonus($periodId, $d);
                 }
+
                 break;
             case 20: //住房补贴
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resHousing($periodId);
                 }
                 foreach ($data as $d) {
                     $this->housing($periodId, $d);
                 }
+
                 break;
             case 21: //独子费
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetSingle($periodId);
                 }
                 foreach ($data as $d) {
                     $this->single($periodId, $d);
                 }
+
                 break;
             case 22: //公积金
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetGjj($periodId);
                 }
                 foreach ($data as $d) {
                     $this->gjj($periodId, $d);
                 }
+
                 break;
             case 23: //社保
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetInsurances($periodId);
                 }
                 foreach ($data as $d) {
                     $this->insurances($periodId, $d);
                 }
+
                 break;
             case 24: //车库
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetGarage($periodId);
                 }
                 foreach ($data as $d) {
                     $this->garage($periodId, $d);
                 }
+
                 break;
             case 25: //成钞水电
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetCcWater($periodId);
                 }
                 foreach ($data as $d) {
                     $this->ccWater($periodId, $d);
                 }
+
                 break;
             case 26: //成钞物管
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetCcProperty($periodId);
                 }
                 foreach ($data as $d) {
                     $this->ccProperty($periodId, $d);
                 }
+
                 break;
             case 27: //鑫源
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetXyDeduction($periodId);
                 }
                 foreach ($data as $d) {
                     $this->xyDeduction($periodId, $d);
                 }
+
                 break;
             case 28: //水电物管退补
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetBackDeduction($periodId);
                 }
                 foreach ($data as $d) {
                     $this->backDeduction($periodId, $d);
                 }
+
                 break;
             case 29: //公车补扣除
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetCarDeduction($periodId);
                 }
                 foreach ($data as $d) {
                     $this->carDeduction($periodId, $d);
                 }
+
                 break;
             case 30: //公车费用
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetCarFee($periodId);
                 }
                 foreach ($data as $d) {
                     $this->carFee($periodId, $d);
                 }
+
                 break;
             case 31: //它项扣除
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetRestDeduction($periodId);
                 }
                 foreach ($data as $d) {
                     $this->restDeduction($periodId, $d);
                 }
+
                 break;
             case 32: //固定扣款
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetFixedDeduction($periodId);
                 }
                 foreach ($data as $d) {
                     $this->fixedDeduction($periodId, $d);
                 }
+
                 break;
             case 33: //临时扣款
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetTempDeduction($periodId);
                 }
                 foreach ($data as $d) {
                     $this->tempDeduction($periodId, $d);
                 }
+
                 break;
             case 34: //其他扣款
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetOtherDeduction($periodId);
                 }
                 foreach ($data as $d) {
                     $this->otherDeduction($periodId, $d);
                 }
+
                 break;
             case 35: //扣工会会费
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetUnionDeduction($periodId);
                 }
                 foreach ($data as $d) {
                     $this->unionDeduction($periodId, $d);
                 }
+
                 break;
             case 36: //捐赠
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetDonate($periodId);
                 }
                 foreach ($data as $d) {
                     $this->donate($periodId, $d);
                 }
+
                 break;
             case 37: //财务发稿酬
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetFinanceArticle($periodId);
                 }
                 foreach ($data as $d) {
                     $this->financeArticle($periodId, $d);
                 }
+
                 break;
             case 38: //工会发稿酬
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetUnionArticle($periodId);
                 }
                 foreach ($data as $d) {
                     $this->unionArticle($periodId, $d);
                 }
+
                 break;
             case 39: //特许使用权
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetFranchise($periodId);
                 }
                 foreach ($data as $d) {
                     $this->franchise($periodId, $d);
                 }
+
                 break;
             case 40: //已销欠款
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetHadDebt($periodId);
                 }
                 foreach ($data as $d) {
                     $this->hadDebt($periodId, $d);
                 }
+
                 break;
             case 41: //专项税务
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetTaxImport($periodId);
                 }
                 foreach ($data as $d) {
                     $this->taxImport($periodId, $d);
                 }
+
                 break;
             case 48: // 专项计算——工资薪金导入
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetSalaryImport($periodId);
                 }
                 foreach ($data as $d) {
                     $this->salaryImport($periodId, $d);
                 }
                 $this->calSalaryTax($periodId);
+
                 break;
             case 49: // 专项计算——稿酬导入
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetArticleImport($periodId);
                 }
                 foreach ($data as $d) {
                     $this->articleImport($periodId, $d);
                 }
                 $this->calArticeTax($periodId);
+
                 break;
             case 50: // 专项计算——特许权导入
-                if (1 == $reset) {
+                if (1 === $reset) {
                     $this->resetFranchiseImport($periodId);
                 }
                 foreach ($data as $d) {
                     $this->franchiseImport($periodId, $d);
                 }
                 $this->calFranchiseTax($periodId);
+
                 break;
             default:
                 // TODO: 是否需要重置当期全部数据
@@ -1543,7 +1580,7 @@ class SalaryRepository
         ]);
     }
 
-
+    // TODO:不知道 字段 是啥
     private function calSalaryTax(int $period)
     {
         $sqlstring = '';
@@ -1582,6 +1619,7 @@ class SalaryRepository
 
     /**
      * 计算当期稿酬减免税.
+     *
      * @param int $period 会计期ID
      */
     private function calArticeTax(int $period)
@@ -1625,6 +1663,7 @@ class SalaryRepository
 
     /**
      * 计算当期特权减免税.
+     *
      * @param int $period 会计期ID
      */
     private function calFranchiseTax(int $period)

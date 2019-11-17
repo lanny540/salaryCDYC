@@ -135,7 +135,7 @@ class CreateSalaryTables extends Migration
 
             $table->float('gjj_classic')->default(0)->comment('公积金标准');
             $table->float('gjj_add')->default(0)->comment('公积金补扣');
-            $table->float('gjj_person')->default(0)->comment('公积金个人标准+补扣');
+            $table->float('gjj_person')->default(0)->comment('公积金个人=标准+补扣');
             $table->float('gjj_deduction')->default(0)->comment('公积金扣除');
             $table->float('gjj_enterprise')->default(0)->comment('公积企业缴');
             $table->float('gjj_out_range')->default(0)->comment('公积企超标');

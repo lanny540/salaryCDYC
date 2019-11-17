@@ -33,6 +33,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('calculation', 'SalaryController@calculate')->name('salary.calculate');
     // 薪酬计算
     Route::get('calSalary', 'SalaryController@calSalary');
+    // 薪酬明细导出
+    Route::post('salaryExport', 'SalaryController@salaryExport');
 
     // 凭证汇总表查看页面
     Route::get('vsheet', 'VoucherController@vsheetIndex')->name('vsheet.index');
