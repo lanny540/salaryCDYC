@@ -76,8 +76,6 @@ class SalaryData
      * 根据UID查询保险编号.
      *
      * @param int $userId 用户ID
-     *
-     * @return string
      */
     public function getPolicyNumber($userId): string
     {
@@ -89,8 +87,6 @@ class SalaryData
      *
      * @param int $periodId 会计期ID
      * @param int $userId   用户ID
-     *
-     * @return array
      */
     public function getDetailSalary($periodId, $userId = 0): array
     {
@@ -133,8 +129,6 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
-     *
-     * @return array
      */
     public function getWage($periodId, $policy = ''): array
     {
@@ -156,8 +150,6 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
-     *
-     * @return array
      */
     public function getBonus($periodId, $policy = ''): array
     {
@@ -180,8 +172,6 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
-     *
-     * @return array
      */
     public function getSubsidy($periodId, $policy = ''): array
     {
@@ -202,8 +192,6 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
-     *
-     * @return array
      */
     public function getReissue($periodId, $policy = ''): array
     {
@@ -224,8 +212,6 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
-     *
-     * @return array
      */
     public function getOutRange($periodId, $policy = ''): array
     {
@@ -247,8 +233,6 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy
-     *
-     * @return array
      */
     public function getInsurance($periodId, $policy = ''): array
     {
@@ -273,8 +257,6 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy
-     *
-     * @return array
      */
     public function getTax($periodId, $policy = ''): array
     {
@@ -298,8 +280,6 @@ class SalaryData
      *
      * @param int $periodId 会计期ID
      * @param int $userId   用户ID
-     *
-     * @return array
      */
     public function getChartSalary($periodId, $userId): array
     {
@@ -315,8 +295,6 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
-     *
-     * @return array
      */
     private function getInnerRingSalary($periodId, $policy): array
     {
@@ -331,8 +309,6 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
-     *
-     * @return array
      */
     private function getOuterRingSalary($periodId, $policy): array
     {

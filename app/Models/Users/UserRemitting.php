@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserRemitting whereUserId($value)
  * @mixin \Eloquent
  * @property-read \App\Models\Users\UserProfile $profile
+ * @property string $remit_address_no 代汇地区码
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserRemitting whereRemitAddressNo($value)
  */
 class UserRemitting extends Model
 {

@@ -199,7 +199,9 @@ class PermissionsSeeder extends Seeder
 //            ['name' => 'reduce_tax', 'description' => '减免个税', 'typeId' => 18, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
 //            ['name' => 'personal_tax', 'description' => '个人所得税', 'typeId' => 18, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
 //            ['name' => 'prior_had_deducted_tax', 'description' => '上月已扣税', 'typeId' => 18, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'declare_tax', 'description' => '申报个税', 'typeId' => 18, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'declare_tax_salary', 'description' => '薪金申报个税', 'typeId' => 18, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'declare_tax_article', 'description' => '稿酬申报个税', 'typeId' => 18, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'declare_tax_franchise', 'description' => '特权申报个税', 'typeId' => 18, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
 //            ['name' => 'tax_diff', 'description' => '税差', 'typeId' => 18, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             // type = 10 特殊薪酬表
             ['name' => 'instead_salary', 'description' => '代汇', 'typeId' => 19, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
@@ -295,6 +297,9 @@ class PermissionsSeeder extends Seeder
             ['name' => 'salary_import', 'description' => '税务计算_工资薪金导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'article_import', 'description' => '税务计算_稿酬导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'franchise_import', 'description' => '税务计算_特许权导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'declare_tax_salary', 'description' => '薪金申报个税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'declare_tax_article', 'description' => '稿酬申报个税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'declare_tax_franchise', 'description' => '特权申报个税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
         ];
         Role::insert($roles);
 
@@ -377,6 +382,9 @@ class PermissionsSeeder extends Seeder
             ['id' => 48, 'columns' => ['累计应补税']],
             ['id' => 49, 'columns' => ['稿酬应补税']],
             ['id' => 50, 'columns' => ['特权应补税']],
+            ['id' => 51, 'columns' => ['薪金申报个税']],
+            ['id' => 52, 'columns' => ['稿酬申报个税']],
+            ['id' => 53, 'columns' => ['特权申报个税']],
         ];
 
         foreach ($data as $d) {

@@ -53,7 +53,6 @@ class CreateUsersTables extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('userProfile', function (Blueprint $table) {
-            $table->dropForeign('userProfile_department_id_foreign');
             $table->dropForeign('userProfile_user_id_foreign');
         });
         Schema::dropIfExists('userProfile');

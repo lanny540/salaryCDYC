@@ -54,7 +54,7 @@ class SalaryController extends Controller
     public function show($period_id)
     {
         $periods = Period::select(['id', 'published_at'])
-            ->where('enddate', '<>', '')->orderByDesc('id')->get();
+            ->where('published_at', '<>', '')->orderByDesc('id')->get();
         $period = Period::find($period_id);
 
         $policy = $this->salaryData->getPolicyNumber(Auth::id());
@@ -93,7 +93,7 @@ class SalaryController extends Controller
     {
         $data = [];
         $period = $this->dataProcess->getPeriodId();
-//        // 计算合计字段
+        // 计算合计字段
         $res = $this->dataProcess->calTotal($period);
 
         if ($res) {
@@ -107,12 +107,12 @@ class SalaryController extends Controller
     /**
      * 导出所有人员当期薪酬明细.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return \Maatwebsite\Excel\BinaryFileResponse
+     *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function salaryExport(Request $request)
+    public function salaryExport()
     {
         $period = $this->dataProcess->getPeriodId();
         $res = $this->dataProcess->getSalaryDetail($period);

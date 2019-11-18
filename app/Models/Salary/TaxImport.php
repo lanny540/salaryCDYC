@@ -69,6 +69,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $tax_diff 税差
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport wherePersonalTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereTaxDiff($value)
+ * @property float $declare_tax_salary 薪金申报个税
+ * @property float $declare_tax_article 稿酬申报个税
+ * @property float $declare_tax_franchise 特权申报个税
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereDeclareTaxArticle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereDeclareTaxFranchise($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereDeclareTaxSalary($value)
  */
 class TaxImport extends Model
 {

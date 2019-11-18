@@ -362,8 +362,35 @@ class SalaryRepository
                 $this->calFranchiseTax($periodId);
 
                 break;
+            case 51: // 申报个税——薪金申报个税
+                if (1 === $reset) {
+                    $this->resetDeclareTaxSalary($periodId);
+                }
+                foreach ($data as $d) {
+                    $this->declareTaxSalary($periodId, $d);
+                }
+
+                break;
+            case 52: // 申报个税——稿酬申报个税
+                if (1 === $reset) {
+                    $this->resetDeclareTaxArticle($periodId);
+                }
+                foreach ($data as $d) {
+                    $this->declareTaxArticle($periodId, $d);
+                }
+
+                break;
+            case 53: // 申报个税——特权申报个税
+                if (1 === $reset) {
+                    $this->resetDeclareTaxFranchise($periodId);
+                }
+                foreach ($data as $d) {
+                    $this->declareTaxFranchise($periodId, $d);
+                }
+
+                break;
             default:
-                // TODO: 是否需要重置当期全部数据
+                // 其余结果
         }
     }
 
@@ -1565,6 +1592,7 @@ class SalaryRepository
         taxImport::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['工号']],
             [
+                'should_be_tax' => 0,
             ]
         );
     }
@@ -1577,14 +1605,23 @@ class SalaryRepository
     private function resetSalaryImport(int $period)
     {
         taxImport::where('period_id', $period)->update([
+            'should_be_tax' => 0,
+            'reduce_tax' => 0,
         ]);
     }
 
-    // TODO:不知道 字段 是啥
+    /**
+     * 计算当期减免个税.
+     *
+     * @param int $period 会计期ID
+     */
     private function calSalaryTax(int $period)
     {
-        $sqlstring = '';
-        $sqlstring .= '';
+        $sqlstring = 'UPDATE taxImport t';
+        $sqlstring .= ' LEFT JOIN userprofile up ON t.policyNumber = up.policyNumber ';
+        $sqlstring .= ' AND t.period_id = ?';
+        $sqlstring .= ' SET t.reduce_tax = t.should_be_tax * up.tax_rebates';
+        $sqlstring .= ' WHERE t.policyNumber = up.policyNumber';
         DB::update($sqlstring, [$period]);
     }
 
@@ -1649,7 +1686,7 @@ class SalaryRepository
     }
 
     /**
-     * 重置当期特许权导入..
+     * 重置当期特许权导入.
      *
      * @param int $period 会计期ID
      */
@@ -1674,5 +1711,89 @@ class SalaryRepository
         $sqlstring .= ' SET o.franchise_sub_tax = o.franchise_add_tax * up.tax_rebates';
         $sqlstring .= ' WHERE o.policyNumber = up.policyNumber';
         DB::update($sqlstring, [$period]);
+    }
+
+    /**
+     * 薪金申报个税导入.
+     *
+     * @param int $period
+     * @param $data
+     */
+    private function declareTaxSalary(int $period, $data)
+    {
+        taxImport::updateOrCreate(
+            ['period_id' => $period, 'policyNumber' => $data['工号']],
+            [
+                'declare_tax_salary' => 0,
+            ]
+        );
+    }
+
+    /**
+     * 重置当期薪金申报个税.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetDeclareTaxSalary(int $period)
+    {
+        taxImport::where('period_id', $period)->update([
+            'declare_tax_salary' => 0,
+        ]);
+    }
+
+    /**
+     * 稿酬申报个税导入.
+     *
+     * @param int $period
+     * @param $data
+     */
+    private function declareTaxArticle(int $period, $data)
+    {
+        taxImport::updateOrCreate(
+            ['period_id' => $period, 'policyNumber' => $data['工号']],
+            [
+                'declare_tax_article' => 0,
+            ]
+        );
+    }
+
+    /**
+     * 重置当期稿酬申报个税.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetDeclareTaxArticle(int $period)
+    {
+        taxImport::where('period_id', $period)->update([
+            'declare_tax_article' => 0,
+        ]);
+    }
+
+    /**
+     * 特权申报个税导入.
+     *
+     * @param int $period
+     * @param $data
+     */
+    private function declareTaxFranchise(int $period, $data)
+    {
+        taxImport::updateOrCreate(
+            ['period_id' => $period, 'policyNumber' => $data['工号']],
+            [
+                'declare_tax_franchise' => 0,
+            ]
+        );
+    }
+
+    /**
+     * 重置当期特权申报个税.
+     *
+     * @param int $period 会计期ID
+     */
+    private function resetDeclareTaxFranchise(int $period)
+    {
+        taxImport::where('period_id', $period)->update([
+            'declare_tax_franchise' => 0,
+        ]);
     }
 }

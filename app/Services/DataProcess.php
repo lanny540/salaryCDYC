@@ -54,7 +54,8 @@ class DataProcess
      */
     public function getPeriodId(): int
     {
-        $period = Period::max('id');
+        // 需要返回还没有关闭的会计期ID
+        $period = Period::where('published_at', '')->max('id');
 
         if (empty($period)) {
             return $this->newPeriod();
@@ -68,7 +69,7 @@ class DataProcess
      *
      * @param string $publishedAt 发布日期
      *
-     * @return null|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
     public function closePeriod(string $publishedAt = '')
     {
@@ -541,15 +542,15 @@ class DataProcess
      */
     private function calTax(int $period)
     {
-        // 获取上期已扣税
+        // 获取上期个人所得税
         $taxs = TaxImport::where('period_id', $period - 1)
-            ->select(['policyNumber', 'prior_had_deducted_tax'])->get();
+            ->select(['policyNumber', 'personal_tax'])->get();
         // 将数据写入当期的 上期已扣税 字段
-        if (\count($taxs) > 0) {
+        if (count($taxs) > 0) {
             foreach ($taxs as $t) {
                 Deduction::updateOrCreate(
                     ['policyNumber' => $t->policyNumber, 'period_id' => $period],
-                    ['prior_had_deducted_tax' => $t->prior_had_deducted_tax],
+                    ['prior_had_deducted_tax' => $t->personal_tax],
                 );
             }
         }
@@ -559,6 +560,8 @@ class DataProcess
         $sqlstring .= 'SET ';
         // 个人所得税
         $sqlstring .= 't.personal_tax=t.should_be_tax + IFNULL(o.article_add_tax,0) + IFNULL(o.franchise_add_tax, 0), ';
+        // 申报个税
+        $sqlstring .= 't.declare_tax = t.declare_tax_salary + declare_tax_article + declare_tax_franchise, ';
         // 税差
         $sqlstring .= 't.tax_diff = (t.declare_tax * 100 - prior_had_deducted_tax * 100) / 100 ';
         $sqlstring .= 'WHERE t.period_id = ?';

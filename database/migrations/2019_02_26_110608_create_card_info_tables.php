@@ -17,7 +17,7 @@ class CreateCardInfoTables extends Migration
             $table->string('remit_card_no')->comment('代汇卡号');
             $table->string('remit_name')->comment('代汇姓名');
             $table->string('remit_bank')->comment('代汇开户行');
-            $table->string('remit_bank_no')->comment('代汇行号');
+            $table->string('remit_address_no')->comment('代汇地区码');
             $table->string('remit_province')->comment('代汇省份');
             $table->string('remit_city')->comment('代汇市');
             $table->timestamps();

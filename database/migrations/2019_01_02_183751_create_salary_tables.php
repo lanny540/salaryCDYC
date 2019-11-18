@@ -268,6 +268,9 @@ class CreateSalaryTables extends Migration
             $table->float('reduce_tax')->default(0)->comment('减免个税');
             $table->float('personal_tax')->default(0)->comment('个人所得税');
             $table->float('prior_had_deducted_tax')->default(0)->comment('上月已扣税');
+            $table->float('declare_tax_salary')->default(0)->comment('薪金申报个税');
+            $table->float('declare_tax_article')->default(0)->comment('稿酬申报个税');
+            $table->float('declare_tax_franchise')->default(0)->comment('特权申报个税');
             $table->float('declare_tax')->default(0)->comment('申报个税');
             $table->float('tax_diff')->default(0)->comment('税差');
         });
