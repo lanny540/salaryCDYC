@@ -4,6 +4,7 @@ use App\Models\Department;
 use App\Models\Users\User;
 use App\Models\Users\UserProfile;
 use Carbon\Carbon;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -25,7 +26,7 @@ class UsersSeeder extends Seeder
             'created_at' => $date, 'updated_at' => $date,
         ]);
 
-        $faker = Faker\factory::create('zh_CN');
+        $faker = factory::create('zh_CN');
 
         UserProfile::create([
             'user_id' => $user->id,

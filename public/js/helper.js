@@ -67,6 +67,7 @@ function calculationData(data, filters, uploadType)
         case '9':
             filters = R.append('年薪工资', filters);
             filters = R.append('岗位工资', filters);
+            filters = R.append('交通费', filters);
             res.excel = employeesWage(data);
             res.filters = filters;
             break;
@@ -310,7 +311,7 @@ function sumHtml(data)
     html += '<td style="white-space: nowrap;">合计金额</td>';
     for (let key in data) {
         if (key !== '保险编号') {
-            html += '<td style="white-space: nowrap;">' + data[key] / 100  + '</td>';
+            html += '<td style="white-space: nowrap;">' + data[key] / 100   + '</td>';
         }
     }
     html += '</tr></tbody>';

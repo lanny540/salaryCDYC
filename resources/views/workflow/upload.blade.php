@@ -179,9 +179,9 @@
                 let uploadType = $("#uploadType option:selected").val();
                 // 计算部分合计字段
                 let calData = calculationData(excel, filters, uploadType);
-                console.log(calData);
                 // 表格初始化
                 let sumSalary = countSalary(calData.excel, calData.filters);
+                // console.log(sumSalary);
                 let html = sumHtml(sumSalary.sumColumn);
                 let table = $('#sumInfo');
                 table.html('');

@@ -935,7 +935,7 @@ class SalaryRepository
      */
     private function resetGjj(int $period)
     {
-        Subsidy::where('period_id', $period)->update([
+        Insurances::where('period_id', $period)->update([
             'gjj_classic' => 0,
             'gjj_add' => 0,
             'gjj_enterprise' => 0,
@@ -994,7 +994,7 @@ class SalaryRepository
      */
     private function resetInsurances(int $period)
     {
-        Subsidy::where('period_id', $period)->update([
+        Insurances::where('period_id', $period)->update([
             'annuity_classic' => 0,
             'annuity_add' => 0,
             'annuity_enterprise' => 0,

@@ -107,10 +107,8 @@ class SalaryController extends Controller
     /**
      * 导出所有人员当期薪酬明细.
      *
-     * @return \Maatwebsite\Excel\BinaryFileResponse
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function salaryExport()
     {
