@@ -60,19 +60,20 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div>
-                                    <a href="{{ route('sheet.index') }}" class="btn btn-primary btn-lg float-right">打印工资条</a>
+                                    <a href="{{ route('sheet.index') }}" class="btn btn-primary btn-lg float-right">
+                                        <i class="fa fa-print" ></i>  打印工资条
+                                    </a>
                                     <button class="btn btn-info btn-lg float-right" style="margin-right: 20px;" data-toggle="modal" data-target="#designFormulas" type="button">
                                         <i class="fa fa-cart-plus" ></i> 查看计算公式
                                     </button>
                                     <h1 class="product-main-price">￥ {{ $summary->salary_total }}</h1>
                                 </div>
                                 <hr>
-
                                 <h3 class="salaryHeader">应发工资: {{ $summary->wage_total }}</h3>
                                 <div class="row">
                                     @foreach($detail['应发工资'][0] as $k => $v)
                                         @if($k !== '保险编号' && $k !== '应发工资')
-                                            <div class="col-md-6 salaryDetail">{{ $k }}: {{ $v }} </div>
+                                            <div class="col-md-6 salaryDetail"><strong>{{ $k }}:</strong> {{ $v }} </div>
                                         @endif
                                     @endforeach
                                 </div>
@@ -81,7 +82,7 @@
                                 <div class="row">
                                     @foreach($detail['补贴合计'][0] as $k => $v)
                                         @if($k !== '保险编号' && $k !== '补贴合计')
-                                            <div class="col-md-6 salaryDetail">{{ $k }}: {{ $v }} </div>
+                                            <div class="col-md-6 salaryDetail"><strong>{{ $k }}:</strong> {{ $v }} </div>
                                         @endif
                                     @endforeach
                                 </div>
@@ -90,7 +91,7 @@
                                 <div class="row">
                                     @foreach($detail['补发合计'][0] as $k => $v)
                                         @if($k !== '保险编号' && $k !== '补发合计')
-                                            <div class="col-md-6 salaryDetail">{{ $k }}: {{ $v }} </div>
+                                            <div class="col-md-6 salaryDetail"><strong>{{ $k }}:</strong> {{ $v }} </div>
                                         @endif
                                     @endforeach
                                 </div>
@@ -99,7 +100,7 @@
                                 <div class="row">
                                     @foreach($detail['奖金合计'][0] as $k => $v)
                                         @if($k !== '保险编号' && $k !== '奖金合计')
-                                            <div class="col-md-6 salaryDetail">{{ $k }}: {{ $v }} </div>
+                                            <div class="col-md-6 salaryDetail"><strong>{{ $k }}:</strong> {{ $v }} </div>
                                         @endif
                                     @endforeach
                                 </div>
@@ -116,17 +117,28 @@
                                 <div class="row">
                                     @foreach($detail['扣款合计'][0] as $k => $v)
                                         @if($k !== '保险编号' && $k !== '扣款合计')
-                                            <div class="col-md-3" style="font-size: 16px;">{{ $k }}: {{ $v }} </div>
+                                            <div class="col-md-3" style="font-size: 16px;"><strong>{{ $k }}:</strong> {{ $v }} </div>
                                         @endif
                                     @endforeach
                                 </div>
                             </div>
                             <div class="col-md-12" style="margin-top: 20px;">
+                                <h3 class="salaryHeader">个人四险一金</h3>
+                                <div class="row">
+                                    @foreach($detail['社保相关'][0] as $k => $v)
+                                        @if($k !== '保险编号')
+                                            <div class="col-md-3" style="font-size: 16px;"><strong>{{ $k }}:</strong> {{ $v }} </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="margin-top: 20px;">
                                 <h3 class="salaryHeader">专项税务相关</h3>
                                 <div class="row">
                                     @foreach($detail['专项相关'][0] as $k => $v)
                                         @if($k !== '保险编号')
-                                            <div class="col-md-3" style="font-size: 16px;">{{ $k }}: {{ $v }} </div>
+                                            <div class="col-md-3" style="font-size: 16px;"><strong>{{ $k }}:</strong> {{ $v }} </div>
                                         @endif
                                     @endforeach
                                 </div>
@@ -194,6 +206,7 @@
             legend: {
                 orient: 'horizontal',
                 x: 'left',
+                fontStyle: 'normal',
                 data: getTitles(chartdatas),
             },
             series: [

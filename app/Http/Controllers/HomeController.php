@@ -2,8 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\SalaryData;
+use Auth;
+use Carbon\Carbon;
+
 class HomeController extends Controller
 {
+    protected $salaryData;
+
+    public function __construct(SalaryData $services)
+    {
+        $this->salaryData = $services;
+    }
+
     /**
      * 仪表盘视图.
      *
@@ -11,6 +22,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $year = Carbon::now()->year;
+
+        // 获取 今年的薪酬汇总数据
+        $salary = $this->salaryData->getDashboardSalary(Auth::id(), $year);
+
+        return view('home')
+            ->with('salary', json_encode($salary));
     }
 }

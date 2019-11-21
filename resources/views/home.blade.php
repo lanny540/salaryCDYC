@@ -36,11 +36,11 @@
                             <ul class="stat-list text-center">
                                 <li>
                                     <h2 class="text-muted m-b block dash-text1">{{ \Carbon\Carbon::now()->year }}年收入</h2>
-                                    <span class="h3 font-bold m-t block dash-text2">￥ 255,346</span>
+                                    <span class="h3 font-bold m-t block dash-text2" id="salary_total"></span>
                                 </li>
                                 <li>
-                                    <h2 class="text-muted m-b block dash-text1">预缴个税</h2>
-                                    <span class="h3 font-bold m-t block dash-text2">￥ 46,100</span>
+                                    <h2 class="text-muted m-b block dash-text1">年缴个税</h2>
+                                    <span class="h3 font-bold m-t block dash-text2" id="salary_tax"></span>
                                 </li>
                             </ul>
                         </div>
@@ -109,8 +109,11 @@
 <script src="{{ asset('js/plugins/chartJs/Chart.min.js') }}"></script>
 
 <script>
+    let datas = <?php echo $salary; ?>;
+    let chartTitle = getSalaryTitle(datas.salary);
+    let chartData = getSalary(datas.salary);
     let barData = {
-        labels: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+        labels: chartTitle,
         datasets: [
             {
                 label: "月度收入",
@@ -118,7 +121,7 @@
                 borderColor: "rgba(26,179,148,0.7)",
                 pointBackgroundColor: "rgba(26,179,148,1)",
                 pointBorderColor: "#fff",
-                data: [7222, 7456, 7540, 8054, 8631, 7813, 7523, 7129, 7923, 8310, 9512, 0]
+                data: chartData,
             }
         ]
     };
@@ -140,6 +143,26 @@
             };
             toastr.success('{{ Auth::user()->profile->userName }} 欢迎进入{{ env('APP_NAME') }}');
         }, 1300);
+
+        $("#salary_total").html('￥' + datas.total);
+        $("#salary_tax").html('￥' + datas.tax);
     });
+
+    // 输出图表纵坐标
+    function getSalary(object) {
+        let values = [];
+        for (let property in object) {
+            values.push(object[property].salary_total);
+        }
+        return values;
+    }
+    // 输出图表横坐标
+    function getSalaryTitle(object) {
+        let values = [];
+        for (let property in object) {
+            values.push(object[property].published_at);
+        }
+        return values;
+    }
 </script>
 @endsection

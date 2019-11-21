@@ -13,6 +13,39 @@ use DB;
 class SalaryData
 {
     /**
+     * 输出首页图表所需数据.
+     *
+     * @param int    $userId 用户ID
+     * @param string $year   年份
+     *
+     * @return mixed
+     */
+    public function getDashboardSalary($userId, $year)
+    {
+        $periods = $this->getPeriodIds($year);
+        $policyNumber = $this->getPolicyNumber($userId);
+
+        $res['salary'] = SalarySummary::where('policyNumber', $policyNumber)
+            ->whereIn('period_id', $periods)
+            ->leftJoin('periods', 'periods.id', '=', 'summary.period_id')
+            ->select(['salary_total', 'periods.published_at'])
+            ->orderBy('period_id')->get();
+
+        $temp = Period::whereIn('periods.id', $periods)
+            ->leftJoin('summary', 'periods.id', '=', 'summary.period_id')
+            ->leftJoin('taxImport', 'periods.id', '=', 'taxImport.period_id')
+            ->where('summary.policyNumber', $policyNumber)
+            ->where('taxImport.policyNumber', $policyNumber)
+            ->selectRaw('SUM(summary.salary_total) AS salary_total, SUM(taxImport.personal_tax) AS personal_tax ')
+            ->orderBy('periods.id')->first();
+
+        $res['total'] = $temp->salary_total;
+        $res['tax'] = $temp->personal_tax;
+
+        return $res;
+    }
+
+    /**
      * 根据年份获取年收入概况.
      *
      * @param int    $userId 用户ID
@@ -76,8 +109,9 @@ class SalaryData
      * 根据UID查询保险编号.
      *
      * @param int $userId 用户ID
+     * @return mixed|string
      */
-    public function getPolicyNumber($userId): string
+    public function getPolicyNumber($userId)
     {
         // TODO：测试用，正式环境部署前删除
         return 1 === $userId ? '0500038' : UserProfile::where('user_id', $userId)->first()->policyNumber;
@@ -251,12 +285,6 @@ class SalaryData
      */
     public function getInsurance($periodId, $policy = '')
     {
-//        $sqlstring = 'policyNumber AS 保险编号, gjj_person AS 公积金个人, gjj_enterprise AS 公积企业缴, gjj_deduction AS 公积金扣除, ';
-//        $sqlstring .= 'annuity_person AS 年金个人, annuity_enterprise AS 年金企业缴, annuity_deduction AS 年金扣除, ';
-//        $sqlstring .= 'retire_person AS 退养金个人, retire_enterprise AS 退养企业缴, retire_deduction AS 退养金扣除, ';
-//        $sqlstring .= 'medical_person AS 医保金个人, medical_enterprise AS 医疗企业缴, medical_deduction AS 医保金补扣, ';
-//        $sqlstring .= 'unemployment_person AS 失业金个人,unemployment_enterprise AS 失业企业缴,unemployment_deduction AS 失业金扣除, ';
-//        $sqlstring .= 'injury_enterprise AS 工伤企业缴, birth_enterprise AS 生育企业缴';
         $sqlstring = 'policyNumber AS 保险编号, gjj_person AS 公积金, annuity_person AS 年金个人, ';
         $sqlstring .= 'retire_person AS 养老保险, medical_person AS 医疗保险, unemployment_person AS 失业保险 ';
         if ('' !== $policy) {
@@ -349,9 +377,9 @@ class SalaryData
      */
     private function getInnerRingSalary($periodId, $policy)
     {
-        return SalarySummary::selectRaw('salary_total AS 工资薪金, should_total AS 应发合计, bonus_total AS 奖金合计, enterprise_out_total AS 企业超合计')
-            ->where('period_id', $periodId)
+        return SalarySummary::where('period_id', $periodId)
             ->where('policyNumber', $policy)
+            ->selectRaw('salary_total AS 工资薪金, should_total AS 应发合计, bonus_total AS 奖金合计,enterprise_out_total AS 企业超合计')
             ->firstOrFail()->toArray();
     }
 
