@@ -2,7 +2,6 @@
 
 namespace App\Models\Salary;
 
-use App\Models\Users\UserProfile;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -145,66 +144,4 @@ class Wage extends Model
         }
     }
 
-    /**
-     * 应发工资=年薪工资+岗位工资+保留工资+套级补差+中夜班费+加班工资+年功工资+统筹小计+企业小计+离退休补充+补偿.
-     */
-    public function setWageTotalAttribute()
-    {
-        $annual = $this->attributes['annual'];
-        $wage = $this->attributes['wage'];
-        $retained_wage = $this->attributes['retained_wage'];
-        $compensation = $this->attributes['compensation'];
-        $night_shift = $this->attributes['night_shift'];
-        $overtime_wage = $this->attributes['overtime_wage'];
-        $seniority_wage = $this->attributes['seniority_wage'];
-        $tcxj = $this->attributes['tcxj'];
-        $qyxj = $this->attributes['qyxj'];
-        $ltxbc = $this->attributes['ltxbc'];
-        $bc = $this->attributes['bc'];
-
-        $wage_total = $annual * 100 + $wage * 100 + $retained_wage * 100 + $compensation * 100 + $night_shift * 100;
-        $wage_total += $overtime_wage * 100 + $seniority_wage * 100 + $tcxj * 100 + $qyxj * 100;
-        $wage_total += $ltxbc * 100 + $bc * 100;
-        $wage_total = $wage_total / 100;
-
-        $this->attributes['wage_total'] = $wage_total;
-    }
-
-    /**
-     * 应发辞退.
-     * 如果dwdm="01020201",应发辞退=应发工资,应发工资=0.
-     */
-    public function setYfctAttribute()
-    {
-        $policy = $this->attributes['policyNumber'];
-
-        $department = UserProfile::where('policyNumber', $policy)->first()->department;
-        $dwdm = isset($department->dwdm) ? $department->dwdm : '0101';
-
-        if ('01020201' == $dwdm) {
-            $this->attributes['yfct'] = $this->attributes['wage_total'];
-            $this->attributes['wage_total'] = 0;
-        } else {
-            $this->attributes['yfct'] = 0;
-        }
-    }
-
-    /**
-     * 应发内退.
-     * 如果dwdm="01020202",应发辞退=应发工资,应发工资=0.
-     */
-    public function setYfntAttribute()
-    {
-        $policy = $this->attributes['policyNumber'];
-
-        $department = UserProfile::where('policyNumber', $policy)->first()->department;
-        $dwdm = isset($department->dwdm) ? $department->dwdm : '0101';
-
-        if ('01020202' == $dwdm) {
-            $this->attributes['yfnt'] = $this->attributes['wage_total'];
-            $this->attributes['wage_total'] = 0;
-        } else {
-            $this->attributes['yfnt'] = 0;
-        }
-    }
 }

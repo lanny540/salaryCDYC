@@ -8,6 +8,7 @@ use App\Models\Salary\SalarySummary;
 use App\Models\Salary\Special;
 use App\Models\Salary\TaxImport;
 use App\Models\Salary\Wage;
+use App\Models\Users\UserProfile;
 use App\Repository\SalaryRepository;
 use Carbon\Carbon;
 use DB;
@@ -110,25 +111,25 @@ class DataProcess
         DB::beginTransaction();
 
         try {
-            // 工资——应发工资、应发辞退、应发内退
-            $this->calWage($period);
-            // 奖金——奖金合计
-            $this->calBonus($period);
-            // 补贴——补贴合计
-            $this->calSubsidy($period);
-            // 社保——企业超合计、专项扣除
-            $this->calInsurances($period);
-            // 补发——补发合计
-            $this->calReissue($period);
-            // 其他费用——稿费
-            $this->calOther($period);
-            // 扣款——水电、物管、其他扣除、扣欠款
-            $this->calDeduction($period);
-            // 专项税务——个人所得税、税差
-            $this->calTax($period);
-            // 合计表
-            $this->calSummary($period);
-            // 需要代汇的人员
+//            // 工资——应发工资、应发辞退、应发内退
+//            $this->calWage($period);
+//            // 奖金——奖金合计
+//            $this->calBonus($period);
+//            // 补贴——补贴合计
+//            $this->calSubsidy($period);
+//            // 社保——企业超合计、专项扣除
+//            $this->calInsurances($period);
+//            // 补发——补发合计
+//            $this->calReissue($period);
+//            // 其他费用——稿费
+//            $this->calOther($period);
+//            // 扣款——水电、物管、其他扣除、扣欠款
+//            $this->calDeduction($period);
+//             // 专项税务——个人所得税、税差
+//            $this->calTax($period);
+//             // 合计表
+//            $this->calSummary($period);
+//            // 需要代汇的人员
             $this->calInstead($period);
 
             DB::commit();
@@ -225,7 +226,7 @@ class DataProcess
         $sqlstring .= 'ROUND(SUM(IFNULL(sp.instead_salary,0)),2) AS 代汇,ROUND(SUM(IFNULL(sp.bank_salary,0)),2) AS 银行发放,';
         $sqlstring .= 'ROUND(SUM(IFNULL(sp.court_salary,0)),2) AS 法院转提 ';
 
-        $sqlstring .= 'FROM userprofile up ';
+        $sqlstring .= 'FROM userProfile up ';
         $sqlstring .= 'LEFT JOIN wage w ON up.policyNumber = w.policyNumber AND w.period_id = ? ';
         $sqlstring .= 'LEFT JOIN bonus b ON up.policyNumber = b.policyNumber AND b.period_id = ? ';
         $sqlstring .= 'LEFT JOIN other o ON up.policyNumber = o.policyNumber AND o.period_id = ? ';
@@ -383,7 +384,7 @@ class DataProcess
         $sqlstring .= 'IFNULL(sp.court_salary,0) AS 法院转提 ';
         // endregion
 
-        $sqlstring .= 'FROM userprofile up ';
+        $sqlstring .= 'FROM userProfile up ';
         $sqlstring .= 'LEFT JOIN departments ON up.department_id = departments.id ';
         $sqlstring .= 'LEFT JOIN wage w ON up.policyNumber = w.policyNumber AND w.period_id = ? ';
         $sqlstring .= 'LEFT JOIN bonus b ON up.policyNumber = b.policyNumber AND b.period_id = ? ';
@@ -394,6 +395,7 @@ class DataProcess
         $sqlstring .= 'LEFT JOIN deduction d ON up.policyNumber = d.policyNumber AND d.period_id = ? ';
         $sqlstring .= 'LEFT JOIN taxImport t ON up.policyNumber = t.policyNumber AND t.period_id = ? ';
         $sqlstring .= 'LEFT JOIN special sp ON up.policyNumber = sp.policyNumber AND sp.period_id = ? ';
+        $sqlstring .= 'WHERE up.user_id <> 1 ';
         $sqlstring .= 'ORDER BY departments.dwdm, up.user_id';
         //endregion
 
@@ -413,6 +415,8 @@ class DataProcess
     {
         $wage = Wage::where('period_id', $period)->get();
         foreach ($wage as $w) {
+            $cal = $this->calWageDetail($w);
+
             Wage::updateOrCreate(
                 ['period_id' => $period, 'policyNumber' => $w->policyNumber],
                 [
@@ -428,12 +432,61 @@ class DataProcess
                     'ltxbc' => $w->ltxbc,
                     'bc' => $w->bc,
 
-                    'wage_total' => 0,
-                    'yfct' => 0,
-                    'yfnt' => 0,
+                    'wage_total' => $cal['wage_total'],
+                    'yfct' => $cal['yfct'],
+                    'yfnt' => $cal['yfnt'],
                 ]
             );
         }
+    }
+
+    /**
+     * 计算工资的 应发工资、应发辞退、应发内退、
+     *
+     * @param $data
+     * @return mixed
+     */
+    private function calWageDetail($data)
+    {
+        // 应发工资
+        $annual = $data->annual;
+        $wage = $data->wage;
+        $retained_wage = $data->retained_wage;
+        $compensation = $data->compensation;
+        $night_shift = $data->night_shift;
+        $overtime_wage = $data->overtime_wage;
+        $seniority_wage = $data->seniority_wage;
+        $tcxj = $data->tcxj;
+        $qyxj = $data->qyxj;
+        $ltxbc = $data->ltxbc;
+        $bc = $data->bc;
+
+        $wage_total = $annual * 100 + $wage * 100 + $retained_wage * 100 + $compensation * 100 + $night_shift * 100;
+        $wage_total += $overtime_wage * 100 + $seniority_wage * 100 + $tcxj * 100 + $qyxj * 100;
+        $wage_total += $ltxbc * 100 + $bc * 100;
+        $wage_total = $wage_total / 100;
+
+        $res['wage_total'] = $wage_total;
+
+
+        $up = UserProfile::with('department')->where('policyNumber', $data->policyNumber)->first();
+        $dwdm = isset($up->department->dwdm) ? $up->department->dwdm : '0101';
+
+        if ('01020201' == $dwdm) {
+            $res['wage_total'] = 0;
+            $res['yfct'] = $wage_total;
+        } else {
+            $res['yfct'] = 0;
+        }
+
+        if ('01020202' == $dwdm) {
+            $res['wage_total'] = 0;
+            $res['yfnt'] = $wage_total;
+        } else {
+            $res['yfnt'] = 0;
+        }
+
+        return $res;
     }
 
     /**
@@ -548,7 +601,7 @@ class DataProcess
         // 将数据写入当期的 上期已扣税 字段
         if (count($taxs) > 0) {
             foreach ($taxs as $t) {
-                Deduction::updateOrCreate(
+                TaxImport::updateOrCreate(
                     ['policyNumber' => $t->policyNumber, 'period_id' => $period],
                     ['prior_had_deducted_tax' => $t->personal_tax],
                 );
@@ -596,11 +649,11 @@ class DataProcess
         $sqlstring .= 'reissue.reissue_total as reissue_total,insurances.enterprise_out_total as enterprise_out_total,';
         $sqlstring .= '(wage_total + subsidy.subsidy_total + reissue.reissue_total) as should_total, ';
         $sqlstring .= '(wage_total + bonus.bonus_total + insurances.enterprise_out_total) as salary_total ';
-        $sqlstring .= 'FROM userprofile up ';
+        $sqlstring .= 'FROM userProfile up ';
         $sqlstring .= 'LEFT JOIN wage ON up.policyNumber = wage.policyNumber AND wage.period_id = ? ';
-        $sqlstring .= 'LEFT JOIN bonus ON up.policyNumber = bonus.policyNumber AND bonus.period_id = ?  ';
-        $sqlstring .= 'LEFT JOIN subsidy ON up.policyNumber = subsidy.policyNumber AND subsidy.period_id = ?  ';
-        $sqlstring .= 'LEFT JOIN reissue ON up.policyNumber = reissue.policyNumber AND reissue.period_id = ?   ';
+        $sqlstring .= 'LEFT JOIN bonus ON up.policyNumber = bonus.policyNumber AND bonus.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN subsidy ON up.policyNumber = subsidy.policyNumber AND subsidy.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN reissue ON up.policyNumber = reissue.policyNumber AND reissue.period_id = ? ';
         $sqlstring .= 'LEFT JOIN insurances ON up.policyNumber = insurances.policyNumber AND insurances.period_id = ? ';
         $summary = DB::select($sqlstring, [
             $period, $period, $period, $period, $period,
@@ -608,13 +661,13 @@ class DataProcess
 
         foreach ($summary as $s) {
             SalarySummary::updateOrCreate(['period_id' => $period, 'policyNumber' => $s->policyNumber], [
-                'wage_total' => isset($s->wage_total) ?: 0,
-                'bonus_total' => isset($s->bonus_total) ?: 0,
-                'subsidy_total' => isset($s->subsidy_total) ?: 0,
-                'reissue_total' => isset($s->reissue_total) ?: 0,
-                'enterprise_out_total' => isset($s->enterprise_out_total) ?: 0,
-                'should_total' => isset($s->should_total) ?: 0,
-                'salary_total' => isset($s->salary_total) ?: 0,
+                'wage_total' => isset($s->wage_total) ? $s->wage_total : 0,
+                'bonus_total' => isset($s->bonus_total) ? $s->bonus_total : 0,
+                'subsidy_total' => isset($s->subsidy_total) ? $s->subsidy_total : 0,
+                'reissue_total' => isset($s->reissue_total) ? $s->reissue_total : 0,
+                'enterprise_out_total' => isset($s->enterprise_out_total) ? $s->enterprise_out_total : 0,
+                'should_total' => isset($s->should_total) ? $s->should_total : 0,
+                'salary_total' => isset($s->salary_total) ? $s->salary_total: 0,
             ]);
         }
     }
@@ -626,7 +679,6 @@ class DataProcess
      */
     private function calInstead(int $period)
     {
-        $date = Carbon::now();
         // 获取 需要代汇 的人员保险编号
         $temp = [];
         $sqlstring = 'SELECT up.policyNumber FROM card_info c LEFT JOIN userprofile up ON c.user_id = up.user_id';
@@ -635,23 +687,22 @@ class DataProcess
             $temp[] = $p->policyNumber;
         }
         // 计算实发工资
-        $sqlstring = 'SELECT d.dwdm, u.policyNumber, summary.period_id, ';
-        $sqlstring .= '(summary.should_total * 100 ';
-        $sqlstring .= '- ifnull(insurances.gjj_person, 0) * 100 - ifnull(insurances.annuity_person,0) * 100 ';
-        $sqlstring .= '- ifnull(insurances.retire_person, 0) * 100 - ifnull(insurances.medical_person, 0) * 100 ';
-        $sqlstring .= '- ifnull(insurances.unemployment_person, 0) * 100 - ifnull(deduction.water_electric, 0) * 100 ';
-        $sqlstring .= '- ifnull(deduction.property_fee, 0) * 100 - ifnull(deduction.debt, 0) * 100 ';
-        $sqlstring .= '- ifnull(deduction.donate, 0) * 100 - ifnull(taxImport.personal_tax, 0) * 100';
-        $sqlstring .= '- ifnull(taxImport.tax_diff, 0) * 100 ) / 100 as actual_salary ';
-        $sqlstring .= 'FROM userprofile u ';
+        $sqlstring = 'SELECT d.dwdm, u.policyNumber, s.period_id, ';
+        $sqlstring .= '(s.should_total * 100 ';
+        $sqlstring .= '- ifnull(i.gjj_person, 0) * 100 - ifnull(i.annuity_person,0) * 100 ';
+        $sqlstring .= '- ifnull(i.retire_person, 0) * 100 - ifnull(i.medical_person, 0) * 100 ';
+        $sqlstring .= '- ifnull(i.unemployment_person, 0) * 100 - ifnull(de.water_electric, 0) * 100 ';
+        $sqlstring .= '- ifnull(de.property_fee, 0) * 100 - ifnull(de.debt, 0) * 100 ';
+        $sqlstring .= '- ifnull(de.donate, 0) * 100 - ifnull(t.personal_tax, 0) * 100';
+        $sqlstring .= '- ifnull(t.tax_diff, 0) * 100 ) / 100 as actual_salary ';
+        $sqlstring .= 'FROM userProfile u ';
         $sqlstring .= 'LEFT JOIN departments d ON u.department_id = d.id ';
-        $sqlstring .= 'LEFT JOIN summary ON u.policyNumber = summary.policyNumber ';
-        $sqlstring .= 'LEFT JOIN insurances ON u.policyNumber = insurances.policyNumber ';
-        $sqlstring .= 'LEFT JOIN deduction ON u.policyNumber = deduction.policyNumber ';
-        $sqlstring .= 'LEFT JOIN taxImport ON u.policyNumber = taxImport.policyNumber ';
-        $sqlstring .= 'WHERE summary.period_id = ?';
+        $sqlstring .= 'LEFT JOIN summary s ON u.policyNumber = s.policyNumber AND s.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN insurances i ON u.policyNumber = i.policyNumber AND i.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN deduction de ON u.policyNumber = de.policyNumber AND de.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN taxImport t ON u.policyNumber = t.policyNumber AND t.period_id = ? ';
 
-        $insteads = DB::select($sqlstring, [$period]);
+        $insteads = DB::select($sqlstring, [$period, $period, $period, $period]);
         // 重置当期的代汇数据
         Special::where('period_id', $period)->update([
             'actual_salary' => 0,
@@ -678,7 +729,7 @@ class DataProcess
                 $debt_salary = 0;
             }
             // 是否是 代汇
-            if (\in_array($i->policyNumber, $temp, true)) {
+            if (in_array($i->policyNumber, $temp, true)) {
                 $instead_salary = $actual_salary + $debt_salary;
                 $bank_salary = 0;
             } else {
@@ -687,17 +738,23 @@ class DataProcess
             }
             $data[$k] = [
                 'policyNumber' => $i->policyNumber,
-                'period_id' => $i->period_id,
-                'created_at' => $date,
-                'updated_at' => $date,
                 'actual_salary' => $actual_salary,
                 'debt_salary' => $debt_salary,
                 'instead_salary' => $instead_salary,
                 'bank_salary' => $bank_salary,
-                // 法院转提 暂时为 0
                 'court_salary' => 0,
             ];
         }
-        Special::insert($data);
+
+        foreach ($data as $d) {
+            Special::updateOrCreate(['period_id' => $period, 'policyNumber' => $d['policyNumber']], [
+                'actual_salary' => $d['actual_salary'],
+                'debt_salary' => $d['debt_salary'],
+                'instead_salary' => $d['instead_salary'],
+                'bank_salary' => $d['bank_salary'],
+                // 法院转提 暂时为 0
+                'court_salary' => 0,
+            ]);
+        }
     }
 }

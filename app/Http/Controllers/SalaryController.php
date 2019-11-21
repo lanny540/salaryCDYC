@@ -10,7 +10,6 @@ use App\Services\SalaryData;
 use Auth;
 use Carbon\Carbon;
 use Excel;
-use Request;
 
 class SalaryController extends Controller
 {

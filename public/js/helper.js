@@ -285,7 +285,7 @@ function countSalary(importData, filters)
     }
     for (let i of importData) {
         for (let key in i) {
-            if (key === '保险编号' || key === '公车扣备注' || key === '它项扣备注') {
+            if (key === '保险编号' || key === '工号' || key === '公车扣备注' || key === '它项扣备注') {
             } else {
                 res.sumColumn[key] += i[key] * 100;
             }
@@ -297,11 +297,12 @@ function countSalary(importData, filters)
 // 动态生成数据汇总结果html
 function sumHtml(data)
 {
+    console.log(data);
     let html = '';
     html += '<thead><tr>';
     html += '<th>#</th>';
     for (let key in data) {
-        if (key !== '保险编号') {
+        if (key !== '保险编号' && key !== '工号') {
             html += '<th style="white-space: nowrap;">' + key + '</th>';
         }
     }
@@ -310,8 +311,8 @@ function sumHtml(data)
     html += '<tbody><tr>';
     html += '<td style="white-space: nowrap;">合计金额</td>';
     for (let key in data) {
-        if (key !== '保险编号') {
-            html += '<td style="white-space: nowrap;">' + data[key] / 100   + '</td>';
+        if (key !== '保险编号' && key !== '工号') {
+            html += '<td style="white-space: nowrap;">' + data[key] / 100 + '</td>';
         }
     }
     html += '</tr></tbody>';

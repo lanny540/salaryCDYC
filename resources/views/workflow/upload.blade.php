@@ -181,7 +181,7 @@
                 let calData = calculationData(excel, filters, uploadType);
                 // 表格初始化
                 let sumSalary = countSalary(calData.excel, calData.filters);
-                // console.log(sumSalary);
+                // console.log(calData);
                 let html = sumHtml(sumSalary.sumColumn);
                 let table = $('#sumInfo');
                 table.html('');
@@ -250,7 +250,13 @@
                     } else {
                         document.getElementById("importColumns").innerHTML = '字段列表获取失败！';
                     }
-                    filters = R.append('保险编号', filters);
+                    if (options.val() == 51 || options.val() == 52 || options.val() == 53) {
+                        filters = R.append('工号', filters);
+                    } else {
+                        filters = R.append('保险编号', filters);
+                    }
+
+                    console.log(filters);
                 }
             });
         }

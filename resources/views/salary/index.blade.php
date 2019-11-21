@@ -9,12 +9,12 @@
                     <a href="{{ route('home') }}">首页</a>
                 </li>
                 <li class="breadcrumb-item active">
-                    <strong>个人薪酬信息</strong>
+                    <strong>个人薪酬统计</strong>
                 </li>
             </ol>
         </div>
     </div>
-@stop
+@endsection
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">

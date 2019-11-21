@@ -28,8 +28,8 @@ class SalaryData
         return SalarySummary::where('summary.policyNumber', $policyNumber)
             ->whereIn('summary.period_id', $period)
             ->leftJoin('periods', 'periods.id', '=', 'summary.period_id')
-            ->select(['wage_total', 'bonus_total', 'salary_total', 'summary.period_id', 'periods.published_at'])
-            ->orderByDesc('summary.period_id')->get();
+            ->select(['should_total', 'bonus_total', 'salary_total', 'summary.period_id', 'periods.published_at'])
+            ->orderBy('summary.period_id')->get();
     }
 
     /**
@@ -79,7 +79,8 @@ class SalaryData
      */
     public function getPolicyNumber($userId): string
     {
-        return UserProfile::where('user_id', $userId)->first()->policyNumber;
+        // TODO：测试用，正式环境部署前删除
+        return 1 === $userId ? '0500038' : UserProfile::where('user_id', $userId)->first()->policyNumber;
     }
 
     /**
@@ -87,8 +88,10 @@ class SalaryData
      *
      * @param int $periodId 会计期ID
      * @param int $userId   用户ID
+     *
+     * @return array
      */
-    public function getDetailSalary($periodId, $userId = 0): array
+    public function getDetailSalary($periodId, $userId = 0)
     {
         $data = [];
         if (0 === $userId) {
@@ -97,8 +100,8 @@ class SalaryData
             $subsidy = $this->getSubsidy($periodId);
             $reissue = $this->getReissue($periodId);
             $outRange = $this->getOutRange($periodId);
-            // TODO: 扣款
             $insurance = $this->getInsurance($periodId);
+            $deduction = $this->getDeduction($periodId);
             $tax = $this->getTax($periodId);
         } else {
             $policy = $this->getPolicyNumber($userId);
@@ -107,8 +110,8 @@ class SalaryData
             $subsidy = $this->getSubsidy($periodId, $policy);
             $reissue = $this->getReissue($periodId, $policy);
             $outRange = $this->getInsurance($periodId, $policy);
-
             $insurance = $this->getInsurance($periodId, $policy);
+            $deduction = $this->getDeduction($periodId, $policy);
             $tax = $this->getTax($periodId, $policy);
         }
 
@@ -117,7 +120,7 @@ class SalaryData
         $data['补贴合计'] = $subsidy;
         $data['补发合计'] = $reissue;
         $data['企业超合计'] = $outRange;
-        $data['扣款合计'] = [];
+        $data['扣款合计'] = $deduction;
         $data['社保相关'] = $insurance;
         $data['专项相关'] = $tax;
 
@@ -129,8 +132,10 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
+     *
+     * @return array
      */
-    public function getWage($periodId, $policy = ''): array
+    public function getWage($periodId, $policy = '')
     {
         $sqlstring = 'policyNumber AS 保险编号, wage_total AS 应发工资, annual AS 年薪工资, wage AS 岗位工资, retained_wage AS 保留工资, ';
         $sqlstring .= 'compensation AS 套级补差, night_shift AS 中夜班费, overtime_wage AS 加班工资, seniority_wage AS 年功工资';
@@ -150,8 +155,10 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
+     *
+     * @return array
      */
-    public function getBonus($periodId, $policy = ''): array
+    public function getBonus($periodId, $policy = '')
     {
         $sqlstring = 'policyNumber AS 保险编号, month_bonus AS 月奖, special AS 专项奖, competition AS 劳动竞赛, ';
         $sqlstring .= 'class_reward AS 课酬, holiday AS 节日慰问费, party_reward AS 党员奖励, union_paying AS 工会发放, ';
@@ -172,8 +179,10 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
+     *
+     * @return array
      */
-    public function getSubsidy($periodId, $policy = ''): array
+    public function getSubsidy($periodId, $policy = '')
     {
         $sqlstring = 'policyNumber AS 保险编号, communication AS 通讯补贴, traffic AS 交通补贴, ';
         $sqlstring .= 'housing AS 住房补贴, single AS 独子费, subsidy_total AS 补贴合计';
@@ -192,8 +201,10 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
+     *
+     * @return array
      */
-    public function getReissue($periodId, $policy = ''): array
+    public function getReissue($periodId, $policy = '')
     {
         $sqlstring = 'policyNumber AS 保险编号, reissue_wage AS 补发工资, reissue_subsidy AS 补发补贴, ';
         $sqlstring .= 'reissue_other AS 补发其他, reissue_total AS 补发合计';
@@ -212,8 +223,10 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
+     *
+     * @return array
      */
-    public function getOutRange($periodId, $policy = ''): array
+    public function getOutRange($periodId, $policy = '')
     {
         $sqlstring = 'policyNumber AS 保险编号, gjj_out_range AS 公积企超标, annuity_out_range AS 年金企超标, ';
         $sqlstring .= 'retire_out_range AS 退养企超标, medical_out_range AS 医疗企超标, ';
@@ -233,15 +246,19 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy
+     *
+     * @return array
      */
-    public function getInsurance($periodId, $policy = ''): array
+    public function getInsurance($periodId, $policy = '')
     {
-        $sqlstring = 'policyNumber AS 保险编号, gjj_person AS 公积金个人, gjj_enterprise AS 公积企业缴, gjj_deduction AS 公积金扣除, ';
-        $sqlstring .= 'annuity_person AS 年金个人, annuity_enterprise AS 年金企业缴, annuity_deduction AS 年金扣除, ';
-        $sqlstring .= 'retire_person AS 退养金个人, retire_enterprise AS 退养企业缴, retire_deduction AS 退养金扣除, ';
-        $sqlstring .= 'medical_person AS 医保金个人, medical_enterprise AS 医疗企业缴, medical_deduction AS 医保金补扣, ';
-        $sqlstring .= 'unemployment_person AS 失业金个人,unemployment_enterprise AS 失业企业缴,unemployment_deduction AS 失业金扣除, ';
-        $sqlstring .= 'injury_enterprise AS 工伤企业缴, birth_enterprise AS 生育企业缴';
+//        $sqlstring = 'policyNumber AS 保险编号, gjj_person AS 公积金个人, gjj_enterprise AS 公积企业缴, gjj_deduction AS 公积金扣除, ';
+//        $sqlstring .= 'annuity_person AS 年金个人, annuity_enterprise AS 年金企业缴, annuity_deduction AS 年金扣除, ';
+//        $sqlstring .= 'retire_person AS 退养金个人, retire_enterprise AS 退养企业缴, retire_deduction AS 退养金扣除, ';
+//        $sqlstring .= 'medical_person AS 医保金个人, medical_enterprise AS 医疗企业缴, medical_deduction AS 医保金补扣, ';
+//        $sqlstring .= 'unemployment_person AS 失业金个人,unemployment_enterprise AS 失业企业缴,unemployment_deduction AS 失业金扣除, ';
+//        $sqlstring .= 'injury_enterprise AS 工伤企业缴, birth_enterprise AS 生育企业缴';
+        $sqlstring = 'policyNumber AS 保险编号, gjj_person AS 公积金, annuity_person AS 年金个人, ';
+        $sqlstring .= 'retire_person AS 养老保险, medical_person AS 医疗保险, unemployment_person AS 失业保险 ';
         if ('' !== $policy) {
             return DB::select(
                 'select '.$sqlstring.' from insurances where period_id = ? AND policyNumber = ?',
@@ -253,12 +270,42 @@ class SalaryData
     }
 
     /**
+     * 查询扣款相关.
+     *
+     * @param int    $periodId 会计期ID
+     * @param string $policy
+     *
+     * @return array
+     */
+    public function getDeduction($periodId, $policy = '')
+    {
+        $sqlstring = 'SELECT d.policyNumber AS 保险编号, (d.water_electric + d.property_fee) AS 扣水电物管, ';
+        $sqlstring .= '(d.debt + d.donate) AS 扣欠款及捐赠, d.union_deduction AS 扣工会会费, ';
+        $sqlstring .= 't.tax_diff AS 税差, t.personal_tax AS 个人所得税, ';
+        $sqlstring .= '(d.water_electric + d.property_fee + d.debt + d.donate + d.union_deduction + t.tax_diff + t.personal_tax) AS 扣款合计 ';
+        $sqlstring .= 'FROM deduction d ';
+        $sqlstring .= 'LEFT JOIN taxImport t ON d.policyNumber = t.policyNumber AND t.period_id = ? ';
+
+        if ('' !== $policy) {
+            $sqlstring .= 'WHERE d.period_id = ? AND d.policyNumber = ? AND t.period_id = ? AND t.policyNumber = ?';
+
+            return DB::select($sqlstring, [$periodId, $periodId, $policy, $periodId, $policy]);
+        }
+
+        $sqlstring .= 'WHERE d.period_id = ? AND t.period_id = ? ';
+
+        return DB::select($sqlstring, [$periodId, $periodId, $periodId]);
+    }
+
+    /**
      * 查询专项税务相关.
      *
      * @param int    $periodId 会计期ID
      * @param string $policy
+     *
+     * @return array
      */
-    public function getTax($periodId, $policy = ''): array
+    public function getTax($periodId, $policy = '')
     {
         $sqlstring = 'policyNumber AS 保险编号, income AS 累计收入额, deduct_expenses AS 累减除费用, special_deduction AS 累计专项扣, ';
         $sqlstring .= 'tax_child AS 累专附子女, tax_old AS 累专附老人, tax_edu AS 累专附继教, tax_loan AS 累专附房利, tax_rent AS 累专附房租, ';
@@ -280,8 +327,10 @@ class SalaryData
      *
      * @param int $periodId 会计期ID
      * @param int $userId   用户ID
+     *
+     * @return array
      */
-    public function getChartSalary($periodId, $userId): array
+    public function getChartSalary($periodId, $userId)
     {
         $policy = $this->getPolicyNumber($userId);
         $inner = $this->getInnerRingSalary($periodId, $policy);
@@ -295,8 +344,10 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
+     *
+     * @return array
      */
-    private function getInnerRingSalary($periodId, $policy): array
+    private function getInnerRingSalary($periodId, $policy)
     {
         return SalarySummary::selectRaw('salary_total AS 工资薪金, should_total AS 应发合计, bonus_total AS 奖金合计, enterprise_out_total AS 企业超合计')
             ->where('period_id', $periodId)
@@ -309,8 +360,10 @@ class SalaryData
      *
      * @param int    $periodId 会计期ID
      * @param string $policy   保险编号
+     *
+     * @return array
      */
-    private function getOuterRingSalary($periodId, $policy): array
+    private function getOuterRingSalary($periodId, $policy)
     {
         $wage = SalarySummary::selectRaw('wage_total AS 应发工资, subsidy_total AS 补贴合计, reissue_total AS 补发合计')
             ->where('period_id', $periodId)
