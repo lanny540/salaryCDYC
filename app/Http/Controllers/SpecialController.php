@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SpecailExport;
+use App\Models\Salary\SalaryLog;
 use App\Repository\SpecialRepository;
 use App\Services\DataProcess;
+use Auth;
 use Excel;
+use File;
 use Illuminate\Http\Request;
 
 class SpecialController extends Controller
@@ -32,7 +35,6 @@ class SpecialController extends Controller
     /**
      * 专项数据导出.
      *
-     * @param Request $request
      * @return \Maatwebsite\Excel\BinaryFileResponse
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
@@ -70,8 +72,24 @@ class SpecialController extends Controller
         // 重置当前的数据
         $info['isReset'] = 1;
 
+        // 保存文件至本地
+        $file = $_FILES['excel'];
+        $arr = explode('.', $file['name']);
+        $fileName = uniqid('excel_', false).'.'.end($arr);
+        $content = File::get($file['tmp_name']);
+//        Storage::disk('excelFiles')->put($fileName, $content);
+        $info['file'] = asset('/storage/excelFiles/'.$fileName);
+
         // 将数据写入DB
         $result = $this->dataProcess->dataToDb($info);
+
+        // 写入salary_log
+        SalaryLog::create([
+            'period_id' => $info['period'],
+            'user_id' => Auth::id(),
+            'upload_type' => $info['uploadType'],
+            'upload_file' => $info['file'],
+        ]);
 
         // 写入失败
         if (!$result) {

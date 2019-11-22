@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Salary\SalaryLog;
 use App\Services\DataProcess;
 use Auth;
 use File;
@@ -74,6 +75,14 @@ class WorkFlowController extends Controller
         $content = File::get($file['tmp_name']);
 //        Storage::disk('excelFiles')->put($fileName, $content);
         $info['file'] = asset('/storage/excelFiles/'.$fileName);
+
+        // 写入salary_log
+        SalaryLog::create([
+            'period_id' => $info['period'],
+            'user_id' => Auth::id(),
+            'upload_type' => $info['uploadType'],
+            'upload_file' => $info['file'],
+        ]);
 
         // 将数据写入DB
         $result = $this->dataProcess->dataToDb($info);

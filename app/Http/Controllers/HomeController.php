@@ -23,8 +23,7 @@ class HomeController extends Controller
     public function index()
     {
         $year = Carbon::now()->year;
-
-        // 获取 今年的薪酬汇总数据
+        // 获取今年的薪酬汇总数据
         $salary = $this->salaryData->getDashboardSalary(Auth::id(), $year);
 
         return view('home')

@@ -50,7 +50,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <div class="panel panel-primary text-center">
                 <div class="panel-heading">
                     <h3>自助服务</h3>
@@ -68,19 +68,25 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <div class="panel panel-success text-center">
                 <div class="panel-heading">
                     <h3>系统功能</h3>
                 </div>
                 <ul class="list-unstyled m-t-md">
                     <li>
-                        <h2><a href="{{ route('upload.index') }}">上传数据</a></h2>
+                        <h2><a href="{{ route('upload.index') }}">上传分表数据</a></h2>
+                    </li>
+                    <li>
+                        <h2><a href="{{ route('special.index') }}">专项数据导出</a></h2>
+                    </li>
+                    <li>
+                        <h2><a href="{{ route('vdata.index') }}">生成凭证</a></h2>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <div class="panel panel-danger text-center">
                 <div class="panel-heading">
                     <h3>常见问题</h3>

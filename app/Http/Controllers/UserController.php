@@ -73,8 +73,6 @@ class UserController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        //TODO: 这里需要判断权限。本人只能修改自己，劳务员可以修改部门人员，管理员可以修改全部人员
-
         //将修改操作写入profile日志
         Log::channel('profile')->info('用户'.Auth::user()->id.'修改了用户'.$userId.'的个人信息。');
 

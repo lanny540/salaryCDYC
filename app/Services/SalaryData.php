@@ -6,6 +6,7 @@ use App\Models\Period;
 use App\Models\Salary\Bonus;
 use App\Models\Salary\Insurances;
 use App\Models\Salary\SalarySummary;
+use App\Models\Salary\TaxImport;
 use App\Models\Users\UserProfile;
 use Carbon\Carbon;
 use DB;
@@ -30,17 +31,12 @@ class SalaryData
             ->leftJoin('periods', 'periods.id', '=', 'summary.period_id')
             ->select(['salary_total', 'periods.published_at'])
             ->orderBy('period_id')->get();
-
-        $temp = Period::whereIn('periods.id', $periods)
-            ->leftJoin('summary', 'periods.id', '=', 'summary.period_id')
-            ->leftJoin('taxImport', 'periods.id', '=', 'taxImport.period_id')
-            ->where('summary.policyNumber', $policyNumber)
-            ->where('taxImport.policyNumber', $policyNumber)
-            ->selectRaw('SUM(summary.salary_total) AS salary_total, SUM(taxImport.personal_tax) AS personal_tax ')
-            ->orderBy('periods.id')->first();
-
-        $res['total'] = $temp->salary_total;
-        $res['tax'] = $temp->personal_tax;
+        $res['total'] = SalarySummary::where('policyNumber', $policyNumber)
+            ->whereIn('period_id', $periods)
+            ->sum('salary_total');
+        $res['tax'] = TaxImport::where('policyNumber', $policyNumber)
+            ->whereIn('period_id', $periods)
+            ->sum('personal_tax');
 
         return $res;
     }
@@ -109,6 +105,7 @@ class SalaryData
      * 根据UID查询保险编号.
      *
      * @param int $userId 用户ID
+     *
      * @return mixed|string
      */
     public function getPolicyNumber($userId)
@@ -342,12 +339,12 @@ class SalaryData
         $sqlstring .= 'have_deducted_tax AS 累计申扣税, should_be_tax AS 累计应补税, prior_had_deducted_tax AS 上月已扣税';
         if ('' !== $policy) {
             return DB::select(
-                'select '.$sqlstring.' from taximport where period_id = ? AND policyNumber = ?',
+                'select '.$sqlstring.' from taxImport where period_id = ? AND policyNumber = ?',
                 [$periodId, $policy]
             );
         }
 
-        return DB::select('select '.$sqlstring.' from taximport where period_id = ?', [$periodId]);
+        return DB::select('select '.$sqlstring.' from taxImport where period_id = ?', [$periodId]);
     }
 
     /**
