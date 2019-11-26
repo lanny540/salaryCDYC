@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Salary\SalaryLog;
 use App\Services\DataProcess;
+use App\Services\ImportColumn;
 use Auth;
 use File;
 use Illuminate\Http\Request;
 use Storage;
-use App\Services\ImportColumn;
 
 class WorkFlowController extends Controller
 {
@@ -30,10 +30,12 @@ class WorkFlowController extends Controller
     {
         $roles = Auth::user()->roles()
             ->where('typeId', 9)
-            ->pluck('description', 'id');
+            ->pluck('description', 'id')
+        ;
 
         return view('workflow.upload')
-                ->with(['roles' => $roles]);
+            ->with(['roles' => $roles])
+        ;
     }
 
     /**
@@ -50,8 +52,6 @@ class WorkFlowController extends Controller
 
     /**
      * 流程向导提交请求
-     *
-     * @param Request $request
      *
      * @throws \Exception
      *

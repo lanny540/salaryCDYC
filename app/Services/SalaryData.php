@@ -411,4 +411,129 @@ class SalaryData
 
         return array_merge($wage, $bonus, $insurances);
     }
+
+    /**
+     * 薪酬查询.
+     *
+     * @param $types
+     * @param $periods
+     *
+     * @return array
+     */
+    public function search($types, $periods)
+    {
+        $columns = $this->getSearchColumn($types);
+        $periods = Period::whereIn('id', $periods)
+            ->pluck('id')->toArray();
+
+        $policy = $this->getPolicyNumber(\Auth::id());
+        $sqlstring = $this->getSearchSql($columns, $periods, $policy);
+
+        return DB::select($sqlstring);
+    }
+
+    /**
+     * 返回查询的表名及字段名称.
+     *
+     * @param $types
+     *
+     * @return array
+     */
+    private function getSearchColumn($types)
+    {
+        switch ($types) {
+            case 's1':
+                $columns = [
+                    'table' => 'wage',
+                    'columns' => [
+                        'wage_total' => '应发工资',
+                    ],
+                ];
+                break;
+            case 's2':
+                $columns = [
+                    'table' => 'bonus',
+                    'columns' => [
+                        'month_bonus' => '月奖',
+                    ],
+                ];
+                break;
+            case 's3':
+                $columns = [
+                    'table' => 'bonus',
+                    'columns' => [
+                        'competition' => '劳动竞赛',
+                    ],
+                ];
+                break;
+            case 's4':
+                $columns = [
+                    'table' => 'bonus',
+                    'columns' => [
+                        'other_reward' => '其他奖励',
+                    ],
+                ];
+                break;
+            case 's5':
+                $columns = [
+                    'table' => 'subsidy',
+                    'columns' => [
+                        'communication' => '通讯补贴',
+                        'housing' => '住房补贴',
+                        'traffic' => '交通补贴',
+                        'single' => '独子费',
+                    ],
+                ];
+                break;
+            case 's6':
+                $columns = [
+                    'table' => 'insurances',
+                    'columns' => [
+                        'gjj_person' => '公积金',
+                        'annuity_person' => '年金个人',
+                        'retire_person' => '养老保险',
+                        'medical_person' => '医疗保险',
+                        'unemployment_person' => '失业保险',
+                    ],
+                ];
+                break;
+            case 's7':
+                $columns = [
+                    'table' => 'taxImport',
+                    'columns' => [
+                        'personal_tax' => '个人所得税',
+                    ],
+                ];
+                break;
+            default:
+                $columns = [];
+        }
+
+        return $columns;
+    }
+
+    /**
+     * 返回查询的sql字符串（将竖表转成横表）.
+     *
+     * @param $columns
+     * @param $periods
+     * @param $policyNumber
+     *
+     * @return string
+     */
+    private function getSearchSql($columns, $periods, $policyNumber)
+    {
+        $pstring = implode(',', $periods);
+        $sqlstring = 'SELECT ';
+        foreach ($columns['columns'] as $k => $v) {
+            $sqlstring .= $k.' AS '.$v.', ';
+        }
+        $sqlstring .= ' p.published_at';
+        $sqlstring .= ' FROM '.$columns['table'];
+        $sqlstring .= ' LEFT JOIN periods p ON p.id = '.$columns['table'].'.period_id';
+        $sqlstring .= ' WHERE policyNumber = '.$policyNumber;
+        $sqlstring .= ' AND p.id IN ('.$pstring.') ';
+
+        return $sqlstring;
+    }
 }

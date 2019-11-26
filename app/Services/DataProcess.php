@@ -444,6 +444,7 @@ class DataProcess
      * 计算工资的 应发工资、应发辞退、应发内退、
      *
      * @param $data
+     *
      * @return mixed
      */
     private function calWageDetail($data)
@@ -467,7 +468,6 @@ class DataProcess
         $wage_total = $wage_total / 100;
 
         $res['wage_total'] = $wage_total;
-
 
         $up = UserProfile::with('department')->where('policyNumber', $data->policyNumber)->first();
         $dwdm = isset($up->department->dwdm) ? $up->department->dwdm : '0101';
@@ -667,7 +667,7 @@ class DataProcess
                 'reissue_total' => isset($s->reissue_total) ? $s->reissue_total : 0,
                 'enterprise_out_total' => isset($s->enterprise_out_total) ? $s->enterprise_out_total : 0,
                 'should_total' => isset($s->should_total) ? $s->should_total : 0,
-                'salary_total' => isset($s->salary_total) ? $s->salary_total: 0,
+                'salary_total' => isset($s->salary_total) ? $s->salary_total : 0,
             ]);
         }
     }

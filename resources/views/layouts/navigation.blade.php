@@ -44,11 +44,11 @@
 
 
             <li class="nav nav-link">自助服务 </li>
-            <li class="{{ Request::is('sheet*') ? 'active' : '' }}">
-                <a href="{{ route('sheet.index') }}"><i class="fa fa-print"></i> <span class="nav-label">工资查询 </span></a>
+            <li class="{{ Request::is('search*') ? 'active' : '' }}">
+                <a href="{{ route('salary.search') }}"><i class="fa fa-search"></i> <span class="nav-label">薪酬查询 </span></a>
             </li>
-            <li class="{{ Request::is('income*') ? 'active' : '' }}">
-                <a href="{{ route('income.index') }}"><i class="fa fa-trophy"></i> <span class="nav-label">收入明细 </span> </a>
+            <li class="{{ Request::is('print*') ? 'active' : '' }}">
+                <a href="{{ route('salary.print') }}"><i class="fa fa-trophy"></i> <span class="nav-label">薪酬打印 </span> </a>
             </li>
 
             <li class="nav nav-link">系统设置 </li>

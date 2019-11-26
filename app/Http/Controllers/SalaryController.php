@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SalaryExport;
+use App\Models\Config\SystemConfig;
 use App\Models\Period;
 use App\Models\Salary\SalarySummary;
 use App\Services\DataProcess;
@@ -10,12 +11,18 @@ use App\Services\SalaryData;
 use Auth;
 use Carbon\Carbon;
 use Excel;
+use Illuminate\Http\Request;
 
 class SalaryController extends Controller
 {
     protected $salaryData;
     protected $dataProcess;
 
+    /**
+     * SalaryController constructor.
+     * @param SalaryData $services
+     * @param DataProcess $dataProcess
+     */
     public function __construct(SalaryData $services, DataProcess $dataProcess)
     {
         $this->salaryData = $services;
@@ -106,8 +113,10 @@ class SalaryController extends Controller
     /**
      * 导出所有人员当期薪酬明细.
      *
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return \Maatwebsite\Excel\BinaryFileResponse
      *
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function salaryExport()
     {
@@ -119,5 +128,47 @@ class SalaryController extends Controller
         } else {
             return Excel::download(new SalaryExport($res['data'], $res['headings']), $res['filename']);
         }
+    }
+
+    /**
+     * 薪酬查询视图.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function salarySearch()
+    {
+        $periods = Period::where('published_at', '<>', '')
+            ->orderByDesc('id')->get();
+
+        $dataTypes = SystemConfig::where('type', 'search')
+            ->select(['config_key', 'config_value'])->get();
+
+        return view('salary.search')
+            ->with('periods', $periods)
+            ->with('dataTypes', $dataTypes);
+    }
+
+    /**
+     * 薪酬查询.
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function search(Request $request)
+    {
+        $res = [];
+        $types = $request->get('types');
+        $periods = $request->get('periods');
+
+        foreach ($types as $t) {
+            $res[] = $this->salaryData->search($t, $periods);
+        }
+
+        return $res;
+    }
+
+    public function salaryPrint()
+    {
+        return view('salary.print');
     }
 }

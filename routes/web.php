@@ -52,12 +52,11 @@ Route::group(['middleware' => 'auth'], function () {
     // 凭证提交页面
     Route::post('vdatastore', 'VoucherController@vdataStore')->name('vdata.store');
 
-    // 工资条页面
-    Route::get('sheet', 'PrintController@sheetIndex')->name('sheet.index');
-    // 工资条打印
-    Route::get('sheetPrint', 'PrintController@sheetPrint')->name('sheet.print');
-    // 年收入页面
-    Route::get('income', 'PrintController@incomeIndex')->name('income.index');
+    // 薪金查询
+    Route::get('search', 'SalaryController@salarySearch')->name('salary.search');
+    Route::post('search', 'SalaryController@search');
+    // 薪金打印
+    Route::get('print', 'SalaryController@salaryPrint')->name('salary.print');
 
     // 人员信息管理
     Route::get('users', 'UserController@usersIndex')->name('users.index');

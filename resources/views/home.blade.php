@@ -59,10 +59,10 @@
                     <ul class="list-unstyled m-t-md">
 
                         <li>
-                            <h2><a href="{{ route('salary.index') }}">查看薪酬信息</a></h2>
+                            <h2><a href="{{ route('salary.search') }}">查看薪酬信息</a></h2>
                         </li>
                         <li>
-                            <h2><a href="{{ route('sheet.index') }}">工资条打印</a></h2>
+                            <h2><a href="{{ route('salary.print') }}">工资条打印</a></h2>
                         </li>
                     </ul>
                 </div>

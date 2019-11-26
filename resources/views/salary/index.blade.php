@@ -94,7 +94,7 @@
         </div>
     </div>
 </div>
-@stop
+@endsection
 
 @section('js')
 <!-- ChartJS-->
@@ -138,4 +138,4 @@
         new Chart(salaryChart, {type: 'bar', data: barData, options:Options});
     });
 </script>
-@stop
+@endsection

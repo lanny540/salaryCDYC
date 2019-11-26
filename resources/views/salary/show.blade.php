@@ -44,7 +44,7 @@
                         </label>
                         <div class="ibox-tools">
                             <label>
-                                <select name="periodId" class="form-control select2_periods" style="width: 200px;"
+                                <select name="periodId" class="form-control select2_periods" style="width: 260px;"
                                         onchange="window.location='/salary/'+this.value"
                                 >
                                     @foreach($periods as $p)
@@ -60,7 +60,7 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div>
-                                    <a href="{{ route('sheet.index') }}" class="btn btn-primary btn-lg float-right">
+                                    <a href="{{ route('salary.print') }}" class="btn btn-primary btn-lg float-right">
                                         <i class="fa fa-print" ></i>  打印工资条
                                     </a>
                                     <button class="btn btn-info btn-lg float-right" style="margin-right: 20px;" data-toggle="modal" data-target="#designFormulas" type="button">
