@@ -349,13 +349,13 @@ function excelDataCheck(arr1, arr2)
 }
 
 // 模拟form提交
-function Post(URL, PARAMTERS)
+function Post(URL, PARAMTERS, TARGET="_self")
 {
     //创建form表单
     let temp_form = document.createElement("form");
     temp_form.action = URL;
     //如需打开新窗口，form的target属性要设置为'_blank'
-    temp_form.target = "_self";
+    temp_form.target = TARGET;
     temp_form.method = "post";
     temp_form.style.display = "none";
     //添加参数

@@ -60,7 +60,7 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div>
-                                    <a href="{{ route('salary.print') }}" class="btn btn-primary btn-lg float-right">
+                                    <a href="{{ route('person.print') }}" class="btn btn-primary btn-lg float-right">
                                         <i class="fa fa-print" ></i>  打印工资条
                                     </a>
                                     <button class="btn btn-info btn-lg float-right" style="margin-right: 20px;" data-toggle="modal" data-target="#designFormulas" type="button">

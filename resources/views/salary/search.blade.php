@@ -139,7 +139,8 @@
         });
     });
 
-    function tranformDataToHtml(data) {
+    function tranformDataToHtml(data)
+    {
         let html = '';
         for (let i = 0; i < data.length; ++i) {
             let name = getObjectKeys(data[i][0]);
@@ -151,20 +152,19 @@
             console.log(data[i]);
             let theadString = tranformThead(pubs);
             let tbodyString = tranformTbody(data[i], name[0]);
-            // console.log(tbodyString);
             html += `
                 <table class="table table-bordered table-striped text-center">
                 <thead>
-                <tr>
-                <th>类别</th>
-                ${theadString}
-                </tr>
+                    <tr>
+                        <th>类别</th>
+                        ${theadString}
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                <td>${name[0]}</td>
-                ${tbodyString}
-                </tr>
+                    <tr>
+                        <td>${name[0]}</td>
+                        ${tbodyString}
+                    </tr>
                 </tbody>
                 </table>
                 <hr/>

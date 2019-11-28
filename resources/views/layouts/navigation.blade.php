@@ -47,8 +47,11 @@
             <li class="{{ Request::is('search*') ? 'active' : '' }}">
                 <a href="{{ route('salary.search') }}"><i class="fa fa-search"></i> <span class="nav-label">薪酬查询 </span></a>
             </li>
-            <li class="{{ Request::is('print*') ? 'active' : '' }}">
-                <a href="{{ route('salary.print') }}"><i class="fa fa-trophy"></i> <span class="nav-label">薪酬打印 </span> </a>
+            <li class="{{ Request::is('personprint*') ? 'active' : '' }}">
+                <a href="{{ route('person.print') }}"><i class="fa fa-trophy"></i> <span class="nav-label">个人薪酬打印 </span> </a>
+            </li>
+            <li class="{{ Request::is('departmentprint*') ? 'active' : '' }}">
+                <a href="{{ route('department.print') }}"><i class="fa fa-print"></i> <span class="nav-label">部门薪酬打印 </span> </a>
             </li>
 
             <li class="nav nav-link">系统设置 </li>

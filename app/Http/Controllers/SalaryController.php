@@ -12,6 +12,7 @@ use Auth;
 use Carbon\Carbon;
 use Excel;
 use Illuminate\Http\Request;
+use Validator;
 
 class SalaryController extends Controller
 {
@@ -156,10 +157,19 @@ class SalaryController extends Controller
      */
     public function search(Request $request)
     {
-        $res = [];
+        $rules = [
+            'types' => 'required',
+            'periods' => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+
         $types = $request->get('types');
         $periods = $request->get('periods');
 
+        $res = [];
         foreach ($types as $t) {
             $res[] = $this->salaryData->search($t, $periods);
         }
@@ -167,8 +177,35 @@ class SalaryController extends Controller
         return $res;
     }
 
-    public function salaryPrint()
+    /**
+     * 个人薪酬打印视图.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function personPrint()
     {
-        return view('salary.print');
+        $periods = Period::where('published_at', '<>', '')
+            ->orderByDesc('id')->limit(18)->get();
+
+        return view('salary.person_print')
+            ->with('periods', $periods);
+    }
+
+    public function getPersonPrintData(Request $request)
+    {
+        $sqlstring = '';
+
+        return '';
+    }
+
+    public function print(Request $request)
+    {
+//        return $request->all();
+        return view('print.person');
+    }
+
+    public function departmentPrint()
+    {
+        return view('salary.department_print');
     }
 }

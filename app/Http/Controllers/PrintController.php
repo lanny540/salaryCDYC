@@ -18,9 +18,4 @@ class PrintController extends Controller
 
         return view('print.sheetPrint')->with(['counts' => $count]);
     }
-
-    public function incomeIndex()
-    {
-        return view('print.income');
-    }
 }

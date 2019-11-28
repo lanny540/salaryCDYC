@@ -40,8 +40,7 @@ class UserController extends Controller
             ->select('users.id', 'users.name')
             ->firstOrFail()
         ;
-        $departments = Department::select('id', 'name')
-            ->where('level', 5)
+        $departments = Department::select(['id', 'name'])
             ->orderBy('weight')
             ->get()
         ;
@@ -53,7 +52,6 @@ class UserController extends Controller
     /**
      * 更新人员一般信息.
      *
-     * @param Request $request
      * @param $userId
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -96,7 +94,6 @@ class UserController extends Controller
     /**
      * 更新人员特殊信息.
      *
-     * @param Request $request
      * @param $userId
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -161,7 +158,6 @@ class UserController extends Controller
     /**
      * 更新用户所属角色.
      *
-     * @param Request $request
      * @param $userId
      *
      * @return mixed

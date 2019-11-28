@@ -55,8 +55,12 @@ Route::group(['middleware' => 'auth'], function () {
     // 薪金查询
     Route::get('search', 'SalaryController@salarySearch')->name('salary.search');
     Route::post('search', 'SalaryController@search');
-    // 薪金打印
-    Route::get('print', 'SalaryController@salaryPrint')->name('salary.print');
+    // 个人薪金打印页
+    Route::get('personprint', 'SalaryController@personPrint')->name('person.print');
+    Route::post('personprint', 'SalaryController@getPersonPrintData');
+    // 部门薪金打印页
+    Route::get('departmentprint', 'SalaryController@departmentPrint')->name('department.print');
+    Route::get('print', 'SalaryController@print');
 
     // 人员信息管理
     Route::get('users', 'UserController@usersIndex')->name('users.index');
