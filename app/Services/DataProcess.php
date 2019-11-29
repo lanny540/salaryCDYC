@@ -103,9 +103,10 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      *
+     * @return string
      * @throws \Exception
      */
-    public function calTotal(int $period): bool
+    public function calTotal(int $period): string
     {
         //避免数据部分更新，采用事务处理
         DB::beginTransaction();
@@ -125,21 +126,22 @@ class DataProcess
 //            $this->calOther($period);
 //            // 扣款——水电、物管、其他扣除、扣欠款
 //            $this->calDeduction($period);
-//             // 专项税务——个人所得税、税差
+//            // 专项税务——个人所得税、税差
 //            $this->calTax($period);
-//             // 合计表
+            // 合计表
 //            $this->calSummary($period);
-//            // 需要代汇的人员
+            // 需要代汇的人员
             $this->calInstead($period);
 
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return false;
+//            return false;
+            return $e;
         }
 
-        return true;
+        return 'success';
     }
 
     /**
@@ -630,7 +632,6 @@ class DataProcess
     private function calSummary(int $period)
     {
         $data = [];
-        $date = Carbon::now();
 
         // 先清空当期合计表数据
         SalarySummary::where('period_id', $period)->update([
@@ -644,17 +645,17 @@ class DataProcess
         ]);
         // 再更新
         $sqlstring = 'SELECT up.policyNumber, ';
-        $sqlstring .= '(wage.wage_total + wage.yfct + wage.yfnt) as wage_total, ';
-        $sqlstring .= 'bonus.bonus_total as bonus_total,subsidy.subsidy_total as subsidy_total,';
-        $sqlstring .= 'reissue.reissue_total as reissue_total,insurances.enterprise_out_total as enterprise_out_total,';
-        $sqlstring .= '(wage_total + subsidy.subsidy_total + reissue.reissue_total) as should_total, ';
-        $sqlstring .= '(wage_total + bonus.bonus_total + insurances.enterprise_out_total) as salary_total ';
+        $sqlstring .= '(w.wage_total + w.yfct + w.yfnt) as wage_total, ';
+        $sqlstring .= 'b.bonus_total as bonus_total,s.subsidy_total as subsidy_total,';
+        $sqlstring .= 'r.reissue_total as reissue_total,i.enterprise_out_total as enterprise_out_total,';
+        $sqlstring .= '(wage_total + s.subsidy_total + r.reissue_total) as should_total, ';
+        $sqlstring .= '(wage_total + b.bonus_total + i.enterprise_out_total) as salary_total ';
         $sqlstring .= 'FROM userProfile up ';
-        $sqlstring .= 'LEFT JOIN wage ON up.policyNumber = wage.policyNumber AND wage.period_id = ? ';
-        $sqlstring .= 'LEFT JOIN bonus ON up.policyNumber = bonus.policyNumber AND bonus.period_id = ? ';
-        $sqlstring .= 'LEFT JOIN subsidy ON up.policyNumber = subsidy.policyNumber AND subsidy.period_id = ? ';
-        $sqlstring .= 'LEFT JOIN reissue ON up.policyNumber = reissue.policyNumber AND reissue.period_id = ? ';
-        $sqlstring .= 'LEFT JOIN insurances ON up.policyNumber = insurances.policyNumber AND insurances.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN wage w ON up.policyNumber = w.policyNumber AND w.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN bonus b ON up.policyNumber = b.policyNumber AND b.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN subsidy s ON up.policyNumber = s.policyNumber AND s.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN reissue r ON up.policyNumber = r.policyNumber AND r.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN insurances i ON up.policyNumber = i.policyNumber AND i.period_id = ? ';
         $summary = DB::select($sqlstring, [
             $period, $period, $period, $period, $period,
         ]);
@@ -681,7 +682,7 @@ class DataProcess
     {
         // 获取 需要代汇 的人员保险编号
         $temp = [];
-        $sqlstring = 'SELECT up.policyNumber FROM card_info c LEFT JOIN userprofile up ON c.user_id = up.user_id';
+        $sqlstring = 'SELECT up.policyNumber FROM card_info c LEFT JOIN userProfile up ON c.user_id = up.user_id';
         $policies = DB::select($sqlstring);
         foreach ($policies as $p) {
             $temp[] = $p->policyNumber;

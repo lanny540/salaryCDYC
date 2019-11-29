@@ -92,29 +92,28 @@ class SalaryController extends Controller
     /**
      * 求和所有字段.
      *
-     * @throws \Exception
+     * @return array|\Illuminate\Http\RedirectResponse
      *
-     * @return array
+     * @throws \Exception
      */
     public function calSalary()
     {
-        $data = [];
         $period = $this->dataProcess->getPeriodId();
         // 计算合计字段
         $res = $this->dataProcess->calTotal($period);
 
-        if ($res) {
+        if ('success' === $res) {
             // 对所有字段进行求和，并输出
-            $data = $this->dataProcess->getTotal($period);
+            return $this->dataProcess->getTotal($period);
+        } else {
+            return redirect()->route('salary.calculate')->withErrors($res);
         }
-
-        return $data;
     }
 
     /**
      * 导出所有人员当期薪酬明细.
      *
-     * @return \Maatwebsite\Excel\BinaryFileResponse
+     * @return \Maatwebsite\Excel\BinaryFileResponse|\Illuminate\Http\RedirectResponse
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
@@ -153,7 +152,7 @@ class SalaryController extends Controller
      * 薪酬查询.
      *
      * @param Request $request
-     * @return array
+     * @return array|\Illuminate\Http\RedirectResponse
      */
     public function search(Request $request)
     {
