@@ -103,7 +103,6 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      *
-     * @return string
      * @throws \Exception
      */
     public function calTotal(int $period): string
@@ -112,24 +111,24 @@ class DataProcess
         DB::beginTransaction();
 
         try {
-//            // 工资——应发工资、应发辞退、应发内退
-//            $this->calWage($period);
-//            // 奖金——奖金合计
-//            $this->calBonus($period);
-//            // 补贴——补贴合计
-//            $this->calSubsidy($period);
-//            // 社保——企业超合计、专项扣除
-//            $this->calInsurances($period);
-//            // 补发——补发合计
-//            $this->calReissue($period);
-//            // 其他费用——稿费
-//            $this->calOther($period);
-//            // 扣款——水电、物管、其他扣除、扣欠款
-//            $this->calDeduction($period);
-//            // 专项税务——个人所得税、税差
-//            $this->calTax($period);
+            // 工资——应发工资、应发辞退、应发内退
+            $this->calWage($period);
+            // 奖金——奖金合计
+            $this->calBonus($period);
+            // 补贴——补贴合计
+            $this->calSubsidy($period);
+            // 社保——企业超合计、专项扣除
+            $this->calInsurances($period);
+            // 补发——补发合计
+            $this->calReissue($period);
+            // 其他费用——稿费
+            $this->calOther($period);
+            // 扣款——水电、物管、其他扣除、扣欠款
+            $this->calDeduction($period);
+            // 专项税务——个人所得税、税差
+            $this->calTax($period);
             // 合计表
-//            $this->calSummary($period);
+            $this->calSummary($period);
             // 需要代汇的人员
             $this->calInstead($period);
 
@@ -137,7 +136,6 @@ class DataProcess
         } catch (\Exception $e) {
             DB::rollBack();
 
-//            return false;
             return $e;
         }
 
@@ -190,7 +188,7 @@ class DataProcess
         $sqlstring .= 'ROUND(SUM(IFNULL(i.retire_classic,0)),2) AS 退养金标准,ROUND(SUM(IFNULL(i.retire_add,0)),2) AS 退养金补扣,ROUND(SUM(IFNULL(i.retire_person,0)),2) AS 退养金个人,';
         $sqlstring .= 'ROUND(SUM(IFNULL(i.retire_deduction,0)),2) AS 退养金扣除,ROUND(SUM(IFNULL(i.retire_enterprise,0)),2) AS 退养企业缴,ROUND(SUM(IFNULL(i.retire_out_range,0)),2) AS 退养企超标,';
         $sqlstring .= 'ROUND(SUM(IFNULL(i.medical_classic,0)),2) AS 医保金标准,ROUND(SUM(IFNULL(i.medical_add,0)),2) AS 医保金补扣,ROUND(SUM(IFNULL(i.medical_person,0)),2) AS 医保金个人,';
-        $sqlstring .= 'ROUND(SUM(IFNULL(i.medical_deduction,0)),2) AS 医保金补扣,ROUND(SUM(IFNULL(i.medical_enterprise,0)),2) AS 医保企业缴,ROUND(SUM(IFNULL(i.medical_out_range,0)),2) AS 医保企超标,';
+        $sqlstring .= 'ROUND(SUM(IFNULL(i.medical_deduction,0)),2) AS 医保金扣除,ROUND(SUM(IFNULL(i.medical_enterprise,0)),2) AS 医保企业缴,ROUND(SUM(IFNULL(i.medical_out_range,0)),2) AS 医保企超标,';
         $sqlstring .= 'ROUND(SUM(IFNULL(i.unemployment_classic,0)),2) AS 失业金标准,ROUND(SUM(IFNULL(i.unemployment_add,0)),2) AS 失业金补扣,ROUND(SUM(IFNULL(i.unemployment_person,0)),2) AS 失业金个人,';
         $sqlstring .= 'ROUND(SUM(IFNULL(i.unemployment_deduction,0)),2) AS 失业金扣除,ROUND(SUM(IFNULL(i.unemployment_enterprise,0)),2) AS 失业企业缴,ROUND(SUM(IFNULL(i.unemployment_out_range,0)),2) AS 失业企超标,';
         $sqlstring .= 'ROUND(SUM(IFNULL(i.injury_enterprise,0)),2) AS 工伤企业缴,ROUND(SUM(IFNULL(i.birth_enterprise,0)),2) AS 生育企业缴,';

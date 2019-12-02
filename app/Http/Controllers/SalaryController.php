@@ -21,8 +21,6 @@ class SalaryController extends Controller
 
     /**
      * SalaryController constructor.
-     * @param SalaryData $services
-     * @param DataProcess $dataProcess
      */
     public function __construct(SalaryData $services, DataProcess $dataProcess)
     {
@@ -92,9 +90,9 @@ class SalaryController extends Controller
     /**
      * 求和所有字段.
      *
-     * @return array|\Illuminate\Http\RedirectResponse
-     *
      * @throws \Exception
+     *
+     * @return array|\Illuminate\Http\RedirectResponse
      */
     public function calSalary()
     {
@@ -105,29 +103,29 @@ class SalaryController extends Controller
         if ('success' === $res) {
             // 对所有字段进行求和，并输出
             return $this->dataProcess->getTotal($period);
-        } else {
-            return redirect()->route('salary.calculate')->withErrors($res);
         }
+
+        return redirect()->route('salary.calculate')->withErrors($res);
     }
 
     /**
      * 导出所有人员当期薪酬明细.
      *
-     * @return \Maatwebsite\Excel\BinaryFileResponse|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function salaryExport()
     {
         $period = $this->dataProcess->getPeriodId();
         $res = $this->dataProcess->getSalaryDetail($period);
 
-        if (0 == count($res['data'])) {
+        if (0 === \count($res['data'])) {
             return redirect()->route('special.index')->withErrors('导出错误或者无导出数据!');
-        } else {
-            return Excel::download(new SalaryExport($res['data'], $res['headings']), $res['filename']);
         }
+
+        return Excel::download(new SalaryExport($res['data'], $res['headings']), $res['filename']);
     }
 
     /**
@@ -145,13 +143,13 @@ class SalaryController extends Controller
 
         return view('salary.search')
             ->with('periods', $periods)
-            ->with('dataTypes', $dataTypes);
+            ->with('dataTypes', $dataTypes)
+        ;
     }
 
     /**
      * 薪酬查询.
      *
-     * @param Request $request
      * @return array|\Illuminate\Http\RedirectResponse
      */
     public function search(Request $request)
@@ -187,14 +185,19 @@ class SalaryController extends Controller
             ->orderByDesc('id')->limit(18)->get();
 
         return view('salary.person_print')
-            ->with('periods', $periods);
+            ->with('periods', $periods)
+        ;
     }
 
     public function getPersonPrintData(Request $request)
     {
-        $sqlstring = '';
+        $data = [
+            ['period' => 10, 'wage' => 555, 'bonus' => 666],
+            ['period' => 11, 'wage' => 666, 'bonus' => 777],
+        ];
+        // return $request->all();
 
-        return '';
+        return $data;
     }
 
     public function print(Request $request)

@@ -128,20 +128,4 @@ class Wage extends Model
 
     // 所有字段都可以批量赋值
     protected $guarded = [];
-
-    public function setJbyljAttribute($value)
-    {
-        if (0 == $value) {
-            $lggw = $this->attributes['lggw'];
-            $lgbl = $this->attributes['lgbl'];
-            $lgzj = $this->attributes['lgzj'];
-            $lgng = $this->attributes['lgng'];
-
-            $jbylj = ($lggw * 100 + $lgbl * 100 + $lgzj * 100 + $lgng * 100) / 100;
-            $this->attributes['jbylj'] = $jbylj;
-        } else {
-            $this->attributes['jbylj'] = $value;
-        }
-    }
-
 }

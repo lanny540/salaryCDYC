@@ -157,7 +157,7 @@ class CreateSalaryTables extends Migration
             $table->float('medical_classic')->default(0)->comment('医保金标准');
             $table->float('medical_add')->default(0)->comment('医保金补扣');
             $table->float('medical_person')->default(0)->comment('医保金个人');
-            $table->float('medical_deduction')->default(0)->comment('医保金补扣');
+            $table->float('medical_deduction')->default(0)->comment('医保金扣除');
             $table->float('medical_enterprise')->default(0)->comment('医保企业缴');
             $table->float('medical_out_range')->default(0)->comment('医保企超标');
 

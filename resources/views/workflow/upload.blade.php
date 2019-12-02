@@ -255,8 +255,7 @@
                     } else {
                         filters = R.append('保险编号', filters);
                     }
-
-                    console.log(filters);
+                    // console.log(filters);
                 }
             });
         }

@@ -658,12 +658,18 @@ class SalaryRepository
      */
     private function specialBonus(int $period, $data)
     {
-        Bonus::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $bonus = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $bonus) {
+            Bonus::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'special' => $data['金额'],
-            ]
-        );
+            ]);
+        } else {
+            Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])
+                ->increment('special', $data['金额']);
+        }
     }
 
     /**
@@ -686,12 +692,18 @@ class SalaryRepository
      */
     private function competitionBonus(int $period, $data)
     {
-        Bonus::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $bonus = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $bonus) {
+            Bonus::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'competition' => $data['金额'],
-            ]
-        );
+            ]);
+        } else {
+            Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])
+                ->increment('competition', $data['金额']);
+        }
     }
 
     /**
@@ -714,12 +726,18 @@ class SalaryRepository
      */
     private function classRewardBonus(int $period, $data)
     {
-        Bonus::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $bonus = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $bonus) {
+            Bonus::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'class_reward' => $data['金额'],
-            ]
-        );
+            ]);
+        } else {
+            Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])
+                ->increment('class_reward', $data['金额']);
+        }
     }
 
     /**
@@ -742,12 +760,18 @@ class SalaryRepository
      */
     private function holidayBonus(int $period, $data)
     {
-        Bonus::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
-                'holiday' => $data['节日慰问费'],
-            ]
-        );
+        $bonus = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $bonus) {
+            Bonus::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
+                'holiday' => $data['金额'],
+            ]);
+        } else {
+            Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])
+                ->increment('holiday', $data['金额']);
+        }
     }
 
     /**
@@ -770,12 +794,18 @@ class SalaryRepository
      */
     private function partyRewardBonus(int $period, $data)
     {
-        Bonus::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $bonus = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $bonus) {
+            Bonus::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'party_reward' => $data['金额'],
-            ]
-        );
+            ]);
+        } else {
+            Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])
+                ->increment('party_reward', $data['金额']);
+        }
     }
 
     /**
@@ -798,12 +828,18 @@ class SalaryRepository
      */
     private function unionPayingBonus(int $period, $data)
     {
-        Bonus::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $bonus = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $bonus) {
+            Bonus::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'union_paying' => $data['金额'],
-            ]
-        );
+            ]);
+        } else {
+            Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])
+                ->increment('union_paying', $data['金额']);
+        }
     }
 
     /**
@@ -826,16 +862,22 @@ class SalaryRepository
      */
     private function otherRewardBonus(int $period, $data)
     {
-        Bonus::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $bonus = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $bonus) {
+            Bonus::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'other_reward' => $data['金额'],
-            ]
-        );
+            ]);
+        } else {
+            Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])
+                ->increment('other_reward', $data['金额']);
+        }
     }
 
     /**
-     * 重置当期工会发放.
+     * 重置当期其他奖励.
      *
      * @param int $period 会计期间ID
      */
@@ -1033,14 +1075,21 @@ class SalaryRepository
      */
     private function garage(int $period, $data)
     {
-        Deduction::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $deduction = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $deduction) {
+            Deduction::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'garage_water' => $data['车库水费'],
                 'garage_electric' => $data['车库电费'],
                 'garage_property' => $data['车库物管'],
-            ]
-        );
+            ]);
+        } else {
+            $sqlstring = 'UPDATE deduction d SET d.garage_water = d.garage_water + ? , d.garage_electric = d.garage_electric + ? , d.garage_property = d.garage_property + ?';
+            $sqlstring .= ' WHERE d.period_id = ? AND d.policyNumber = ?';
+            DB::update($sqlstring, [$data['车库水费'], $data['车库电费'], $data['车库物管'], $period, $data['保险编号']]);
+        }
     }
 
     /**
@@ -1065,13 +1114,20 @@ class SalaryRepository
      */
     private function ccWater(int $period, $data)
     {
-        Deduction::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $deduction = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $deduction) {
+            Deduction::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'cc_water' => $data['水费'],
                 'cc_electric' => $data['电费'],
-            ]
-        );
+            ]);
+        } else {
+            $sqlstring = 'UPDATE deduction d SET d.cc_water = d.cc_water + ? , d.cc_electric = d.cc_electric + ? ';
+            $sqlstring .= ' WHERE d.period_id = ? AND d.policyNumber = ?';
+            DB::update($sqlstring, [$data['水费'], $data['电费'], $period, $data['保险编号']]);
+        }
     }
 
     /**
@@ -1095,12 +1151,19 @@ class SalaryRepository
      */
     private function ccProperty(int $period, $data)
     {
-        Deduction::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $deduction = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $deduction) {
+            Deduction::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'cc_property' => $data['合计'],
-            ]
-        );
+            ]);
+        } else {
+            $sqlstring = 'UPDATE deduction d SET d.cc_property = d.cc_property + ? ';
+            $sqlstring .= ' WHERE d.period_id = ? AND d.policyNumber = ?';
+            DB::update($sqlstring, [$data['合计'], $period, $data['保险编号']]);
+        }
     }
 
     /**
@@ -1123,14 +1186,21 @@ class SalaryRepository
      */
     private function xyDeduction(int $period, $data)
     {
-        Deduction::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $deduction = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $deduction) {
+            Deduction::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'xy_water' => $data['水费'],
                 'xy_electric' => $data['电费'],
                 'xy_property' => $data['物管费'],
-            ]
-        );
+            ]);
+        } else {
+            $sqlstring = 'UPDATE deduction d SET d.xy_water = d.xy_water + ? , d.xy_electric = d.xy_electric + ? , d.xy_property = d.xy_property + ?';
+            $sqlstring .= ' WHERE d.period_id = ? AND d.policyNumber = ?';
+            DB::update($sqlstring, [$data['水费'], $data['电费'], $data['物管费'], $period, $data['保险编号']]);
+        }
     }
 
     /**
@@ -1155,14 +1225,21 @@ class SalaryRepository
      */
     private function backDeduction(int $period, $data)
     {
-        Deduction::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $deduction = Bonus::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $deduction) {
+            Deduction::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'back_water' => $data['水费'],
                 'back_electric' => $data['电费'],
                 'back_property' => $data['物管费'],
-            ]
-        );
+            ]);
+        } else {
+            $sqlstring = 'UPDATE deduction d SET d.back_water = d.back_water + ? , d.back_electric = d.back_electric + ? , d.back_property = d.back_property + ?';
+            $sqlstring .= ' WHERE d.period_id = ? AND d.policyNumber = ?';
+            DB::update($sqlstring, [$data['水费'], $data['电费'], $data['物管费'], $period, $data['保险编号']]);
+        }
     }
 
     /**
@@ -1415,12 +1492,18 @@ class SalaryRepository
      */
     private function financeArticle(int $period, $data)
     {
-        Other::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $other = Other::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $other) {
+            Other::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'finance_article' => $data['金额'],
-            ]
-        );
+            ]);
+        } else {
+            Other::where('period_id', $period)->where('policyNumber', $data['保险编号'])
+                ->increment('finance_article', $data['金额']);
+        }
     }
 
     /**
@@ -1443,12 +1526,18 @@ class SalaryRepository
      */
     private function unionArticle(int $period, $data)
     {
-        Other::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
-            [
+        $other = Other::where('period_id', $period)->where('policyNumber', $data['保险编号'])->count();
+
+        if (0 == $other) {
+            Other::create([
+                'policyNumber' => $data['保险编号'],
+                'period_id' => $period,
                 'union_article' => $data['金额'],
-            ]
-        );
+            ]);
+        } else {
+            Other::where('period_id', $period)->where('policyNumber', $data['保险编号'])
+                ->increment('union_article', $data['金额']);
+        }
     }
 
     /**
@@ -1716,7 +1805,6 @@ class SalaryRepository
     /**
      * 薪金申报个税导入.
      *
-     * @param int $period
      * @param $data
      */
     private function declareTaxSalary(int $period, $data)
@@ -1744,7 +1832,6 @@ class SalaryRepository
     /**
      * 稿酬申报个税导入.
      *
-     * @param int $period
      * @param $data
      */
     private function declareTaxArticle(int $period, $data)
@@ -1772,7 +1859,6 @@ class SalaryRepository
     /**
      * 特权申报个税导入.
      *
-     * @param int $period
      * @param $data
      */
     private function declareTaxFranchise(int $period, $data)

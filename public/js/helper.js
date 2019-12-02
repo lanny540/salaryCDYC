@@ -125,8 +125,14 @@ function calculationData(data, filters, uploadType)
 function employeesWage(data)
 {
     for (let item=0; item<data.length; item++) {
-        data[item]['年薪工资'] = data[item]['标准预付年'] - data[item]['岗位工资病'] - data[item]['岗位工资事'] - data[item]['岗位工资婴'];
-        data[item]['岗位工资'] = data[item]['标准岗位工'] - data[item]['岗位工资病'] - data[item]['岗位工资事'] - data[item]['岗位工资婴'];
+        if (data[item]['标准预付年'] === 0) {
+            data[item]['年薪工资'] = 0;
+            data[item]['岗位工资'] = data[item]['标准岗位工'] - data[item]['岗位工资病'] - data[item]['岗位工资事'] - data[item]['岗位工资婴'];
+        }
+        if (data[item]['标准岗位工'] === 0) {
+            data[item]['年薪工资'] = data[item]['标准预付年'] - data[item]['岗位工资病'] - data[item]['岗位工资事'] - data[item]['岗位工资婴'];
+            data[item]['岗位工资'] = 0;
+        }
         data[item]['交通费'] = data[item]['标准交通补'] + data[item]['交通补贴考'];
     }
 
@@ -143,7 +149,7 @@ function lgxy(data)
     return data;
 }
 
-// 离岗休养
+// 退休数据
 function txsj(data)
 {
     for (let item=0; item < data.length; item++) {
@@ -182,14 +188,16 @@ function gjj(data)
 
         if (temp > GJJ_PERSON_UPPER_LIMIT) {
             data[item]['公积金扣除'] = GJJ_PERSON_UPPER_LIMIT;
+        } else if (temp < 0) {
+            data[item]['公积金扣除'] = 0;
         } else {
             data[item]['公积金扣除'] = temp;
         }
 
         if (data[item]['公积企业缴'] > GJJ_ENTERPRISE_UPPER_LIMIT) {
-            data[item]['公积企超标'] = GJJ_ENTERPRISE_UPPER_LIMIT;
+            data[item]['公积企超标'] = data[item]['公积企业缴'] - GJJ_ENTERPRISE_UPPER_LIMIT;
         } else {
-            data[item]['公积企超标'] = data[item]['公积企业缴'];
+            data[item]['公积企超标'] = 0;
         }
     }
 
@@ -215,14 +223,16 @@ function insurances(data)
 
         if (annuity > ANNUITY_PERSON_UPPER_LIMIT) {
             data[item]['年金扣除'] = ANNUITY_PERSON_UPPER_LIMIT;
+        } else if (annuity < 0) {
+            data[item]['年金扣除'] = 0;
         } else {
             data[item]['年金扣除'] = annuity;
         }
 
         if (data[item]['年金企业缴'] > ANNUITY_ENTERPRISE_UPPER_LIMIT) {
-            data[item]['年金企超标'] = ANNUITY_ENTERPRISE_UPPER_LIMIT;
+            data[item]['年金企超标'] = data[item]['年金企业缴'] - ANNUITY_ENTERPRISE_UPPER_LIMIT;
         } else {
-            data[item]['年金企超标'] = data[item]['年金企业缴'];
+            data[item]['年金企超标'] = 0;
         }
         // 退养金计算字段
         let retire = data[item]['退养金标准'] + data[item]['退养金补扣'];
@@ -230,14 +240,16 @@ function insurances(data)
 
         if (retire > RETIRE_PERSON_UPPER_LIMIT) {
             data[item]['退养金扣除'] = RETIRE_PERSON_UPPER_LIMIT;
+        } else if (retire < 0) {
+            data[item]['退养金扣除'] = 0;
         } else {
             data[item]['退养金扣除'] = retire;
         }
 
         if (data[item]['退养企业缴'] > RETIRE_ENTERPRISE_UPPER_LIMIT) {
-            data[item]['退养企超标'] = RETIRE_ENTERPRISE_UPPER_LIMIT;
+            data[item]['退养企超标'] = data[item]['退养企业缴'] - RETIRE_ENTERPRISE_UPPER_LIMIT;
         } else {
-            data[item]['退养企超标'] = data[item]['退养企业缴'];
+            data[item]['退养企超标'] = 0;
         }
         // 医保金计算字段
         let medical = data[item]['医保金标准'] + data[item]['医保金补扣'];
@@ -245,14 +257,16 @@ function insurances(data)
 
         if (medical > MEDICAL_PERSON_UPPER_LIMIT) {
             data[item]['医保金扣除'] = MEDICAL_PERSON_UPPER_LIMIT;
+        } else if (medical < 0) {
+            data[item]['医保金扣除'] = 0;
         } else {
             data[item]['医保金扣除'] = medical;
         }
 
         if (data[item]['医保企业缴'] > MEDICAL_ENTERPRISE_UPPER_LIMIT) {
-            data[item]['医保企超标'] = MEDICAL_ENTERPRISE_UPPER_LIMIT;
+            data[item]['医保企超标'] = data[item]['医保企业缴'] - MEDICAL_ENTERPRISE_UPPER_LIMIT;
         } else {
-            data[item]['医保企超标'] = data[item]['医保企业缴'];
+            data[item]['医保企超标'] = 0;
         }
         // 失业金计算字段
         let unemployment = data[item]['失业金标准'] + data[item]['失业金补扣'];
@@ -260,14 +274,16 @@ function insurances(data)
 
         if (unemployment > UNEMPLOYMENT_PERSON_UPPER_LIMIT) {
             data[item]['失业金扣除'] = UNEMPLOYMENT_PERSON_UPPER_LIMIT;
+        } else if (unemployment < 0) {
+            data[item]['失业金扣除'] = 0;
         } else {
             data[item]['失业金扣除'] = unemployment;
         }
 
         if (data[item]['失业企业缴'] > UNEMPLOYMENT_ENTERPRISE_UPPER_LIMIT) {
-            data[item]['失业企超标'] = UNEMPLOYMENT_ENTERPRISE_UPPER_LIMIT;
+            data[item]['失业企超标'] = data[item]['失业企业缴'] - UNEMPLOYMENT_ENTERPRISE_UPPER_LIMIT;
         } else {
-            data[item]['失业企超标'] = data[item]['失业企业缴'];
+            data[item]['失业企超标'] = 0;
         }
     }
 

@@ -82,13 +82,50 @@
     });
 
     $(document).ready(function () {
-        $('#searchBtn').click(function () {
-            document.getElementById("aaa").innerText = "adfasdf";
+        $('#searchBtn').on('click', function() {
+            let params = {
+                periods: $("#published_at").val(),
+                policy: {{ Auth::user()->profile->policyNumber }},
+            };
+            $.post({
+                url: 'personprint',
+                data: params,
+                success: function (data) {
+                    console.log(data);
+                    let printHtml = getPrintHtml(data);
+                    let printTable = $('#printTable');
+                    printTable.html('');
+                    printTable.html(printHtml);
+                }
+            });
+
         });
 
         $('#printBtn').click(function () {
             window.open('/print');
         });
     });
+
+    function getPrintHtml(data)
+    {
+        let html = '';
+        for (let i = 0; i < data.length; ++i) {
+            let tableHtml = getPrintTable(data[i]);
+            let totalHtml = getPrintTotal(data[i]);
+            html += tableHtml + totalHtml + '<hr/>';
+        }
+
+        return html;
+    }
+
+    function getPrintTable(d)
+    {
+        return 'table ';
+    }
+
+    function getPrintTotal(d)
+    {
+        return 'total ';
+    }
 </script>
 @endsection
