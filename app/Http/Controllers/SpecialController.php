@@ -35,7 +35,9 @@ class SpecialController extends Controller
     /**
      * 专项数据导出.
      *
-     * @return \Maatwebsite\Excel\BinaryFileResponse
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception

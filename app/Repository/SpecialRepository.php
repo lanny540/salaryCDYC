@@ -108,14 +108,14 @@ class SpecialRepository
             $sqlstring .= "IFNULL(t.reduce_tax, 0) as '减免税额',";
         }
 
-        $sqlstring .= "IFNULL(d.car_deduction_comment, '')as '备注'";
-        $sqlstring .= ' FROM userprofile up';
+        $sqlstring .= "IFNULL(d.car_deduction_comment, '') as '备注'";
+        $sqlstring .= ' FROM userProfile up';
         $sqlstring .= ' LEFT JOIN departments ON up.department_id = departments.id';
         $sqlstring .= ' LEFT JOIN summary s ON up.policyNumber = s.policyNumber AND s.period_id = ? ';
         $sqlstring .= ' LEFT JOIN insurances i ON up.policyNumber = i.policyNumber AND i.period_id = ? ';
         $sqlstring .= ' LEFT JOIN deduction d ON up.policyNumber = d.policyNumber AND d.period_id = ?';
         $sqlstring .= ' LEFT JOIN taxImport t ON up.policyNumber = t.policyNumber AND t.period_id = ?';
-        $sqlstring .= ' WHERE s.salary > 0';
+        $sqlstring .= ' WHERE s.salary_total > 0';
         $sqlstring .= " AND (departments.dwdm LIKE '010101%' OR departments.dwdm LIKE '010202%' ";
         $sqlstring .= " OR departments.dwdm = '03' OR departments.dwdm = '04') ";
         $data = DB::select($sqlstring, [$period, $period, $period, $period]);
@@ -167,11 +167,11 @@ class SpecialRepository
             $sqlstring .= "IFNULL(o.article_sub_tax, 0) as '减免税额',";
         }
         $sqlstring .= "' ' as '备注'";
-        $sqlstring .= ' FROM userprofile up';
+        $sqlstring .= ' FROM userProfile up';
         $sqlstring .= ' LEFT JOIN other o ON up.policyNumber = o.policyNumber AND o.period_id = ? ';
         $sqlstring .= ' LEFT JOIN departments d ON up.department_id = d.id';
         $sqlstring .= ' LEFT JOIN summary s ON up.policyNumber = s.policyNumber AND s.period_id = ? ';
-        $sqlstring .= ' WHERE s.salary > 0';
+        $sqlstring .= ' WHERE s.salary_total > 0';
         $sqlstring .= " AND (d.dwdm LIKE '010101%' OR d.dwdm LIKE '010202%' ";
         $sqlstring .= " OR d.dwdm = '03' OR d.dwdm = '04') ";
 
@@ -223,11 +223,11 @@ class SpecialRepository
             $sqlstring .= "IFNULL(o.franchise_sub_tax, 0) as '减免税额',";
         }
         $sqlstring .= "' ' as '备注'";
-        $sqlstring .= ' FROM userprofile up';
+        $sqlstring .= ' FROM userProfile up';
         $sqlstring .= ' LEFT JOIN other o ON up.policyNumber = o.policyNumber AND o.period_id = ? ';
         $sqlstring .= ' LEFT JOIN departments d ON up.department_id = d.id';
         $sqlstring .= ' LEFT JOIN summary s ON up.policyNumber = s.policyNumber AND s.period_id = ? ';
-        $sqlstring .= ' WHERE s.salary > 0';
+        $sqlstring .= ' WHERE s.salary_total > 0';
         $sqlstring .= " AND (d.dwdm LIKE '010101%' OR d.dwdm LIKE '010202%' ";
         $sqlstring .= " OR d.dwdm = '03' OR d.dwdm = '04') ";
 

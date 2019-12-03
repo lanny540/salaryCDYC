@@ -459,6 +459,7 @@ class SalaryRepository
                 'traffic_standard' => $data['标准交通补'],
                 'traffic_add' => $data['交通补贴考'],
                 'traffic' => $data['交通费'],
+                'communication' => $data['通讯补贴'],
             ]
         );
     }
@@ -494,6 +495,7 @@ class SalaryRepository
             'traffic_standard' => 0,
             'traffic_add' => 0,
             'traffic' => 0,
+            'communication' => 0,
         ]);
     }
 
