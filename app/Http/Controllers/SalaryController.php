@@ -21,6 +21,8 @@ class SalaryController extends Controller
 
     /**
      * SalaryController constructor.
+     * @param SalaryData $services
+     * @param DataProcess $dataProcess
      */
     public function __construct(SalaryData $services, DataProcess $dataProcess)
     {
@@ -150,6 +152,7 @@ class SalaryController extends Controller
     /**
      * 薪酬查询.
      *
+     * @param Request $request
      * @return array|\Illuminate\Http\RedirectResponse
      */
     public function search(Request $request)

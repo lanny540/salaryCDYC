@@ -42,8 +42,6 @@ class DataProcess
         } catch (\Exception $e) {
             DB::rollback();
 
-            //            return false;
-            // 调试用代码
             return redirect()->back()->withErrors($e->getMessage());
         }
 
@@ -103,6 +101,7 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      *
+     * @return string
      * @throws \Exception
      */
     public function calTotal(int $period): string
