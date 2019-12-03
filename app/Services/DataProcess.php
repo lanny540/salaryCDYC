@@ -224,6 +224,8 @@ class DataProcess
         $sqlstring .= 'ROUND(SUM(IFNULL(sp.actual_salary,0)),2) AS 实发工资,ROUND(SUM(IFNULL(sp.debt_salary,0)),2) AS 余欠款,';
         $sqlstring .= 'ROUND(SUM(IFNULL(sp.instead_salary,0)),2) AS 代汇,ROUND(SUM(IFNULL(sp.bank_salary,0)),2) AS 银行发放,';
         $sqlstring .= 'ROUND(SUM(IFNULL(sp.court_salary,0)),2) AS 法院转提 ';
+        // 合计
+        $sqlstring .= 'ROUND(SUM(IFNULL(summary.salary_total)), 2) AS 工资薪金';
 
         $sqlstring .= 'FROM userProfile up ';
         $sqlstring .= 'LEFT JOIN wage w ON up.policyNumber = w.policyNumber AND w.period_id = ? ';
@@ -235,10 +237,11 @@ class DataProcess
         $sqlstring .= 'LEFT JOIN deduction d ON up.policyNumber = d.policyNumber AND d.period_id = ? ';
         $sqlstring .= 'LEFT JOIN taxImport t ON up.policyNumber = t.policyNumber AND t.period_id = ? ';
         $sqlstring .= 'LEFT JOIN special sp ON up.policyNumber = sp.policyNumber AND sp.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN summary ON up.policyNumber = summary.policyNumber AND summary.period_id = ? ';
         // endregion
 
         return DB::select($sqlstring, [
-            $period, $period, $period, $period, $period, $period, $period, $period, $period,
+            $period, $period, $period, $period, $period, $period, $period, $period, $period, $period,
         ]);
     }
 
@@ -440,7 +443,7 @@ class DataProcess
     }
 
     /**
-     * 计算工资的 应发工资、应发辞退、应发内退、
+     * 计算工资的 应发工资、应发辞退、应发内退.
      *
      * @param $data
      *
@@ -473,16 +476,16 @@ class DataProcess
 
         if ('01020201' == $dwdm) {
             $res['wage_total'] = 0;
+            $res['yfnt'] = 0;
             $res['yfct'] = $wage_total;
-        } else {
-            $res['yfct'] = 0;
-        }
-
-        if ('01020202' == $dwdm) {
+        } elseif ('01020202' == $dwdm) {
             $res['wage_total'] = 0;
             $res['yfnt'] = $wage_total;
+            $res['yfct'] = 0;
         } else {
+            $res['wage_total'] = $wage_total;
             $res['yfnt'] = 0;
+            $res['yfct'] = 0;
         }
 
         return $res;
@@ -560,7 +563,7 @@ class DataProcess
         $deductions = Special::where('period_id', $period - 1)->where('debt_salary', '>', 0)
             ->select(['policyNumber', 'debt_salary'])->get();
         // 如果上期存在余欠款数据，则插入到当期的 上期余欠款 字段。
-        if (\count($deductions) > 0) {
+        if (count($deductions) > 0) {
             foreach ($deductions as $d) {
                 Deduction::updateOrCreate(
                     ['policyNumber' => $d->policyNumber, 'period_id' => $period],
@@ -754,5 +757,52 @@ class DataProcess
                 'court_salary' => 0,
             ]);
         }
+    }
+
+    /**
+     * 查询个人打印数据.
+     *
+     * @param array  $periods 会计期
+     * @param string $policy  保险编号
+     *
+     * @return array
+     */
+    public function getPersonPrintData($periods, $policy)
+    {
+        $pstring = implode(',', $periods);
+
+        //region 查询SQL
+        $sqlstring = 'SELECT p.published_at, ';
+        $sqlstring .= ' w.annual, w.wage, w.retained_wage, w.compensation, w.night_shift, w.seniority_wage, w.overtime_wage,';
+        $sqlstring .= ' b.month_bonus, b.special, b.competition, b.class_reward, b.holiday, b.party_reward, b.other_reward, b.union_paying,';
+        $sqlstring .= ' s.communication, s.housing, s.single, s.traffic, r.reissue_wage, r.reissue_subsidy, r.reissue_other,';
+        $sqlstring .= ' i.retire_person, i.medical_person, i.unemployment_person, i.gjj_person, i.annuity_person,';
+        $sqlstring .= ' Round((d.water_electric + d.property_fee), 2) as property, Round((d.debt + d.donate), 2) as debt, d.union_deduction,';
+        $sqlstring .= ' t.tax_child, t.tax_old, t.tax_edu, t.tax_loan, t.tax_rent, t.tax_other_deduct, t.deduct_donate, t.personal_tax,';
+        $sqlstring .= ' t.tax_income, t.taxable, t.tax_reliefs, t.should_deducted_tax, t.have_deducted_tax, t.should_be_tax, t.prior_had_deducted_tax,';
+        $sqlstring .= ' t.income, t.deduct_expenses, t.special_deduction,';
+        $sqlstring .= ' Round((d.water_electric + d.property_fee + d.debt + d.donate + d.union_deduction + t.personal_tax + t.tax_diff), 2) as deduction_total,';
+        $sqlstring .= ' summary.wage_total, summary.bonus_total, summary.subsidy_total, summary.reissue_total, summary.salary_total';
+        $sqlstring .= ' FROM periods p';
+        $sqlstring .= ' LEFT JOIN summary ON p.id = summary.period_id AND summary.policyNumber = ? ';
+        $sqlstring .= ' LEFT JOIN wage w ON p.id = w.period_id AND w.policyNumber = ? ';
+        $sqlstring .= ' LEFT JOIN bonus b ON p.id = b.period_id AND b.policyNumber = ? ';
+        $sqlstring .= ' LEFT JOIN subsidy s ON p.id = s.period_id AND s.policyNumber = ? ';
+        $sqlstring .= ' LEFT JOIN reissue r ON p.id = r.period_id AND r.policyNumber = ? ';
+        $sqlstring .= ' LEFT JOIN insurances i ON p.id = i.period_id AND i.policyNumber = ? ';
+        $sqlstring .= ' LEFT JOIN taxImport t ON p.id = t.period_id AND t.policyNumber = ? ';
+        $sqlstring .= ' LEFT JOIN deduction d ON p.id = d.period_id AND d.policyNumber = ? ';
+        $sqlstring .= ' WHERE summary.period_id IN ('.$pstring.')';
+        $sqlstring .= ' AND w.period_id IN ('.$pstring.')';
+        $sqlstring .= ' AND b.period_id IN ('.$pstring.')';
+        $sqlstring .= ' AND s.period_id IN ('.$pstring.')';
+        $sqlstring .= ' AND r.period_id IN ('.$pstring.')';
+        $sqlstring .= ' AND i.period_id IN ('.$pstring.')';
+        $sqlstring .= ' AND t.period_id IN ('.$pstring.')';
+        $sqlstring .= ' AND d.period_id IN ('.$pstring.')';
+        $sqlstring .= ' ORDER BY p.id DESC';
+        //endregion
+
+        return DB::select($sqlstring, [$policy, $policy, $policy, $policy, $policy, $policy, $policy, $policy]);
     }
 }

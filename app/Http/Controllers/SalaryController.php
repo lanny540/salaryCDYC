@@ -192,13 +192,15 @@ class SalaryController extends Controller
         ;
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function getPersonPrintData(Request $request)
     {
-        $data = [
-            ['period' => 10, 'wage' => 555, 'bonus' => 666],
-            ['period' => 11, 'wage' => 666, 'bonus' => 777],
-        ];
-        // return $request->all();
+        $periods = $request->get('periods');
+        $policy = $this->salaryData->getPolicyNumber(Auth::id());
+        $data = $this->dataProcess->getPersonPrintData($periods, $policy);
 
         return $data;
     }

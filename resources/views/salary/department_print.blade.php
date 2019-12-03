@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('css')
-
 @endsection
 
 @section('breadcrumbs')
@@ -21,9 +20,14 @@
 @endsection
 
 @section('content')
-
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="text-center p-lg">
+                <h2>系统暂时不提供部门工资条打印功能。部门打印由计划财务部提供PDF文件自行打印。</h2>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
-
 @endsection

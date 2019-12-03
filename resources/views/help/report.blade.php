@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', '系统BUG报告')
-
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox-content m-b-sm border-bottom">
