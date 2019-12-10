@@ -144,8 +144,6 @@
                         let printTable = $('#printTable');
                         printTable.html('');
                         printTable.html(printHtml);
-                        // 数据保存
-                        printData = periods;
                     }
                 });
             } else {
@@ -158,16 +156,16 @@
             let params = {
                 _token: '{{ csrf_token() }}',
                 periods: periods,
-                policy: '{{ Auth::user()->profile->policyNumber }}',
             };
 
             Post('personprintExport', params, '_blank');
         });
 
         $('#printBtn').on('click', function () {
+            let periods = $("#published_at").val();
             let params = {
                 _token: '{{ csrf_token() }}',
-                print: printData,
+                periods: periods,
             };
 
             Post('print', params, '_blank');

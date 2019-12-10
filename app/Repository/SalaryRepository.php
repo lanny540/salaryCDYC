@@ -1651,7 +1651,7 @@ class SalaryRepository
     private function taxImport(int $period, $data)
     {
         TaxImport::updateOrCreate(
-            ['period_id' => $period, 'policyNumber' => $data['保险编号']],
+            ['period_id' => $period, 'policyNumber' => $data['工号']],
             [
                 'income' => $data['累计收入额'],
                 'deduct_expenses' => $data['累计减除费用'],

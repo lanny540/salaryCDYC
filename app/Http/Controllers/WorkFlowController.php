@@ -53,9 +53,9 @@ class WorkFlowController extends Controller
     /**
      * 流程向导提交请求
      *
-     * @throws \Exception
-     *
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function wizardSubmit(Request $request)
     {

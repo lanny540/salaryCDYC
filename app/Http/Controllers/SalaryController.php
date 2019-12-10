@@ -21,6 +21,7 @@ class SalaryController extends Controller
 
     /**
      * SalaryController constructor.
+     *
      * @param SalaryData $services
      * @param DataProcess $dataProcess
      */
@@ -112,7 +113,7 @@ class SalaryController extends Controller
     /**
      * 导出所有人员当期薪酬明细.
      *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return \Illuminate\Http\RedirectResponse|\Maatwebsite\Excel\BinaryFileResponse
      *
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Exception
@@ -238,7 +239,10 @@ class SalaryController extends Controller
      * 个人打印数据导出.
      *
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return \Maatwebsite\Excel\BinaryFileResponse
+     *
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function personPrintExport(Request $request)
     {
@@ -268,9 +272,9 @@ class SalaryController extends Controller
      */
     public function print(Request $request)
     {
-        $data = explode(',', $request->get('print'));
-        $policy = $request->get('policy');
-        $data = $this->dataProcess->getPersonPrintData($data, $policy);
+        $periods = explode(',', $request->get('periods'));
+        $policy = $this->salaryData->getPolicyNumber(Auth::id());
+        $data = $this->dataProcess->getPersonPrintData($periods, $policy);
 
         return view('print.person')
             ->with('data', $data);
