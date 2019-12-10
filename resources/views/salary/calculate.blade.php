@@ -54,16 +54,12 @@
         <div class="col-lg-12">
             <div class="ibox" id="statistForm">
                 <div class="ibox-content">
-                    <div class="sk-spinner sk-spinner-cube-grid">
-                        <div class="sk-cube"></div>
-                        <div class="sk-cube"></div>
-                        <div class="sk-cube"></div>
-                        <div class="sk-cube"></div>
-                        <div class="sk-cube"></div>
-                        <div class="sk-cube"></div>
-                        <div class="sk-cube"></div>
-                        <div class="sk-cube"></div>
-                        <div class="sk-cube"></div>
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect1"></div>
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
                     </div>
                     <table class="table table-bordered invoice-table row mx-0">
                         <tbody class="w-100" id="summaryTable">
@@ -81,6 +77,8 @@
 <script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
 <!-- ramda -->
 <script src="{{ asset('js/plugins/ramda/ramda.min.js') }}"></script>
+<!-- sweetalert -->
+<script src="{{ asset('js/plugins/sweetalert2/sweetalert.min.js') }}"></script>
 
 <script src="{{ asset('js/helper.js') }}"></script>
 
@@ -96,10 +94,11 @@
 
     $(document).ready(function() {
         // 计算
-        $('.salarysubmit').click(function () {
+        $('.salarysubmit').on('click', (function () {
             toastr.info('计算中！');
             $('#statistForm').children('.ibox-content').toggleClass('sk-loading');
             $.get('/calSalary', function (data) {
+                console.log(data);
                 if (data.length === 0) {
                     toastr.error('计算错误!请联系管理员.');
                 } else {
@@ -110,10 +109,10 @@
                 }
                 $('#statistForm').children('.ibox-content').toggleClass('sk-loading');
             });
-        });
+        }));
 
         // 导出数据
-        $('.salaryExport').click(function () {
+        $('.salaryExport').on('click', (function () {
             $('#statistForm').children('.ibox-content').toggleClass('sk-loading');
             toastr.info('正在导出！请耐心等待.');
             let params = {
@@ -123,41 +122,37 @@
             setTimeout(function () {
                 $('#statistForm').children('.ibox-content').toggleClass('sk-loading');
             }, 30000);
-        });
+        }));
 
         // 结束周期
-        $('.settleAccount').click(function () {
-            let table = $('#staticsSalary').DataTable();
-
-            if (! table.data().any()) {
-                swal('错误!', '没有汇总数据.请点击左侧按钮计算当期数据.', 'error');
-            } else {
-                swal({
-                    title: '是否结算当前会计周期？',
-                    text: '确定结算会关闭当前周期，并自动开启新的会计周期。',
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: "确定结算!",
-                    closeOnConfirm: false,
-                }, function () {
-                    $.ajax({
-                        type: 'POST',
-                        url: '/settleAccount',
-                        data: {
-                            salary: staticsSalary,
-                        },
-                        success: function(data) {
-                            swal({
-                                title: data.title,
-                                text: data.text,
-                                type: data.type,
-                            });
-                        }
-                    });
-                });
-            }
-        });
+        $('.settleAccount').on('click', (function () {
+            let regex = /^(\d{4}.)?\d{2}$/;
+            swal("请输入当期的发放时间:", {
+                content: "input",
+            }).then((value) => {
+                if ('' === value) {
+                    toastr.error('请输入发放时间！');
+                } else {
+                    let res = regex.test(value);
+                    console.log(res);
+                    if (res) {
+                        swal(`You typed: ${value}`);
+                        $.post({
+                            url: '/settleAccount',
+                            data: {
+                                published_at: value,
+                            },
+                            success: function(data) {
+                                swal("处理成功!", data.message, "success");
+                                // console.log(data);
+                            }
+                        });
+                    } else {
+                        toastr.info('格式错误!请修改格式为 XXXX.XX');
+                    }
+                }
+            });
+        }));
     });
 
 </script>

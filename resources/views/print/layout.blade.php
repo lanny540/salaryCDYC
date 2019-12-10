@@ -11,7 +11,6 @@
     <link href="{{ asset('font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-{{--    <link rel="stylesheet" href="{{ asset('css/print.css') }}" media="print">--}}
 </head>
 
 <body class="white-bg">
@@ -22,7 +21,6 @@
 
     </div>
 </div>
-</body>
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
@@ -33,6 +31,9 @@
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+@yield('js')
+</body>
 
 <script type="text/javascript">
     window.print();

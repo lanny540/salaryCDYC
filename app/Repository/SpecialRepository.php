@@ -175,7 +175,7 @@ class SpecialRepository
         $sqlstring .= " AND (d.dwdm LIKE '010101%' OR d.dwdm LIKE '010202%' ";
         $sqlstring .= " OR d.dwdm = '03' OR d.dwdm = '04') ";
 
-        $data = DB::select($sqlstring, [$period]);
+        $data = DB::select($sqlstring, [$period, $period]);
         return $data;
     }
 
@@ -231,7 +231,7 @@ class SpecialRepository
         $sqlstring .= " AND (d.dwdm LIKE '010101%' OR d.dwdm LIKE '010202%' ";
         $sqlstring .= " OR d.dwdm = '03' OR d.dwdm = '04') ";
 
-        $data = DB::select($sqlstring, [$period]);
+        $data = DB::select($sqlstring, [$period, $period]);
         return $data;
     }
 }

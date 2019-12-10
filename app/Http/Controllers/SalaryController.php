@@ -101,13 +101,12 @@ class SalaryController extends Controller
         $period = $this->dataProcess->getPeriodId();
         // 计算合计字段
         $res = $this->dataProcess->calTotal($period);
-
         if ('success' === $res) {
             // 对所有字段进行求和，并输出
             return $this->dataProcess->getTotal($period);
         }
 
-        return redirect()->route('salary.calculate')->withErrors($res);
+        return [];
     }
 
     /**
@@ -128,6 +127,34 @@ class SalaryController extends Controller
         }
 
         return Excel::download(new SalaryExport($res['data'], $res['headings']), $res['filename']);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function settleAccount(Request $request)
+    {
+        $rules = [
+            'published_at' => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+
+        $published_at = $request->get('published_at');
+        // 关闭周期
+        $period = $this->dataProcess->closePeriod($published_at);
+        // 中断1秒，防止上期结束和本期开始为相同时间.
+        sleep(1);
+        // 新开周期
+        $this->dataProcess->newPeriod();
+
+        return response()->json([
+            'statuscode' => '201',
+            'message' => '当期结束于'.$period->enddate.'.',
+        ]);
     }
 
     /**
@@ -193,6 +220,8 @@ class SalaryController extends Controller
     }
 
     /**
+     * 输出个人打印数据.
+     *
      * @param Request $request
      * @return array
      */
@@ -205,12 +234,51 @@ class SalaryController extends Controller
         return $data;
     }
 
-    public function print(Request $request)
+    /**
+     * 个人打印数据导出.
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function personPrintExport(Request $request)
     {
-//        return $request->all();
-        return view('print.person');
+        $periods = explode(',', $request->get('periods'));
+
+        $policy = $this->salaryData->getPolicyNumber(Auth::id());
+        $data = $this->dataProcess->getPersonPrintData($periods, $policy);
+        $headings = [
+            '发布日期', '年薪工资', '岗位工资', '保留工资', '套级补差', '中夜班费', '年功工资', '加班工资',
+            '月奖', '专项奖', '劳动竞赛', '课酬', '节日慰问费', '党员奖励', '其他奖励', '工会发放',
+            '通讯补贴', '住房补贴', '独子费', '交通补贴', '补发工资', '补发补贴', '补发其他',
+            '养老保险个人', '医疗保险个人', '失业保险个人', '公积金个人', '年金个人', '扣水电物管', '扣欠款及捐赠', '扣工会会费',
+            '累专附子女', '累专附老人', '累专附继教', '累专附房租', '累专附房利', '累其他扣除', '累计扣捐赠', '个人所得税',
+            '累计应纳税所得额', '累计应纳税', '累计减免税', '累计应扣税', '累计申报已扣税', '累计应补税', '上期已扣税',
+            '累计收入', '累计减除费用', '累计专项扣除', '扣款合计', '应发工资', '奖金合计', '补贴合计', '补发合计', '工资薪金',
+        ];
+        $filename = '打印数据导出.xlsx';
+
+        return Excel::download(new SalaryExport($data, $headings), $filename);
     }
 
+    /**
+     * 个人薪酬打印.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function print(Request $request)
+    {
+        $data = explode(',', $request->get('print'));
+        $policy = $request->get('policy');
+        $data = $this->dataProcess->getPersonPrintData($data, $policy);
+
+        return view('print.person')
+            ->with('data', $data);
+    }
+
+    /**
+     * 部门薪酬打印.
+     */
     public function departmentPrint()
     {
         return view('salary.department_print');

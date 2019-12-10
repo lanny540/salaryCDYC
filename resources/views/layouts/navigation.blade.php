@@ -2,18 +2,18 @@
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
-                <div class="dropdown profile-element">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <span class="clear">
-                            <span class="block m-t-xs text-center">
-                                <strong class="font-bold">{{ Auth::user()->profile->userName }}</strong>
-                            </span>
-                            <span class="text-muted m-t-xs text-center block">
-                                {{ Auth::user()->profile->department->name }}
-                            </span>
-                        </span>
-                    </a>
-                </div>
+{{--                <div class="dropdown profile-element">--}}
+{{--                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">--}}
+{{--                        <span class="clear">--}}
+{{--                            <span class="block m-t-xs text-center">--}}
+{{--                                <strong class="font-bold">{{ Auth::user()->profile->userName }}</strong>--}}
+{{--                            </span>--}}
+{{--                            <span class="text-muted m-t-xs text-center block">--}}
+{{--                                {{ Auth::user()->profile->department->name }}--}}
+{{--                            </span>--}}
+{{--                        </span>--}}
+{{--                    </a>--}}
+{{--                </div>--}}
                 <div class="logo-element"> Salary</div>
             </li>
 

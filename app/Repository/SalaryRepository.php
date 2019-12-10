@@ -332,7 +332,7 @@ class SalaryRepository
                 }
 
                 break;
-            case 48: // 专项计算——工资薪金导入
+            case 48: // 专项计算——工资薪金一次导入
                 if (1 === $reset) {
                     $this->resetSalaryImport($periodId);
                 }
@@ -342,7 +342,7 @@ class SalaryRepository
                 $this->calSalaryTax($periodId);
 
                 break;
-            case 49: // 专项计算——稿酬导入
+            case 49: // 专项计算——稿酬一次导入
                 if (1 === $reset) {
                     $this->resetArticleImport($periodId);
                 }
@@ -352,7 +352,7 @@ class SalaryRepository
                 $this->calArticeTax($periodId);
 
                 break;
-            case 50: // 专项计算——特许权导入
+            case 50: // 专项计算——特许权一次导入
                 if (1 === $reset) {
                     $this->resetFranchiseImport($periodId);
                 }
@@ -362,7 +362,25 @@ class SalaryRepository
                 $this->calFranchiseTax($periodId);
 
                 break;
-            case 51: // 申报个税——薪金申报个税
+            case 51: // 专项计算——工资薪金二次导入
+                foreach ($data as $d) {
+                    $this->taxImport($periodId, $d);
+                }
+
+                break;
+            case 52: // 专项计算——稿酬二次导入
+                foreach ($data as $d) {
+                    $this->articleImport($periodId, $d);
+                }
+
+                break;
+            case 53: // 专项计算——特许权二次导入
+                foreach ($data as $d) {
+                    $this->franchiseImport($periodId, $d);
+                }
+
+                break;
+            case 54: // 申报个税——薪金申报个税
                 if (1 === $reset) {
                     $this->resetDeclareTaxSalary($periodId);
                 }
@@ -371,7 +389,7 @@ class SalaryRepository
                 }
 
                 break;
-            case 52: // 申报个税——稿酬申报个税
+            case 55: // 申报个税——稿酬申报个税
                 if (1 === $reset) {
                     $this->resetDeclareTaxArticle($periodId);
                 }
@@ -380,7 +398,7 @@ class SalaryRepository
                 }
 
                 break;
-            case 53: // 申报个税——特权申报个税
+            case 56: // 申报个税——特权申报个税
                 if (1 === $reset) {
                     $this->resetDeclareTaxFranchise($periodId);
                 }
@@ -1687,7 +1705,7 @@ class SalaryRepository
     }
 
     /**
-     * 税务计算_工资薪金导入.
+     * 税务计算_工资薪金一次导入.
      *
      * @param int $period 会计期ID
      * @param $data
@@ -1697,7 +1715,7 @@ class SalaryRepository
         taxImport::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['工号']],
             [
-                'should_be_tax' => 0,
+                'should_be_tax' => $data['累计应补(退)税额'],
             ]
         );
     }
@@ -1723,7 +1741,7 @@ class SalaryRepository
     private function calSalaryTax(int $period)
     {
         $sqlstring = 'UPDATE taxImport t';
-        $sqlstring .= ' LEFT JOIN userprofile up ON t.policyNumber = up.policyNumber ';
+        $sqlstring .= ' LEFT JOIN userProfile up ON t.policyNumber = up.policyNumber ';
         $sqlstring .= ' AND t.period_id = ?';
         $sqlstring .= ' SET t.reduce_tax = t.should_be_tax * up.tax_rebates';
         $sqlstring .= ' WHERE t.policyNumber = up.policyNumber';
@@ -1767,7 +1785,7 @@ class SalaryRepository
     private function calArticeTax(int $period)
     {
         $sqlstring = 'UPDATE other o';
-        $sqlstring .= ' LEFT JOIN userprofile up ON o.policyNumber = up.policyNumber ';
+        $sqlstring .= ' LEFT JOIN userProfile up ON o.policyNumber = up.policyNumber ';
         $sqlstring .= ' AND o.period_id = ?';
         $sqlstring .= ' SET o.article_sub_tax = o.article_add_tax * up.tax_rebates';
         $sqlstring .= ' WHERE o.policyNumber = up.policyNumber';
@@ -1811,7 +1829,7 @@ class SalaryRepository
     private function calFranchiseTax(int $period)
     {
         $sqlstring = 'UPDATE other o';
-        $sqlstring .= ' LEFT JOIN userprofile up ON o.policyNumber = up.policyNumber ';
+        $sqlstring .= ' LEFT JOIN userProfile up ON o.policyNumber = up.policyNumber ';
         $sqlstring .= ' AND o.period_id = ?';
         $sqlstring .= ' SET o.franchise_sub_tax = o.franchise_add_tax * up.tax_rebates';
         $sqlstring .= ' WHERE o.policyNumber = up.policyNumber';
@@ -1829,7 +1847,7 @@ class SalaryRepository
         taxImport::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['工号']],
             [
-                'declare_tax_salary' => 0,
+                'declare_tax_salary' => $data['累计应补(退)税额'],
             ]
         );
     }
@@ -1857,7 +1875,7 @@ class SalaryRepository
         taxImport::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['工号']],
             [
-                'declare_tax_article' => 0,
+                'declare_tax_article' => $data['累计应补(退)税额'],
             ]
         );
     }
@@ -1885,7 +1903,7 @@ class SalaryRepository
         taxImport::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['工号']],
             [
-                'declare_tax_franchise' => 0,
+                'declare_tax_franchise' => $data['累计应补(退)税额'],
             ]
         );
     }

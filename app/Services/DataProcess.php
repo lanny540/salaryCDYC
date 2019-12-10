@@ -104,7 +104,7 @@ class DataProcess
      * @return string
      * @throws \Exception
      */
-    public function calTotal(int $period): string
+    public function calTotal(int $period)
     {
         //避免数据部分更新，采用事务处理
         DB::beginTransaction();
@@ -223,9 +223,9 @@ class DataProcess
         // 特殊
         $sqlstring .= 'ROUND(SUM(IFNULL(sp.actual_salary,0)),2) AS 实发工资,ROUND(SUM(IFNULL(sp.debt_salary,0)),2) AS 余欠款,';
         $sqlstring .= 'ROUND(SUM(IFNULL(sp.instead_salary,0)),2) AS 代汇,ROUND(SUM(IFNULL(sp.bank_salary,0)),2) AS 银行发放,';
-        $sqlstring .= 'ROUND(SUM(IFNULL(sp.court_salary,0)),2) AS 法院转提 ';
+        $sqlstring .= 'ROUND(SUM(IFNULL(sp.court_salary,0)),2) AS 法院转提, ';
         // 合计
-        $sqlstring .= 'ROUND(SUM(IFNULL(summary.salary_total)), 2) AS 工资薪金';
+        $sqlstring .= 'ROUND(SUM(IFNULL(su.salary_total,0)),2) AS 工资薪金 ';
 
         $sqlstring .= 'FROM userProfile up ';
         $sqlstring .= 'LEFT JOIN wage w ON up.policyNumber = w.policyNumber AND w.period_id = ? ';
@@ -237,7 +237,7 @@ class DataProcess
         $sqlstring .= 'LEFT JOIN deduction d ON up.policyNumber = d.policyNumber AND d.period_id = ? ';
         $sqlstring .= 'LEFT JOIN taxImport t ON up.policyNumber = t.policyNumber AND t.period_id = ? ';
         $sqlstring .= 'LEFT JOIN special sp ON up.policyNumber = sp.policyNumber AND sp.period_id = ? ';
-        $sqlstring .= 'LEFT JOIN summary ON up.policyNumber = summary.policyNumber AND summary.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN summary su ON up.policyNumber = su.policyNumber AND su.period_id = ? ';
         // endregion
 
         return DB::select($sqlstring, [
@@ -416,8 +416,14 @@ class DataProcess
     private function calWage(int $period)
     {
         $wage = Wage::where('period_id', $period)->get();
+        $yfct = UserProfile::leftJoin('departments', 'departments.id', '=', 'userProfile.department_id')
+            ->where('departments.dwdm', 'like', '01020201%')
+            ->pluck('policyNumber')->toArray();
+        $yfnt = UserProfile::leftJoin('departments', 'departments.id', '=', 'userProfile.department_id')
+            ->where('departments.dwdm', 'like', '01020202%')
+            ->pluck('policyNumber')->toArray();
         foreach ($wage as $w) {
-            $cal = $this->calWageDetail($w);
+            $cal = $this->calWageDetail($w, $yfct, $yfnt);
 
             Wage::updateOrCreate(
                 ['period_id' => $period, 'policyNumber' => $w->policyNumber],
@@ -447,9 +453,11 @@ class DataProcess
      *
      * @param $data
      *
+     * @param $yfct
+     * @param $yfnt
      * @return mixed
      */
-    private function calWageDetail($data)
+    private function calWageDetail($data, $yfct, $yfnt)
     {
         // 应发工资
         $annual = $data->annual;
@@ -471,14 +479,11 @@ class DataProcess
 
         $res['wage_total'] = $wage_total;
 
-        $up = UserProfile::with('department')->where('policyNumber', $data->policyNumber)->first();
-        $dwdm = isset($up->department->dwdm) ? $up->department->dwdm : '0101';
-
-        if ('01020201' == $dwdm) {
+        if (in_array($data->policyNumber, $yfct)) {
             $res['wage_total'] = 0;
             $res['yfnt'] = 0;
             $res['yfct'] = $wage_total;
-        } elseif ('01020202' == $dwdm) {
+        } elseif (in_array($data->policyNumber, $yfnt)) {
             $res['wage_total'] = 0;
             $res['yfnt'] = $wage_total;
             $res['yfct'] = 0;
@@ -616,7 +621,7 @@ class DataProcess
         // 个人所得税
         $sqlstring .= 't.personal_tax=t.should_be_tax + IFNULL(o.article_add_tax,0) + IFNULL(o.franchise_add_tax, 0), ';
         // 申报个税
-        $sqlstring .= 't.declare_tax = t.declare_tax_salary + declare_tax_article + declare_tax_franchise, ';
+        $sqlstring .= 't.declare_tax = t.declare_tax_salary + t.declare_tax_article + t.declare_tax_franchise, ';
         // 税差
         $sqlstring .= 't.tax_diff = (t.declare_tax * 100 - prior_had_deducted_tax * 100) / 100 ';
         $sqlstring .= 'WHERE t.period_id = ?';

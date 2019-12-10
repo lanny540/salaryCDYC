@@ -27,7 +27,7 @@ Route::group(['middleware' => 'auth'], function () {
     // 专项税务导入导出
     Route::get('special', 'SpecialController@index')->name('special.index');
     Route::post('specialExport', 'SpecialController@taxExport');
-    Route::post('specialImport', 'SpecialController@taxImport');
+    Route::post('specialImport', 'SpecialController@taxImport')->name('special.import');
 
     // 薪酬计算页面
     Route::get('calculation', 'SalaryController@calculate')->name('salary.calculate');
@@ -35,6 +35,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('calSalary', 'SalaryController@calSalary');
     // 薪酬明细导出
     Route::post('salaryExport', 'SalaryController@salaryExport');
+    // 当期会计期结束
+    Route::post('settleAccount', 'SalaryController@settleAccount');
 
     // 凭证汇总表查看页面
     Route::get('vsheet', 'VoucherController@vsheetIndex')->name('vsheet.index');
@@ -57,10 +59,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('search', 'SalaryController@search');
     // 个人薪金打印页
     Route::get('personprint', 'SalaryController@personPrint')->name('person.print');
+    Route::post('personprintExport', 'SalaryController@personPrintExport')->name('person.export');
     Route::post('personprint', 'SalaryController@getPersonPrintData');
     // 部门薪金打印页
     Route::get('departmentprint', 'SalaryController@departmentPrint')->name('department.print');
-    Route::get('print', 'SalaryController@print');
+    Route::post('print', 'SalaryController@print');
 
     // 人员信息管理
     Route::get('users', 'UserController@usersIndex')->name('users.index');

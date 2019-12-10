@@ -1,19 +1,3 @@
-<style>
-    .printTable-total > tbody > tr > td {
-        border: 0 none;
-    }
-
-    .printTable-total > tbody > tr > td:nth-child(odd) {
-        text-align: right;
-    }
-
-    .printTable-total > tbody > tr > td:nth-child(even) {
-        border-bottom: 1px solid #DDDDDD;
-        text-align: left;
-        width: 15%;
-    }
-</style>
-
 <div class="row">
     <div class="col-sm-6">
         <address>
@@ -29,4 +13,4 @@
     </div>
 </div>
 
-<div id="printTable"></div>
+<div id="printTable" class="print-table"></div>

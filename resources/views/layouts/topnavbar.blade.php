@@ -15,7 +15,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-alerts">
                     <li>
-                        <a href="mailbox.html" class="dropdown-item">
+                        <a href="#" class="dropdown-item">
                             <div>
                                 <i class="fa fa-envelope fa-fw"></i> You have 16 messages
                                 <span class="float-right text-muted small">4 minutes ago</span>
@@ -24,7 +24,7 @@
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
-                        <a href="profile.html" class="dropdown-item">
+                        <a href="#" class="dropdown-item">
                             <div>
                                 <i class="fa fa-twitter fa-fw"></i> 3 New Followers
                                 <span class="float-right text-muted small">12 minutes ago</span>
@@ -33,12 +33,22 @@
                     </li>
                 </ul>
             </li>
-            <li>
-                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fa fa-sign-out"></i> 注销
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user"></i> {{ Auth::user()['profile']['userName'] }}
                 </a>
-                {{ Form::open(['id' => 'logout-form', 'style' => 'display: none;', 'method' => 'POST', 'route' => 'logout']) }}
-                {{ Form::close() }}
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/users/{{ Auth::id() }}/edit"><i class="fa fa-edit"></i> 个人资料</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fa fa-vcard"></i> 修改密码</a></li>
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item">
+                            <i class="fa fa-sign-out"></i> 用户注销
+                        </a>
+                        {{ Form::open(['id' => 'logout-form', 'style' => 'display: none;', 'method' => 'POST', 'route' => 'logout']) }}
+                        {{ Form::close() }}
+                    </li>
+                </ul>
             </li>
         </ul>
     </nav>

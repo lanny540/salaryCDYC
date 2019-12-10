@@ -294,9 +294,12 @@ class PermissionsSeeder extends Seeder
             ['name' => 'article_export_2', 'description' => '稿费导出2', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'franchise_export_1', 'description' => '特许权导出1', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'franchise_export_2', 'description' => '特许权导出2', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'salary_import', 'description' => '税务计算_工资薪金导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'article_import', 'description' => '税务计算_稿酬导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
-            ['name' => 'franchise_import', 'description' => '税务计算_特许权导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'salary_import_1', 'description' => '税务计算_工资薪金一次导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'article_import_1', 'description' => '税务计算_稿酬一次导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'franchise_import_1', 'description' => '税务计算_特许权一次导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'salary_import_2', 'description' => '税务计算_工资薪金二次导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'article_import_2', 'description' => '税务计算_稿酬二次导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'franchise_import_2', 'description' => '税务计算_特许权二次导入', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'declare_tax_salary', 'description' => '薪金申报个税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'declare_tax_article', 'description' => '稿酬申报个税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'declare_tax_franchise', 'description' => '特权申报个税', 'typeId' => 9, 'guard_name' => 'web', 'created_at' => $date, 'updated_at' => $date],
@@ -336,8 +339,8 @@ class PermissionsSeeder extends Seeder
             '医保金标准', '医保金补扣', '医保企业缴', '失业金标准', '失业金补扣', '失业企业缴',
             '工伤企业缴', '生育企业缴',
         ];
-        // 专项税务导入
-        $columns41 = [
+        // 薪金二次导入
+        $columns51 = [
             '累计收入额', '累减除费用', '累计专项扣',
             '累专附子女', '累专附老人', '累专附继教', '累专附房利', '累专附房租', '累其他扣除',
             '累计扣捐赠', '累税所得额', '税率', '速算扣除数',
@@ -378,13 +381,15 @@ class PermissionsSeeder extends Seeder
             ['id' => 38, 'columns' => ['工会发稿酬']],
             ['id' => 39, 'columns' => ['特许使用权']],
             ['id' => 40, 'columns' => ['已销欠款']],
-            ['id' => 41, 'columns' => $columns41],
             ['id' => 48, 'columns' => ['累计应补税']],
             ['id' => 49, 'columns' => ['稿酬应补税']],
             ['id' => 50, 'columns' => ['特权应补税']],
-            ['id' => 51, 'columns' => ['薪金申报个税']],
-            ['id' => 52, 'columns' => ['稿酬申报个税']],
-            ['id' => 53, 'columns' => ['特权申报个税']],
+            ['id' => 51, 'columns' => $columns51],
+            ['id' => 52, 'columns' => ['稿酬应补税']],
+            ['id' => 53, 'columns' => ['特权应补税']],
+            ['id' => 54, 'columns' => ['薪金申报个税']],
+            ['id' => 55, 'columns' => ['稿酬申报个税']],
+            ['id' => 56, 'columns' => ['特权申报个税']],
         ];
 
         foreach ($data as $d) {

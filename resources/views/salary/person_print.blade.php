@@ -3,6 +3,30 @@
 @section('css')
 <!-- Select2 -->
 <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+<!-- Toastr style -->
+<link href="{{ asset('css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
+
+<style>
+    .print-table {
+        overflow: scroll;
+        width: 100%;
+        height: 680px;
+    }
+
+    .printTable-total > tbody > tr > td {
+        border: 0 none;
+    }
+
+    .printTable-total > tbody > tr > td:nth-child(odd) {
+        text-align: right;
+    }
+
+    .printTable-total > tbody > tr > td:nth-child(even) {
+        border-bottom: 1px solid #DDDDDD;
+        text-align: left;
+        width: 15%;
+    }
+</style>
 @endsection
 
 @section('breadcrumbs')
@@ -19,27 +43,26 @@
         </ol>
     </div>
 
-    <div class="col-lg-7">
+    <div class="col-lg-4">
         <div class="title-action form-group row">
             <div class="col-lg-3">
                 <label class="col-form-label" for="published_at">发放日期</label>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-9">
                 <select name="published_at" id="published_at" class="select2_published form-control" multiple="multiple">
                     @foreach($periods as $p)
                         <option value="{{ $p->id }}">{{ $p->published_at }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-3">
-                <button class="btn btn-white" id="searchBtn"><i class="fa fa-pencil"></i> 确定 </button>
-            </div>
         </div>
     </div>
 
-    <div class="col-lg-2">
+    <div class="col-lg-5">
         <div class="title-action">
-            <button class="btn btn-primary" id="printBtn"><i class="fa fa-print"></i> 打印工资条 </button>
+            <button class="btn btn-success" id="searchBtn" style="margin-right: 10px;"><i class="fa fa-pencil"></i> 查询薪金 </button>
+            <button class="btn btn-primary" id="exportBtn" style="margin-right: 10px;" disabled><i class="fa fa-pencil"></i> 导出到Excel </button>
+            <button class="btn btn-primary" id="printBtn" disabled><i class="fa fa-print"></i> 打印工资条 </button>
         </div>
     </div>
 </div>
@@ -51,7 +74,7 @@
         <div class="col-lg-12">
             <div class="ibox-content p-xl">
 
-                @include('print._table')
+                @include('salary._table')
 
                 <div class="well m-t"><strong>说明：</strong>
                     收入清单属于个人隐私，请妥善保管！！ 如果数据有任何疑问，请通过系统相关功能查询或者点击 <a href="{{ route('contact') }}">联系我们</a>  页面 联系财务部。
@@ -65,6 +88,8 @@
 @section('js')
 <!-- Select2 -->
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<!-- Toastr script -->
+<script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
 
 <script src="{{ asset('js/helper.js') }}"></script>
 
@@ -75,34 +100,77 @@
         }
     });
 
+    toastr.options = {
+        progressBar: true,
+        positionClass: 'toast-top-right',
+        showMethod: 'slideDown',
+        timeOut: 1500,
+    };
+
     $(".select2_published").select2({
         maximumSelectionLength: 12,
         placeholder: "请选择发放日期...",
         allowClear: true,
     });
 
-    $(document).ready(function () {
-        $('#searchBtn').on('click', function() {
-            let params = {
-                periods: $("#published_at").val(),
-                policy: {{ Auth::user()->profile->policyNumber }},
-            };
-            $.post({
-                url: 'personprint',
-                data: params,
-                success: function (data) {
-                    console.log(data);
-                    let printHtml = getPrintHtml(data);
-                    let printTable = $('#printTable');
-                    printTable.html('');
-                    printTable.html(printHtml);
-                }
-            });
+    let printData;
 
+    $(document).ready(function () {
+        $('#published_at').on('change', function() {
+            let periods = $("#published_at").val();
+            if (periods.length === 0) {
+                $('#exportBtn').attr("disabled", true);
+                $('#printBtn').attr("disabled", true);
+            }
         });
 
-        $('#printBtn').click(function () {
-            window.open('/print');
+        $('#searchBtn').on('click', function() {
+            let periods = $("#published_at").val();
+            if (periods.length > 0) {
+                $('#exportBtn').attr("disabled", false);
+                $('#printBtn').attr("disabled", false);
+
+                let params = {
+                    periods: periods,
+                    policy: '{{ Auth::user()->profile->policyNumber }}',
+                };
+                $.post({
+                    url: 'personprint',
+                    data: params,
+                    success: function (data) {
+                        console.log(data);
+                        toastr.success('数据查询成功！请点击右侧打印！');
+                        let printHtml = getPrintHtml(data);
+                        let printTable = $('#printTable');
+                        printTable.html('');
+                        printTable.html(printHtml);
+                        // 数据保存
+                        printData = periods;
+                    }
+                });
+            } else {
+                toastr.error('请选择需要查询的日期！');
+            }
+        });
+
+        $('#exportBtn').on('click', function() {
+            let periods = $("#published_at").val();
+            let params = {
+                _token: '{{ csrf_token() }}',
+                periods: periods,
+                policy: '{{ Auth::user()->profile->policyNumber }}',
+            };
+
+            Post('personprintExport', params, '_blank');
+        });
+
+        $('#printBtn').on('click', function () {
+            let params = {
+                _token: '{{ csrf_token() }}',
+                print: printData,
+            };
+
+            Post('print', params, '_blank');
         });
     });
 
@@ -112,7 +180,7 @@
         for (let i = 0; i < data.length; ++i) {
             let tableHtml = getPrintTable(data[i]);
             let totalHtml = getPrintTotal(data[i]);
-            html += tableHtml + totalHtml + '<hr/>';
+            html += tableHtml + totalHtml + "<hr style='border: 5px solid grey;'/>";
         }
 
         return html;
@@ -195,7 +263,7 @@
                             <th>年金个人</th>
                             <th>扣水电物管</th>
                             <th>扣欠款及捐赠</th>
-                            <th>工会会费</th>
+                            <th>扣工会会费</th>
                         </tr>
                         <tr>
                             <td>${d.retire_person}</td>
@@ -259,38 +327,38 @@
     {
         return `
             <table class="table printTable-total">
-            <tbody>
-            <tr>
-                <td><strong>发放时间 :</strong></td>
-                <td>${d.published_at}</td>
-                <td><strong>工资薪金 :</strong></td>
-                <td>${d.salary_total}</td>
-                <td><strong>应发工资 :</strong></td>
-                <td>${d.wage_total}</td>
-                <td><strong>奖金合计 :</strong></td>
-                <td>${d.bonus_total}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td><strong>补贴合计 :</strong></td>
-                <td>${d.subsidy_total}</td>
-                <td><strong>补发合计 :</strong></td>
-                <td>${d.reissue_total}</td>
-                <td><strong>扣款合计 :</strong></td>
-                <td>${d.deduction_total}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td><strong>累计收入 :</strong></td>
-                <td>${d.income}</td>
-                <td><strong>累计减除费用 :</strong></td>
-                <td>${d.deduct_expenses}</td>
-                <td><strong>累计专项扣除 :</strong></td>
-                <td>${d.special_deduction}</td>
-            </tr>
-            </tbody>
+                <tbody>
+                <tr>
+                    <td><strong>发放时间 :</strong></td>
+                    <td>${d.published_at}</td>
+                    <td><strong>工资薪金 :</strong></td>
+                    <td>${d.salary_total}</td>
+                    <td><strong>应发工资 :</strong></td>
+                    <td>${d.wage_total}</td>
+                    <td><strong>奖金合计 :</strong></td>
+                    <td>${d.bonus_total}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><strong>补贴合计 :</strong></td>
+                    <td>${d.subsidy_total}</td>
+                    <td><strong>补发合计 :</strong></td>
+                    <td>${d.reissue_total}</td>
+                    <td><strong>扣款合计 :</strong></td>
+                    <td>${d.deduction_total}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><strong>累计收入 :</strong></td>
+                    <td>${d.income}</td>
+                    <td><strong>累计减除费用 :</strong></td>
+                    <td>${d.deduct_expenses}</td>
+                    <td><strong>累计专项扣除 :</strong></td>
+                    <td>${d.special_deduction}</td>
+                </tr>
+                </tbody>
             </table>
         `;
     }
