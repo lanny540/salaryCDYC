@@ -85,7 +85,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getDepartments', 'DepartmentController@getDepartments');
     Route::get('departments/{depId}', 'DepartmentController@show')->name('department.show');
     Route::post('departments', 'DepartmentController@store')->name('department.store');
-    // 凭证模板管理
+    // 系统基础信息管理
+    Route::get('systemconfig', 'ConfigController@systemIndex')->name('systemconfig.index');
+    // 导入字段读取管理
+    Route::get('importconfig', 'ConfigController@importIndex')->name('importconfig.index');
+    // TODO:凭证模板管理
 
     // 个税计算器页面
     Route::get('tax', 'HelpController@taxIndex')->name('tax');

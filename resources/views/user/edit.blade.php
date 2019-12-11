@@ -118,7 +118,7 @@
                 </div>
             </div>
         </div>
-        @hasanyrole('administrator | financial_manager')
+        @hasanyrole('administrator|financial_manager')
         <div class="row">
             <div class="col-md-12">
                 <div class="ibox collapsed">

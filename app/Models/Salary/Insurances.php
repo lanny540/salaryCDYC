@@ -5,47 +5,48 @@ namespace App\Models\Salary;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Salary\Insurances
+ * App\Models\Salary\Insurances.
  *
- * @property int $id
- * @property string $policyNumber 保险编号
- * @property int $period_id 会计期ID
+ * @property int                             $id
+ * @property string                          $policyNumber            保险编号
+ * @property int                             $period_id               会计期ID
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property float $gjj_classic 公积金标准
- * @property float $gjj_add 公积金补扣
- * @property float $gjj_person 公积金个人.个人=标准+补扣
- * @property float $gjj_deduction 公积金扣除
- * @property float $gjj_enterprise 公积企业缴
- * @property float $gjj_out_range 公积企超标
- * @property float $annuity_classic 年金标准
- * @property float $annuity_add 年金补扣
- * @property float $annuity_person 年金个人
- * @property float $annuity_deduction 年金扣除
- * @property float $annuity_enterprise 年金企业缴
- * @property float $annuity_out_range 年金企超标
- * @property float $retire_classic 退养金标准
- * @property float $retire_add 退养金补扣
- * @property float $retire_person 退养金个人
- * @property float $retire_deduction 退养金扣除
- * @property float $retire_enterprise 退养企业缴
- * @property float $retire_out_range 退养企超标
- * @property float $medical_classic 医保金标准
- * @property float $medical_add 医保金补扣
- * @property float $medical_person 医保金个人
- * @property float $medical_deduction 医保金补扣
- * @property float $medical_enterprise 医疗企业缴
- * @property float $medical_out_range 医疗企超标
- * @property float $unemployment_classic 失业金标准
- * @property float $unemployment_add 失业金补扣
- * @property float $unemployment_person 失业金个人
- * @property float $unemployment_deduction 失业金扣除
- * @property float $unemployment_enterprise 失业企业缴
- * @property float $unemployment_out_range 失业企超标
- * @property float $injury_enterprise 工伤企业缴
- * @property float $birth_enterprise 生育企业缴
- * @property float $enterprise_out_total 企业超合计.企业超合计=公积企超标+失业企超标+医保企超标+年金企超标+退养企超标
- * @property float $specail_deduction 专项扣除.专项扣除=退养金扣除+医保金扣除+失业金扣除+公积金扣除
+ * @property float                           $gjj_classic             公积金标准
+ * @property float                           $gjj_add                 公积金补扣
+ * @property float                           $gjj_person              公积金个人.个人=标准+补扣
+ * @property float                           $gjj_deduction           公积金扣除
+ * @property float                           $gjj_enterprise          公积企业缴
+ * @property float                           $gjj_out_range           公积企超标
+ * @property float                           $annuity_classic         年金标准
+ * @property float                           $annuity_add             年金补扣
+ * @property float                           $annuity_person          年金个人
+ * @property float                           $annuity_deduction       年金扣除
+ * @property float                           $annuity_enterprise      年金企业缴
+ * @property float                           $annuity_out_range       年金企超标
+ * @property float                           $retire_classic          退养金标准
+ * @property float                           $retire_add              退养金补扣
+ * @property float                           $retire_person           退养金个人
+ * @property float                           $retire_deduction        退养金扣除
+ * @property float                           $retire_enterprise       退养企业缴
+ * @property float                           $retire_out_range        退养企超标
+ * @property float                           $medical_classic         医保金标准
+ * @property float                           $medical_add             医保金补扣
+ * @property float                           $medical_person          医保金个人
+ * @property float                           $medical_deduction       医保金补扣
+ * @property float                           $medical_enterprise      医疗企业缴
+ * @property float                           $medical_out_range       医疗企超标
+ * @property float                           $unemployment_classic    失业金标准
+ * @property float                           $unemployment_add        失业金补扣
+ * @property float                           $unemployment_person     失业金个人
+ * @property float                           $unemployment_deduction  失业金扣除
+ * @property float                           $unemployment_enterprise 失业企业缴
+ * @property float                           $unemployment_out_range  失业企超标
+ * @property float                           $injury_enterprise       工伤企业缴
+ * @property float                           $birth_enterprise        生育企业缴
+ * @property float                           $enterprise_out_total    企业超合计.企业超合计=公积企超标+失业企超标+医保企超标+年金企超标+退养企超标
+ * @property float                           $specail_deduction       专项扣除.专项扣除=退养金扣除+医保金扣除+失业金扣除+公积金扣除
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Insurances newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Insurances newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Insurances query()

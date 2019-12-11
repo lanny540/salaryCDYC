@@ -54,7 +54,7 @@
             </div>
         </div>
     </div>
-@stop
+@endsection
 
 @section('js')
 <!--  datatables  -->
@@ -95,4 +95,4 @@
         });
     })
 </script>
-@stop
+@endsection

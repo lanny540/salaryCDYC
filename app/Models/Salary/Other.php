@@ -5,21 +5,22 @@ namespace App\Models\Salary;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Salary\Other
+ * App\Models\Salary\Other.
  *
- * @property int $id
- * @property string $policyNumber 保险编号
- * @property int $period_id 会计期ID
+ * @property int                             $id
+ * @property string                          $policyNumber      保险编号
+ * @property int                             $period_id         会计期ID
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property float $finance_article 财务发稿酬
- * @property float $union_article 工会发稿酬
- * @property float $article_fee 稿酬.稿酬=财务发稿酬+工会发稿酬
- * @property float $article_add_tax 稿酬应补税
- * @property float $article_sub_tax 稿酬减免税
- * @property float $franchise 特许使用权
- * @property float $franchise_add_tax 特权应补税
- * @property float $franchise_sub_tax 特权减免税
+ * @property float                           $finance_article   财务发稿酬
+ * @property float                           $union_article     工会发稿酬
+ * @property float                           $article_fee       稿酬.稿酬=财务发稿酬+工会发稿酬
+ * @property float                           $article_add_tax   稿酬应补税
+ * @property float                           $article_sub_tax   稿酬减免税
+ * @property float                           $franchise         特许使用权
+ * @property float                           $franchise_add_tax 特权应补税
+ * @property float                           $franchise_sub_tax 特权减免税
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Other newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Other newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Other query()

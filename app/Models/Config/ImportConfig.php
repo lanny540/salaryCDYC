@@ -5,15 +5,16 @@ namespace App\Models\Config;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Config\ImportConfig
+ * App\Models\Config\ImportConfig.
  *
- * @property int $id
- * @property int $role_id 角色ID
- * @property string $db_column 数据表中的字段
- * @property string $human_column 显示的字段
- * @property string $excel_column excel读取的字段
+ * @property int                             $id
+ * @property int                             $role_id      角色ID
+ * @property string                          $db_column    数据表中的字段
+ * @property string                          $human_column 显示的字段
+ * @property string                          $excel_column excel读取的字段
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Config\ImportConfig newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Config\ImportConfig newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Config\ImportConfig query()
