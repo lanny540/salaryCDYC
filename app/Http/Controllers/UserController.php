@@ -30,28 +30,35 @@ class UserController extends Controller
      *
      * @param $userId
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
     public function edit($userId)
     {
-        //TODO: 这里需要判断权限。本人只能查看自己，劳务员可以查看部门人员，管理员可以查看全部人员
-        $user = User::with(['profile', 'remit'])
-            ->where('id', $userId)
-            ->select('users.id', 'users.name')
-            ->firstOrFail()
-        ;
-        $departments = Department::select(['id', 'name'])
-            ->orderBy('weight')
-            ->get()
-        ;
-        $roles = Role::select('id', 'description', 'typeId')->get();
+        // 管理员可编辑所有人，否则只能编辑自己
+        $roles = Role::where('id', '<=', 2)->get();
 
-        return view('user.edit')->with(['user' => $user, 'departments' => $departments, 'roles' => $roles]);
+        if (Auth::id() === $userId || Auth::user()->hasAnyRole($roles)) {
+            $user = User::with(['profile', 'remit'])
+                ->where('id', $userId)
+                ->select('users.id', 'users.name')
+                ->firstOrFail()
+            ;
+            $departments = Department::select(['id', 'name'])
+                ->orderBy('weight')
+                ->get()
+            ;
+            $roles = Role::select('id', 'description', 'typeId')->get();
+
+            return view('user.edit')->with(['user' => $user, 'departments' => $departments, 'roles' => $roles]);
+        } else {
+            return redirect()->back()->withErrors('没有权限浏览其他人的信息!');
+        }
     }
 
     /**
      * 更新人员一般信息.
      *
+     * @param Request $request
      * @param $userId
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -94,6 +101,7 @@ class UserController extends Controller
     /**
      * 更新人员特殊信息.
      *
+     * @param Request $request
      * @param $userId
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -158,6 +166,7 @@ class UserController extends Controller
     /**
      * 更新用户所属角色.
      *
+     * @param Request $request
      * @param $userId
      *
      * @return mixed
@@ -187,13 +196,26 @@ class UserController extends Controller
      */
     public function getUsersData()
     {
-        $users = User::with(['profile' => function ($query) {
-            $query->select(['user_id', 'userName', 'department_id'])
-                ->with(['department' => function ($q) {
-                    $q->select(['id', 'name']);
-                }])
-            ;
-        }])->select('users.id', 'users.name');
+        //本人只能查看自己，管理员可以查看全部人员
+        $roles = Role::where('id', '<=', 2)->get();
+        if (Auth::user()->hasAnyRole($roles)) {
+            $users = User::with(['profile' => function ($query) {
+                $query->select(['user_id', 'userName', 'department_id'])
+                    ->with(['department' => function ($q) {
+                        $q->select(['id', 'name']);
+                    }])
+                ;
+            }])->select('users.id', 'users.name');
+        } else {
+            $users = User::with(['profile' => function ($query) {
+                $query->select(['user_id', 'userName', 'department_id'])
+                    ->with(['department' => function ($q) {
+                        $q->select(['id', 'name']);
+                    }])
+                ;
+            }])->select('users.id', 'users.name')
+            ->where('id', Auth::id());
+        }
 
         return DataTables::of($users)
             ->addColumn('action', function ($user) {

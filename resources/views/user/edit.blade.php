@@ -30,10 +30,10 @@
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="ibox collapsed">
                     <div class="ibox-title">
-                        <h5>基本信息<small class="m-l-sm">任何人都能修改</small> </h5>
+                        <h5>基本信息</h5>
                         <div class="ibox-tools">
                             <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                         </div>
@@ -117,10 +117,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+        </div>
+        @hasanyrole('administrator | financial_manager')
+        <div class="row">
+            <div class="col-md-12">
                 <div class="ibox collapsed">
                     <div class="ibox-title">
-                        <h5>特殊信息<small class="m-l-sm">只有财务管理员能修改</small> </h5>
+                        <h5>特殊信息</h5>
                         <div class="ibox-tools">
                             <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                         </div>
@@ -221,7 +224,7 @@
                         </div>
                     </div>
                 </div>
-        </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -302,6 +305,7 @@
                 </div>
             </div>
         </div>
+        @endhasanyrole
     </div>
 @stop
 

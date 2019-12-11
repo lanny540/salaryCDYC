@@ -151,7 +151,7 @@
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                         <h4 class="modal-title">薪酬计算公式</h4>
-                                        <small class="font-bold" style="font-size: 16px;">由计划财务部提供并提供解释</small>
+                                        <small class="font-bold" style="font-size: 16px;">由计划财务部提供</small>
                                     </div>
                                     <div class="modal-body">
                                         <p><strong>累计应纳税所得额</strong> = 累计收入 - 累计减除费用 - 累计专项扣除 - 累专附子女 - 累专附老人 - 累专附继教

@@ -50,7 +50,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <div class="panel panel-primary text-center">
                 <div class="panel-heading">
                     <h3>自助服务</h3>
@@ -59,7 +59,7 @@
                     <ul class="list-unstyled m-t-md">
 
                         <li>
-                            <h2><a href="{{ route('salary.search') }}">查看薪酬信息</a></h2>
+                            <h2><a href="{{ route('salary.index') }}">查看薪酬信息</a></h2>
                         </li>
                         <li>
                             <h2><a href="{{ route('person.print') }}">工资条打印</a></h2>
@@ -68,7 +68,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3">
+        @hasanyrole('administrator | financial_manager')
+        <div class="col-lg-4">
             <div class="panel panel-success text-center">
                 <div class="panel-heading">
                     <h3>系统功能</h3>
@@ -86,7 +87,8 @@
                 </ul>
             </div>
         </div>
-        <div class="col-lg-3">
+        @endhasanyrole
+        <div class="col-lg-4">
             <div class="panel panel-danger text-center">
                 <div class="panel-heading">
                     <h3>常见问题</h3>

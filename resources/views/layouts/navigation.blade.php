@@ -25,6 +25,7 @@
                 <a href="{{ route('salary.index') }}"><i class="fa fa-address-book"></i> <span class="nav-label">个人薪酬信息 </span></a>
             </li>
 
+            @hasanyrole('administrator | financial_manager')
             <li class="nav nav-link">业务办理 </li>
             <li class="{{ Request::is('uploadData*') ? 'active' : '' }}">
                 <a href="{{ route('upload.index') }}"><i class="fa fa-gears"></i> <span class="nav-label">上传分表数据 </span></a>
@@ -41,7 +42,7 @@
             <li class="{{ Request::is('vdata*') ? 'active' : '' }}">
                 <a href="{{ route('vdata.index') }}"><i class="fa fa-retweet"></i> <span class="nav-label">生成凭证 </span></a>
             </li>
-
+            @endhasanyrole
 
             <li class="nav nav-link">自助服务 </li>
             <li class="{{ Request::is('search*') ? 'active' : '' }}">
@@ -50,6 +51,7 @@
             <li class="{{ Request::is('personprint*') ? 'active' : '' }}">
                 <a href="{{ route('person.print') }}"><i class="fa fa-trophy"></i> <span class="nav-label">个人薪酬打印 </span> </a>
             </li>
+            @hasanyrole('administrator | financial_manager')
             <li class="{{ Request::is('departmentprint*') ? 'active' : '' }}">
                 <a href="{{ route('department.print') }}"><i class="fa fa-print"></i> <span class="nav-label">部门薪酬打印 </span> </a>
             </li>
@@ -67,6 +69,7 @@
             <li class="{{ Request::is('department*') ? 'active' : '' }}">
                 <a href="{{ route('department.index') }}"><i class="fa fa-sitemap"></i> <span class="nav-label">部门管理 </span></a>
             </li>
+            @endhasanyrole
 
             <li class="nav nav-link">其他工具</li>
             <li class="{{ Request::is('tax') ? 'active' : '' }}">
