@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string                          $excel_column excel读取的字段
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Config\ImportConfig newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Config\ImportConfig newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Config\ImportConfig query()

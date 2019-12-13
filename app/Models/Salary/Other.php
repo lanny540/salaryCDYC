@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $franchise         特许使用权
  * @property float                           $franchise_add_tax 特权应补税
  * @property float                           $franchise_sub_tax 特权减免税
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Other newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Other newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Other query()

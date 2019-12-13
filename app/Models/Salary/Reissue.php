@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $reissue_subsidy 补发补贴
  * @property float                           $reissue_other   补发其他
  * @property float                           $reissue_total   补发合计.补发合计=补发工资+补发补贴+补发其他
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Reissue newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Reissue newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Reissue query()

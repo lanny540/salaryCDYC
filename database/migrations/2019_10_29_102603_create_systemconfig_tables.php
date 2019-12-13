@@ -17,6 +17,7 @@ class CreateSystemconfigTables extends Migration
             $table->bigIncrements('id');
             $table->string('config_key')->comment('系统常量设置key值');
             $table->string('config_value')->comment('系统常量设置value值');
+            $table->string('description')->comment('字段描述');
             $table->string('type')->nullable()->comment('常量类型');
             $table->timestamps();
         });

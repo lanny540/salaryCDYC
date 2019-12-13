@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int                             $subject_type 科目类别.ERP编码分为6段，即0-5
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Subject newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Subject newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Subject query()

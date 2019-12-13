@@ -87,8 +87,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('departments', 'DepartmentController@store')->name('department.store');
     // 系统基础信息管理
     Route::get('systemconfig', 'ConfigController@systemIndex')->name('systemconfig.index');
+    Route::get('systemconfig/{id}', 'ConfigController@systemShow')->name('systemconfig.show');
+    Route::put('systemconfig/{id}', 'ConfigController@systemUpdate')->name('systemconfig.update');
+    Route::delete('systemconfig/{id}', 'ConfigController@systemDelete')->name('systemconfig.delete');
     // 导入字段读取管理
     Route::get('importconfig', 'ConfigController@importIndex')->name('importconfig.index');
+    Route::get('importconfig/{id}', 'ConfigController@importShow')->name('importconfig.show');
+    Route::put('importconfig/{id}', 'ConfigController@importUpdate')->name('importconfig.update');
+    Route::delete('importconfig/{id}', 'ConfigController@importDelete')->name('importconfig.delete');
     // TODO:凭证模板管理
 
     // 个税计算器页面

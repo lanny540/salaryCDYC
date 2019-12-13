@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $reduce_tax             减免个税
  * @property float                           $prior_had_deducted_tax 上月已扣税
  * @property float                           $declare_tax            申报个税
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport query()
@@ -66,17 +65,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereUsername($value)
  * @mixin \Eloquent
- *
  * @property float $personal_tax 个人所得税
  * @property float $tax_diff     税差
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport wherePersonalTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereTaxDiff($value)
- *
  * @property float $declare_tax_salary    薪金申报个税
  * @property float $declare_tax_article   稿酬申报个税
  * @property float $declare_tax_franchise 特权申报个税
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereDeclareTaxArticle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereDeclareTaxFranchise($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\TaxImport whereDeclareTaxSalary($value)

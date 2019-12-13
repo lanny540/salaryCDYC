@@ -40,7 +40,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $debt                   扣欠款
  * @property float                           $donate                 捐赠
  * @property float                           $sum_deduction          其他扣除.其他扣除=公车补扣除+它项扣除
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Deduction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Deduction newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Deduction query()

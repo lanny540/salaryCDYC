@@ -46,7 +46,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float                           $birth_enterprise        生育企业缴
  * @property float                           $enterprise_out_total    企业超合计.企业超合计=公积企超标+失业企超标+医保企超标+年金企超标+退养企超标
  * @property float                           $specail_deduction       专项扣除.专项扣除=退养金扣除+医保金扣除+失业金扣除+公积金扣除
- *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Insurances newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Insurances newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\Insurances query()
