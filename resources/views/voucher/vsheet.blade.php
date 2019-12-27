@@ -43,14 +43,17 @@
                         <label class="col-sm-2 col-form-label" for="period">发放日期 </label>
                         <div class="col-sm-4">
                             <select class="form-control select2_types" id="period" size="12" style="width: 200px;">
-                                <option></option>
                                 @foreach($periods as $p)
-                                    <option value="{{ $p->id }}">{{ $p->published_at }}</option>
+                                    @if($p->published_at === '')
+                                        <option value="{{ $p->id }}">当前周期</option>
+                                    @else
+                                        <option value="{{ $p->id }}">{{ $p->published_at }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-sm-2">
-                            <button class="btn btn-block btn-primary" id="vsheetGenerate">生成汇总表</button>
+                            <button class="btn btn-block btn-primary" id="vsheetGenerate">重新生成</button>
                         </div>
                         <div class="col-sm-2">
                             <button class="btn btn-block btn-success" id="vsheetSubmit" disabled>提交保存</button>
@@ -175,6 +178,11 @@
     $(document).ready(function () {
         let sheets = <?php echo $sheets; ?>;
         let sheetData;
+
+        $('#period').on('change', function () {
+            let period = $("#period").val();
+            console.log(period);
+        });
 
         $('#vsheetGenerate').on('click', function () {
             $('#ibox').children('.ibox-content').toggleClass('sk-loading');

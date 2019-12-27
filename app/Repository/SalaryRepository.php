@@ -1650,6 +1650,7 @@ class SalaryRepository
      */
     private function taxImport(int $period, $data)
     {
+        $this->resetTaxImport($period);
         TaxImport::updateOrCreate(
             ['period_id' => $period, 'policyNumber' => $data['工号']],
             [
@@ -1742,9 +1743,9 @@ class SalaryRepository
     {
         $sqlstring = 'UPDATE taxImport t';
         $sqlstring .= ' LEFT JOIN userProfile up ON t.policyNumber = up.policyNumber ';
-        $sqlstring .= ' AND t.period_id = ?';
         $sqlstring .= ' SET t.reduce_tax = t.should_be_tax * up.tax_rebates';
         $sqlstring .= ' WHERE t.policyNumber = up.policyNumber';
+        $sqlstring .= ' AND t.period_id = ?';
         DB::update($sqlstring, [$period]);
     }
 

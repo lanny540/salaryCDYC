@@ -113,7 +113,7 @@ class SalaryController extends Controller
     /**
      * 导出所有人员当期薪酬明细.
      *
-     * @return \Illuminate\Http\RedirectResponse|\Maatwebsite\Excel\BinaryFileResponse
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      *
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Exception
@@ -239,7 +239,7 @@ class SalaryController extends Controller
      * 个人打印数据导出.
      *
      * @param Request $request
-     * @return \Maatwebsite\Excel\BinaryFileResponse
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception

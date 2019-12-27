@@ -37,6 +37,9 @@ class VoucherController extends Controller
      */
     public function vsheetIndex()
     {
+        /**
+         * 下拉选择后，判断下拉的ID 是否存在于 ￥sheets 中，如果存在，直接读取，如果不存在，则生成。
+         */
         $periods = Period::select(['id', 'published_at'])->get()->sortByDesc('id');
         $sheets = VoucherStatistic::select(['id', 'period_id'])->get();
 

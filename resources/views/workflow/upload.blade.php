@@ -250,7 +250,7 @@
                     } else {
                         document.getElementById("importColumns").innerHTML = '字段列表获取失败！';
                     }
-                    if (options.val() == 51 || options.val() == 52 || options.val() == 53) {
+                    if (options.val() == 54 || options.val() == 55 || options.val() == 56) {
                         filters = R.append('工号', filters);
                     } else {
                         filters = R.append('保险编号', filters);

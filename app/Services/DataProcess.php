@@ -614,19 +614,31 @@ class DataProcess
                 );
             }
         }
+        TaxImport::where('period_id', $period)->update(['personal_tax' => 0]);
 
         $sqlstring = 'UPDATE taxImport t ';
-        $sqlstring .= 'LEFT JOIN other o ON t.policyNumber = o.policyNumber AND t.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN ( ';
+        // 子查询
+        $sqlstring .= 'SELECT a.policyNumber, a.aa, IFNULL(b.article_add_tax, 0) as bb, IFNULL(b.franchise_add_tax, 0) as cc ';
+        $sqlstring .= 'FROM ';
+        $sqlstring .= '(SELECT period_id, policyNumber, should_be_tax as aa FROM taxImport ';
+        $sqlstring .= 'WHERE period_id = ? ) a ';
+        $sqlstring .= 'LEFT JOIN ';
+        $sqlstring .= '(SELECT o.period_id, policyNumber, o.article_add_tax, o.franchise_add_tax FROM other o ';
+        $sqlstring .= 'WHERE o.period_id = ? ) b ';
+        $sqlstring .= 'ON a.policyNumber = b.policyNumber AND a.period_id = b.period_id ';
+        $sqlstring .= ') tt ';
+        $sqlstring .= 'ON t.policyNumber = tt.policyNumber ';
         $sqlstring .= 'SET ';
         // 个人所得税
-        $sqlstring .= 't.personal_tax=t.should_be_tax + IFNULL(o.article_add_tax,0) + IFNULL(o.franchise_add_tax, 0), ';
+        $sqlstring .= 't.personal_tax = tt.aa + tt.bb + tt.cc, ';
         // 申报个税
         $sqlstring .= 't.declare_tax = t.declare_tax_salary + t.declare_tax_article + t.declare_tax_franchise, ';
         // 税差
         $sqlstring .= 't.tax_diff = (t.declare_tax * 100 - prior_had_deducted_tax * 100) / 100 ';
-        $sqlstring .= 'WHERE t.period_id = ?';
+        $sqlstring .= 'WHERE t.period_id = ? ';
 
-        DB::update($sqlstring, [$period, $period]);
+        DB::update($sqlstring, [$period, $period, $period]);
     }
 
     /**
@@ -650,11 +662,11 @@ class DataProcess
         ]);
         // 再更新
         $sqlstring = 'SELECT up.policyNumber, ';
-        $sqlstring .= '(w.wage_total + w.yfct + w.yfnt) as wage_total, ';
-        $sqlstring .= 'b.bonus_total as bonus_total,s.subsidy_total as subsidy_total,';
-        $sqlstring .= 'r.reissue_total as reissue_total,i.enterprise_out_total as enterprise_out_total,';
-        $sqlstring .= '(wage_total + s.subsidy_total + r.reissue_total) as should_total, ';
-        $sqlstring .= '(wage_total + b.bonus_total + i.enterprise_out_total) as salary_total ';
+        $sqlstring .= '(IFNULL(w.wage_total, 0) + IFNULL(w.yfct, 0) + IFNULL(w.yfnt, 0)) as wage_total, ';
+        $sqlstring .= 'IFNULL(b.bonus_total, 0) as bonus_total, IFNULL(s.subsidy_total, 0) as subsidy_total,';
+        $sqlstring .= 'IFNULL(r.reissue_total , 0) as reissue_total, IFNULL(i.enterprise_out_total, 0) as enterprise_out_total,';
+        $sqlstring .= '(IFNULL(w.wage_total, 0) + IFNULL(w.yfct, 0) + IFNULL(w.yfnt, 0) + IFNULL(s.subsidy_total, 0) + IFNULL(r.reissue_total , 0)) as should_total, ';
+        $sqlstring .= '(IFNULL(w.wage_total, 0) + IFNULL(w.yfct, 0) + IFNULL(w.yfnt, 0) + IFNULL(s.subsidy_total, 0) + IFNULL(r.reissue_total , 0) + IFNULL(b.bonus_total, 0) + IFNULL(i.enterprise_out_total, 0)) as salary_total ';
         $sqlstring .= 'FROM userProfile up ';
         $sqlstring .= 'LEFT JOIN wage w ON up.policyNumber = w.policyNumber AND w.period_id = ? ';
         $sqlstring .= 'LEFT JOIN bonus b ON up.policyNumber = b.policyNumber AND b.period_id = ? ';
@@ -724,7 +736,7 @@ class DataProcess
             if ('010101' === substr($i->dwdm, 0, 6) || '0102' === substr($i->dwdm, 0, 4)) {
                 // 实发工资 < 0，余欠款 = 1 - 实发工资
                 if ($i->actual_salary < 0) {
-                    $actual_salary = 0;
+                    $actual_salary = $i->actual_salary;
                     $debt_salary = 1 - $i->actual_salary;
                 } else {
                     $actual_salary = $i->actual_salary;
