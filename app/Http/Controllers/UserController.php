@@ -67,6 +67,7 @@ class UserController extends Controller
     {
         $rules = [
             'department_id' => 'required',
+            'organization_id' => 'required',
             'status' => 'required',
             'uid' => 'required | max:50',
             'wageCard' => 'required | max:32',
@@ -84,6 +85,7 @@ class UserController extends Controller
         $userProfile = UserProfile::where('user_id', $userId)->first();
 
         $userProfile->department_id = $request->get('department_id');
+        $userProfile->organization_id = $request->get('organization_id');
         $userProfile->status = $request->get('status');
         $userProfile->uid = $request->get('uid');
         $userProfile->wageCard = $request->get('wageCard');

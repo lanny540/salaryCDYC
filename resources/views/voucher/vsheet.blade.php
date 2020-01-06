@@ -150,7 +150,7 @@
         </div>
     </div>
 </div>
-@stop
+@endsection
 
 @section('js')
 <!-- ramda -->
@@ -343,4 +343,4 @@
         });
     }
 </script>
-@stop
+@endsection

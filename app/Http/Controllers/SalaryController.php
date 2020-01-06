@@ -39,6 +39,10 @@ class SalaryController extends Controller
     public function index()
     {
         $year = Carbon::now()->year;
+        $periods = $this->salaryData->getPeriodIds($year);
+        if (0 == count($periods)) {
+            $year = $year - 1;
+        }
         // 获取 去年的薪酬汇总数据
         $preYearSalary = $this->salaryData->getYearSalary(Auth::id(), $year - 1);
         // 获取 今年的薪酬汇总数据
@@ -113,7 +117,7 @@ class SalaryController extends Controller
     /**
      * 导出所有人员当期薪酬明细.
      *
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\RedirectResponse
      *
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Exception
@@ -123,7 +127,7 @@ class SalaryController extends Controller
         $period = $this->dataProcess->getPeriodId();
         $res = $this->dataProcess->getSalaryDetail($period);
 
-        if (0 === \count($res['data'])) {
+        if (0 === count($res['data'])) {
             return redirect()->route('special.index')->withErrors('导出错误或者无导出数据!');
         }
 

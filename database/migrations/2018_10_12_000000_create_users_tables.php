@@ -27,6 +27,7 @@ class CreateUsersTables extends Migration
             $table->string('userName', 16)->comment('姓名');
             $table->string('sex', 4)->nullable()->comment('性别');
             $table->unsignedInteger('department_id')->index()->comment('部门ID');
+            $table->unsignedInteger('organization_id')->index()->comment('组织ID');
             $table->string('uid', 50)->unique()->comment('身份证');
             $table->string('mobile', 16)->nullable()->comment('手机');
             $table->string('phone', 16)->nullable()->comment('电话');

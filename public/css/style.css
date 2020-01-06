@@ -5778,7 +5778,7 @@ ul.clear-list:first-child {
   border-left: 1px solid #e7eaec;
   border-top: 1px solid #e7eaec;
   padding-top: 10px;
-  min-height: 100px;
+  /*min-height: 100px;*/
 }
 .timeline-item .content:hover {
   background: #f6f6f6;

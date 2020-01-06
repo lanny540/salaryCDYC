@@ -255,9 +255,10 @@ class DataProcess
     public function getSalaryDetail(int $period)
     {
         $res['headings'] = [
-            '保险编号', '姓名', 'dwdm', '部门',
+            'dwdm', '部门', '工序', '人数', '姓名', '转储姓名', '保险编号', '人员编码', '手机号码',
+            '证照类型', '证照号码', '工资工行卡', '奖金工行卡', '入职时间', '离职时间', '是否残疾人', '减免税率',
             // region 工资
-            '年薪工资标', '岗位工资标', '岗位工资日', '扣岗位工病', '扣岗位工事', '扣岗位工婴', '年薪工资', '岗位工资',
+            '年薪工资', '年薪工资标', '岗位工资标', '岗位工资日', '扣岗位工病', '扣岗位工事', '扣岗位工婴', '岗位工资',
             '保留工资', '套级补差', '中夜班费', '加班工资', '年功工资', '离岗岗位', '离岗保留', '离岗增加', '离岗年功',
             '基本养老金', '增机', '国家补贴', '国家生活', '国家小计', '地方粮差', '地方其他', '地方物补', '地方生活', '地方小计',
             '行业工龄', '行业退补', '行业其他', '行业小计', '统筹小计',
@@ -288,26 +289,33 @@ class DataProcess
             // region 扣款
             '车库水费', '车库电费', '车库物管', '成钞水费', '成钞电费', '成钞物管', '鑫源水费', '鑫源电费', '鑫源物管',
             '退补水费', '退补电费', '退补物管费', '水电', '物管费',
-            '公车费用', '公车补扣除', '它项扣除', '其他扣除',
+            '公车费用', '公车补扣除', '公车扣备注', '它项扣除', '它项扣备注', '其他扣除',
             '固定扣款', '其他扣款', '临时扣款', '扣工会会费', '上期余欠款', '已销欠款', '扣欠款', '捐赠',
             // endregion
             // region 专项
             '累计收入额', '累减除费用', '累计专项扣', '累专附子女', '累专附老人', '累专附继教', '累专附房利', '累专附房租', '累其他扣除',
-            '累计扣捐赠', '累税所得额', '累计应纳税', '累计减免税', '累计应扣税', '累计申扣税', '累计应补税',
+            '累计扣捐赠', '累税所得额', '税率', '速算扣除数', '累计应纳税', '累计减免税', '累计应扣税', '累计申扣税', '累计应补税',
             '减免个税', '个人所得税', '上月已扣税', '申报个税', '税差',
             // endregion
             // region 特殊
-            '实发工资', '余欠款', '代汇', '银行发放', '法院转提',
+            '汇', '代汇', '银行发放', '实发工资', '余欠款', '法院转提',
             // endregion
+            // region card
+            '代汇开户行', '代汇省', '代汇市', '代汇地区码', '代汇姓名', '代汇账号',
+            //endregion
         ];
 
         $res['filename'] = date('Ym').'_所有字段明细数据导出.xlsx';
         // region SQL 查询语句
-        $sqlstring = 'SELECT up.policyNumber, up.userName, departments.dwdm, departments.name,';
+        $sqlstring = "SELECT d1.dwdm, d1.name AS '部门', d2.name AS '工序', 1 AS '人数', ";
+        $sqlstring .= 'up.userName, up.userName as name1, up.policyNumber, users.name as uname, ';
+        $sqlstring .= "up.mobile, '身份证' as '证照类型', up.uid, up.wageCard, up.bonusCard, up.hiredate, up.departure, ";
+        $sqlstring .= "IF(handicapped = 0, 'F', 'T') as handicapped, up.tax_rebates, ";
         // region 工资
-        $sqlstring .= 'IFNULL(w.annual_standard,0) AS 年薪工资标,IFNULL(w.wage_standard,0) AS 岗位工资标,IFNULL(w.wage_daily,0) AS 岗位工资日,';
+        $sqlstring .= 'IFNULL(w.annual,0) AS 年薪工资, IFNULL(w.annual_standard,0) AS 年薪工资标,';
+        $sqlstring .= 'IFNULL(w.wage_standard,0) AS 岗位工资标,IFNULL(w.wage_daily,0) AS 岗位工资日,';
         $sqlstring .= 'IFNULL(w.sick_sub,0) AS 扣岗位工病,IFNULL(w.leave_sub,0) AS 扣岗位工事,IFNULL(w.baby_sub,0) AS 扣岗位工婴,';
-        $sqlstring .= 'IFNULL(w.annual,0) AS 年薪工资,IFNULL(w.wage,0) AS 岗位工资,';
+        $sqlstring .= 'IFNULL(w.wage,0) AS 岗位工资,';
         $sqlstring .= 'IFNULL(w.retained_wage,0) AS 保留工资,IFNULL(w.compensation,0) AS 套级补差,';
         $sqlstring .= 'IFNULL(w.night_shift,0) AS 中夜班费,IFNULL(w.overtime_wage,0) AS 加班工资,IFNULL(w.seniority_wage,0) AS 年功工资,';
         $sqlstring .= 'IFNULL(w.lggw,0) AS 离岗岗位,IFNULL(w.lgbl,0) AS 离岗保留,IFNULL(w.lgzj,0) AS 离岗增加,IFNULL(w.lgng,0) AS 离岗年功,';
@@ -364,7 +372,8 @@ class DataProcess
         $sqlstring .= 'IFNULL(d.xy_water,0) AS 鑫源水费,IFNULL(d.xy_electric,0) AS 鑫源电费,IFNULL(d.xy_property,0) AS 鑫源物管,';
         $sqlstring .= 'IFNULL(d.back_water,0) AS 退补水费,IFNULL(d.back_electric,0) AS 退补电费,IFNULL(d.back_property,0) AS 退补物管费,';
         $sqlstring .= 'IFNULL(d.water_electric,0) AS 水电,IFNULL(d.property_fee,0) AS 物管费,';
-        $sqlstring .= 'IFNULL(d.car_fee,0) AS 公车费用,IFNULL(d.car_deduction,0) AS 公车补扣除,IFNULL(d.rest_deduction,0) AS 它项扣除,';
+        $sqlstring .= "IFNULL(d.car_fee,0) AS 公车费用,IFNULL(d.car_deduction,0) AS 公车补扣除,IFNULL(d.car_deduction_comment,'') AS '公车扣备注',";
+        $sqlstring .= "IFNULL(d.rest_deduction,0) AS 它项扣除, IFNULL(d.rest_deduction_comment, '') AS '它项扣备注',";
         $sqlstring .= 'IFNULL(d.sum_deduction,0) AS 其他扣除,';
         $sqlstring .= 'IFNULL(d.fixed_deduction,0) AS 固定扣款,IFNULL(d.other_deduction,0) AS 其他扣款,IFNULL(d.temp_deduction,0) AS 临时扣款,';
         $sqlstring .= 'IFNULL(d.union_deduction,0) AS 扣工会会费,IFNULL(d.prior_deduction,0) AS 上期余欠款,IFNULL(d.had_debt,0) AS 已销欠款,';
@@ -374,20 +383,26 @@ class DataProcess
         $sqlstring .= 'IFNULL(t.income,0) AS 累计收入额,IFNULL(t.deduct_expenses,0) AS 累减除费用,IFNULL(t.special_deduction,0) AS 累计专项扣,';
         $sqlstring .= 'IFNULL(t.tax_child,0) AS 累专附子女,IFNULL(t.tax_old,0) AS 累专附老人,IFNULL(t.tax_edu,0) AS 累专附继教,';
         $sqlstring .= 'IFNULL(t.tax_loan,0) AS 累专附房利,IFNULL(t.tax_rent,0) AS 累专附房租,IFNULL(t.tax_other_deduct,0) AS 累其他扣除,';
-        $sqlstring .= 'IFNULL(t.deduct_donate,0) AS 累计扣捐赠,IFNULL(t.tax_income,0) AS 累税所得额,';
+        $sqlstring .= 'IFNULL(t.deduct_donate,0) AS 累计扣捐赠,IFNULL(t.tax_income,0) AS 累税所得额,IFNULL(t.taxrate,0) AS 税率,IFNULL(t.quick_deduction,0) AS 速算扣除数,';
         $sqlstring .= 'IFNULL(t.taxable,0) AS 累计应纳税,IFNULL(t.tax_reliefs,0) AS 累计减免税,IFNULL(t.should_deducted_tax,0) AS 累计应扣税,';
         $sqlstring .= 'IFNULL(t.have_deducted_tax,0) AS 累计申扣税,IFNULL(t.should_be_tax,0) AS 累计应补税,IFNULL(t.reduce_tax,0) AS 减免个税,';
         $sqlstring .= 'IFNULL(t.personal_tax,0) AS 个人所得税,IFNULL(t.prior_had_deducted_tax,0) AS 上月已扣税,';
         $sqlstring .= 'IFNULL(t.declare_tax,0) AS 申报个税,IFNULL(t.tax_diff,0) AS 税差,';
         // endregion
         // region 特殊
-        $sqlstring .= 'IFNULL(sp.actual_salary,0) AS 实发工资,IFNULL(sp.debt_salary,0) AS 余欠款,';
-        $sqlstring .= 'IFNULL(sp.instead_salary,0) AS 代汇,IFNULL(sp.bank_salary,0) AS 银行发放,';
-        $sqlstring .= 'IFNULL(sp.court_salary,0) AS 法院转提 ';
+        $sqlstring .= "IF(sp.instead_salary > 0, 'T', 'F') AS 汇, IFNULL(sp.instead_salary,0) AS 代汇,";
+        $sqlstring .= 'IFNULL(sp.bank_salary,0) AS 银行发放,IFNULL(sp.actual_salary,0) AS 实发工资,';
+        $sqlstring .= 'IFNULL(sp.debt_salary,0) AS 余欠款,IFNULL(sp.court_salary,0) AS 法院转提, ';
+        // endregion
+        // region card
+        $sqlstring .= 'c.remit_bank, c.remit_province, c.remit_city,';
+        $sqlstring .= 'c.remit_address_no, c.remit_name, c.remit_card_no ';
         // endregion
 
         $sqlstring .= 'FROM userProfile up ';
-        $sqlstring .= 'LEFT JOIN departments ON up.department_id = departments.id ';
+        $sqlstring .= 'LEFT JOIN users ON up.user_id = users.id ';
+        $sqlstring .= 'LEFT JOIN departments d1 ON up.department_id = d1.id ';
+        $sqlstring .= 'LEFT JOIN departments d2 ON up.organization_id = d2.id ';
         $sqlstring .= 'LEFT JOIN wage w ON up.policyNumber = w.policyNumber AND w.period_id = ? ';
         $sqlstring .= 'LEFT JOIN bonus b ON up.policyNumber = b.policyNumber AND b.period_id = ? ';
         $sqlstring .= 'LEFT JOIN other o ON up.policyNumber = o.policyNumber AND o.period_id = ? ';
@@ -397,8 +412,9 @@ class DataProcess
         $sqlstring .= 'LEFT JOIN deduction d ON up.policyNumber = d.policyNumber AND d.period_id = ? ';
         $sqlstring .= 'LEFT JOIN taxImport t ON up.policyNumber = t.policyNumber AND t.period_id = ? ';
         $sqlstring .= 'LEFT JOIN special sp ON up.policyNumber = sp.policyNumber AND sp.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN card_info c ON up.user_id = c.user_id ';
         $sqlstring .= 'WHERE up.user_id <> 1 ';
-        $sqlstring .= 'ORDER BY departments.dwdm, up.user_id';
+        $sqlstring .= 'ORDER BY d1.dwdm, up.user_id';
         //endregion
 
         $res['data'] = DB::select($sqlstring, [

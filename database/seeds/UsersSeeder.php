@@ -33,6 +33,7 @@ class UsersSeeder extends Seeder
             'userName' => '李凌',
             'sex' => '男',
             'department_id' => 9,
+            'organation_id' => 9,
             'uid' => $faker->uuid,
             'mobile' => $faker->phoneNumber,
             'phone' => $faker->phoneNumber,
@@ -55,7 +56,7 @@ class UsersSeeder extends Seeder
         $user->roles()->sync($role);
 
 //        //以下为测试数据
-//        $department = Department::where('level', 5)->pluck('id')->toArray();
+//        $department = Department::where('level', 2)->pluck('id')->toArray();
 //        $tempUsers = [];
 //        $userProfiles = [];
 //        for ($i = 1; $i < 20; ++$i) {
@@ -69,6 +70,7 @@ class UsersSeeder extends Seeder
 //                'userName' => $faker->name,
 //                'sex' => '男',
 //                'department_id' => $department[array_rand($department)],
+//                'organation_id' => $department[array_rand($department)],
 //                'uid' => $faker->uuid,
 //                'mobile' => $faker->phoneNumber,
 //                'phone' => $faker->phoneNumber,

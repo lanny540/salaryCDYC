@@ -23,8 +23,8 @@ class SalaryData
      */
     public function getDashboardSalary($userId, $year)
     {
-        $periods = $this->getPeriodIds($year);
         $policyNumber = $this->getPolicyNumber($userId);
+        $periods = $this->getPeriodIds($year);
 
         $res['salary'] = SalarySummary::where('policyNumber', $policyNumber)
             ->whereIn('period_id', $periods)

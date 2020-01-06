@@ -35,11 +35,17 @@
                         <div class="col-lg-3">
                             <ul class="stat-list text-center">
                                 <li>
-                                    <h2 class="text-muted m-b block dash-text1">{{ \Carbon\Carbon::now()->year }}年收入</h2>
+                                    <h2 class="text-muted m-b block dash-text1">
+                                        {{ $year }}年收入
+                                        <span class="fa fa-exclamation-circle" data-toggle="popover" data-placement="top" data-content="年度工资薪金"></span>
+                                    </h2>
                                     <span class="h3 font-bold m-t block dash-text2" id="salary_total"></span>
                                 </li>
                                 <li>
-                                    <h2 class="text-muted m-b block dash-text1">年缴个税</h2>
+                                    <h2 class="text-muted m-b block dash-text1">
+                                        年缴个税
+                                        <span class="fa fa-exclamation-circle" data-toggle="popover" data-placement="top" data-content="年度累计申报已扣税"></span>
+                                    </h2>
                                     <span class="h3 font-bold m-t block dash-text2" id="salary_tax"></span>
                                 </li>
                             </ul>
@@ -49,61 +55,105 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="panel panel-primary text-center">
-                <div class="panel-heading">
-                    <h3>自助服务</h3>
-                </div>
-                <div class="panel-body">
-                    <ul class="list-unstyled m-t-md">
 
-                        <li>
-                            <h2><a href="{{ route('salary.index') }}">查看薪酬信息</a></h2>
-                        </li>
-                        <li>
-                            <h2><a href="{{ route('person.print') }}">工资条打印</a></h2>
-                        </li>
-                    </ul>
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>自助服务</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content text-center">
+                    <h3><a href="{{ route('salary.index') }}">查看薪酬信息</a></h3>
+                    <h3><a href="{{ route('person.print') }}">工资条打印</a></h3>
+                </div>
+            </div>
+            @hasanyrole('administrator|financial_manager')
+            <div class="ibox collapsed">
+                <div class="ibox-title">
+                    <h5>系统功能</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content text-center">
+                    <h3><a href="{{ route('upload.index') }}">上传分表数据</a></h3>
+                    <h3><a href="{{ route('special.index') }}">专项数据导出</a></h3>
+                    <h3><a href="{{ route('vdata.index') }}">生成凭证</a></h3>
+                </div>
+            </div>
+            @endhasanyrole
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>常见问题</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content text-center">
+                    <h3><a href="{{ route('tax') }}">个税计算器</a></h3>
+                    <h3><a href="{{ route('report') }}">系统BUG报告</a></h3>
+                    <h3><a href="{{ route('contact') }}">系统意见建议</a></h3>
                 </div>
             </div>
         </div>
-        @hasanyrole('administrator | financial_manager')
-        <div class="col-lg-4">
-            <div class="panel panel-success text-center">
-                <div class="panel-heading">
-                    <h3>系统功能</h3>
+
+        <div class="col-lg-7">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>日志</h5>
+                    <span class="label label-primary">只显示最近的三次操作</span>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
                 </div>
-                <ul class="list-unstyled m-t-md">
-                    <li>
-                        <h2><a href="{{ route('upload.index') }}">上传分表数据</a></h2>
-                    </li>
-                    <li>
-                        <h2><a href="{{ route('special.index') }}">专项数据导出</a></h2>
-                    </li>
-                    <li>
-                        <h2><a href="{{ route('vdata.index') }}">生成凭证</a></h2>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        @endhasanyrole
-        <div class="col-lg-4">
-            <div class="panel panel-danger text-center">
-                <div class="panel-heading">
-                    <h3>常见问题</h3>
+
+                <div class="ibox-content inspinia-timeline">
+                    @foreach($logs as $log)
+                    <div class="timeline-item">
+                        <div class="row">
+                            @if($log->upload_type !== 0)
+                                <div class="col-3 date">
+                                    <i class="fa fa-file-text"></i>
+                                    {{ $log->updated_at }}
+                                    <br/>
+                                    <small class="text-navy">{{ $log->updated_at->diffForHumans() }}</small>
+                                </div>
+                                <div class="col-8 content">
+                                    <p class="m-b-xs"><strong>上传</strong></p>
+                                    <p>
+                                        {{ Auth::user()->profile->userName }} 上传了 <b>{{ $log->description }}</b> 数据。
+                                        <a href="{{ $log->upload_file }}">下载查看该数据。</a>
+                                    </p>
+                                </div>
+                            @else
+                                <div class="col-3 date">
+                                    <i class="fa fa-briefcase"></i>
+                                    {{ $log->updated_at }}
+                                    <br/>
+                                    <small class="text-navy">{{ $log->updated_at->diffForHumans() }}</small>
+                                </div>
+                                <div class="col-8 content">
+                                    <p class="m-b-xs"><strong>修改</strong></p>
+                                    <p>
+                                        {{ $log->user_id->profile->userName }} 修改了 <b>{{ $log->upload_file }}</b> 数据。
+                                    </p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
-                <ul class="list-unstyled m-t-md">
-                    <li>
-                        <h2><a href="{{ route('tax') }}">个税计算器</a></h2>
-                    </li>
-                    <li>
-                        <h2><a href="{{ route('report') }}">系统BUG报告</a></h2>
-                    </li>
-                    <li>
-                        <h2><a href="{{ route('contact') }}">系统意见建议</a></h2>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
@@ -118,8 +168,15 @@
 
 <script>
     let datas = <?php echo $salary; ?>;
-    let chartTitle = getSalaryTitle(datas.salary);
-    let chartData = getSalary(datas.salary);
+    let chartTitle, chartData;
+    if (datas.salary.length > 0) {
+        chartTitle = getSalaryTitle(datas.salary);
+        chartData = getSalary(datas.salary);
+    } else {
+        chartTitle = ['一月'];
+        chartData = [0];
+    }
+
     let barData = {
         labels: chartTitle,
         datasets: [

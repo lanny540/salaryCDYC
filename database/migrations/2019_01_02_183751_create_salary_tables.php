@@ -16,7 +16,7 @@ class CreateSalaryTables extends Migration
             $table->increments('id');
             $table->integer('period_id')->default(0)->index()->comment('会计期ID');
             $table->integer('user_id')->comment('上传人员ID');
-            $table->integer('upload_type')->comment('上传数据的类型， 等于角色ID');
+            $table->integer('upload_type')->default(0)->comment('上传数据的类型， 等于角色ID');
             $table->string('upload_file')->default('')->comment('上传文件路径');
             $table->timestamps();
         });
