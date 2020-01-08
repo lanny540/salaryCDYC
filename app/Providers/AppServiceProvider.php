@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
+use View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,6 +14,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Carbon::setLocale('zh');
+
+//        View::share('msgCount', 5);
+        View::composer('*', 'App\Http\ViewComposers\MsgComposer');
     }
 
     /**

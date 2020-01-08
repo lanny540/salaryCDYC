@@ -55,8 +55,14 @@
             <li class="{{ Request::is('departmentprint*') ? 'active' : '' }}">
                 <a href="{{ route('department.print') }}"><i class="fa fa-print"></i> <span class="nav-label">部门薪酬打印 </span> </a>
             </li>
+            <li class="{{ Request::is('mymsg*') ? 'active' : '' }}">
+                <a href="{{ route('mymsg.index') }}"><i class="fa fa-envelope"></i> <span class="nav-label">我的消息 </span> </a>
+            </li>
 
             <li class="nav nav-link">系统设置 </li>
+            <li class="{{ Request::is('messages*') ? 'active' : '' }}">
+                <a href="{{ route('messages.send') }}"><i class="fa fa-envelope"></i> <span class="nav-label">消息发送 </span> </a>
+            </li>
             <li class="{{ Request::is('users*') ? 'active' : '' }}">
                 <a href="{{ route('users.index') }}"><i class="fa fa-users"></i> <span class="nav-label">人员管理 </span></a>
             </li>

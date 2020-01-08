@@ -11,14 +11,18 @@
         <ul class="nav navbar-top-links navbar-right">
             <li class="dropdown">
                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                    <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
+                    <i class="fa fa-bell"></i>  <span class="label label-primary">{{ $messages['count'] }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-alerts">
                     <li>
                         <a href="#" class="dropdown-item">
                             <div>
-                                <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                                <span class="float-right text-muted small">4 minutes ago</span>
+                                <i class="fa fa-envelope fa-fw"></i> 有 {{ $messages['sysMsg']->msgcount }} 条未读系统消息
+                                <span class="float-right text-muted small">
+                                    @if($messages['sysMsg']->lastdate !== null)
+                                    {{ \Carbon\Carbon::parse($messages['sysMsg']->lastdate)->diffForHumans() }}
+                                    @endif
+                                </span>
                             </div>
                         </a>
                     </li>
@@ -26,8 +30,12 @@
                     <li>
                         <a href="#" class="dropdown-item">
                             <div>
-                                <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                <span class="float-right text-muted small">12 minutes ago</span>
+                                <i class="fa fa-twitter fa-fw"></i> 有 {{ $messages['depMsg']->msgcount }} 条未读部门消息
+                                <span class="float-right text-muted small">
+                                    @if($messages['depMsg']->lastdate !== null)
+                                    {{ \Carbon\Carbon::parse($messages['depMsg']->lastdate)->diffForHumans() }}
+                                    @endif
+                                </span>
                             </div>
                         </a>
                     </li>

@@ -38,7 +38,7 @@ function importf(obj)
         // 按字段读取excel的值
         let xlsData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
         excel = filterData(xlsData, filters);
-        // console.log(excel);
+        console.log(excel);
     };
     reader.readAsBinaryString(f);
 }

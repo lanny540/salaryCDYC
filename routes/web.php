@@ -64,6 +64,13 @@ Route::group(['middleware' => 'auth'], function () {
     // 部门薪金打印页
     Route::get('departmentprint', 'SalaryController@departmentPrint')->name('department.print');
     Route::post('print', 'SalaryController@print');
+    // 我的消息
+    Route::get('mymsg', 'MessageController@index')->name('mymsg.index');
+
+    // 消息发送
+    Route::get('messages', 'MessageController@sendIndex')->name('messages.send');
+    Route::post('messages', 'MessageController@sendMessage')->name('msg.send');
+    Route::post('customMessages', 'MessageController@sendCustomMessage')->name('customMsg.send');
 
     // 人员信息管理
     Route::get('users', 'UserController@usersIndex')->name('users.index');
@@ -107,4 +114,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('report', 'HelpController@reportPost')->name('report.post');
     // 联系我们页面
     Route::get('contact', 'HelpController@contactIndex')->name('contact');
+
+    Route::get('temp', 'TempController@test');
 });

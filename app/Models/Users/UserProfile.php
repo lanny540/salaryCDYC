@@ -54,6 +54,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Salary\SalarySummary[] $salaries
  * @property int|null $salaries_count
+ * @property int $organization_id 组织ID
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Users\UserProfile whereOrganizationId($value)
  */
 class UserProfile extends Model
 {
