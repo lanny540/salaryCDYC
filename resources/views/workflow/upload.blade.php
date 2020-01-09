@@ -141,8 +141,6 @@
 <script src="{{ asset('js/helper.js') }}"></script>
 
 <script>
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}});
-
     let filters = [];       //根据角色得到需要获取的列名
     let wb;                 //excel数据
     let excel = [];         //处理后的数据

@@ -80,8 +80,10 @@
                             {{ Form::close() }}
                         </div>
                     </div>
+                    @hasanyrole('administrator|financial_manager|department_manager')
                     <div role="tabpanel" id="tab-2" class="tab-pane">
                         <div class="panel-body">
+                            {{ Form::open(['route' => 'customMsg.send', 'method' => 'post', 'id' => 'customMsgForm', 'files' => true]) }}
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label text-right" for="excel">上传列表</label>
                                 <div class="col-sm-4">
@@ -97,11 +99,13 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group row">
                                 <div class="col-sm-4 offset-4">
-                                    <button id="customSend" class="btn btn-lg btn-primary btn-block">发送</button>
+                                    <button id="customSend" class="btn btn-lg btn-primary btn-block" type="button">发送</button>
                                 </div>
                             </div>
+                            {{ Form::close() }}
                         </div>
                     </div>
+                    @endhasanyrole
                 </div>
             </div>
         </div>
@@ -151,6 +155,19 @@
             } else {
                 temp1.style.display="none";
             }
+        });
+
+        $('#customSend').on('click', function () {
+            let form = $('#customMsgForm');
+
+            let jsonstr = JSON.stringify(excel);
+            let importData = document.createElement('input');
+            importData.type = 'hidden';
+            importData.name = 'importData';
+            importData.value = jsonstr;
+            form.append(importData);
+
+            form.submit();
         });
     });
 </script>

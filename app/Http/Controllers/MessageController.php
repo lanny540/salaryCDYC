@@ -5,13 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Message;
 use App\Models\Users\User;
+use App\Repository\MessageRepository;
 use Auth;
 use Carbon\Carbon;
 use File;
 use Illuminate\Http\Request;
+use Storage;
 
 class MessageController extends Controller
 {
+    protected $messages;
+
+    public function __construct(MessageRepository $msg)
+    {
+        $this->messages = $msg;
+    }
+
+    /**
+     * 我的消息视图.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         return view('messages.index');
@@ -85,7 +99,7 @@ class MessageController extends Controller
             $arr = explode('.', $file['name']);
             $fileName = uniqid('attachment_', false).'.'.end($arr);
             $content = File::get($file['tmp_name']);
-//        Storage::disk('excelFiles')->put($fileName, $content);
+//        Storage::disk('attachment')->put($fileName, $content);
             $attachment = asset('/storage/attachment/'.$fileName);
         } else {
             $attachment = '';
@@ -110,7 +124,25 @@ class MessageController extends Controller
 
     public function sendCustomMessage(Request $request)
     {
-        return $request->all();
-//        return redirect()->route()->with('success', '消息发送成功！');
+        $import = json_decode($request->get('importData'), true);
+
+        if (isset($import[0]) && array_key_exists('保险编号', $import[0]) && array_key_exists('发送内容', $import[0])) {
+            $data = $this->messages->transMsg(Auth::id(), $import);
+
+            Message::insert($data);
+
+            // 保存文件至本地
+            if ($request->hasFile('excel') && $request->file('excel')->isValid()) {
+                $file = $_FILES['excel'];
+                $arr = explode('.', $file['name']);
+                $fileName = uniqid('customMsg', false).'.'.end($arr);
+                $content = File::get($file['tmp_name']);
+                Storage::disk('customMsg')->put($fileName, $content);
+            }
+
+            return redirect()->route('messages.send')->with('success', '消息发送成功！');
+        } else {
+            return redirect()->back()->withErrors('传入字段不正确！必须存在 保险编号 和 发送内容 两个字段.');
+        }
     }
 }

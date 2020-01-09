@@ -15,8 +15,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Carbon::setLocale('zh');
 
-//        View::share('msgCount', 5);
-        View::composer('*', 'App\Http\ViewComposers\MsgComposer');
+//        View::composer('*', 'App\Http\ViewComposers\MsgComposer');
+        View::composer(['layouts.topnavbar'], 'App\Http\ViewComposers\MsgComposer');
     }
 
     /**

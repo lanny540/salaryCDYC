@@ -35,6 +35,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Message withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Message withoutTrashed()
  * @mixin \Eloquent
+ * @property int $isread 是否已读.0否1是
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Message whereIsread($value)
  */
 class Message extends Model
 {
