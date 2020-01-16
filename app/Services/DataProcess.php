@@ -225,7 +225,7 @@ class DataProcess
         $sqlstring .= 'ROUND(SUM(IFNULL(sp.instead_salary,0)),2) AS 代汇,ROUND(SUM(IFNULL(sp.bank_salary,0)),2) AS 银行发放,';
         $sqlstring .= 'ROUND(SUM(IFNULL(sp.court_salary,0)),2) AS 法院转提, ';
         // 合计
-        $sqlstring .= 'ROUND(SUM(IFNULL(su.salary_total,0)),2) AS 工资薪金 ';
+        $sqlstring .= 'ROUND(SUM(IFNULL(su.should_total,0)),2) AS 应发合计, ROUND(SUM(IFNULL(su.salary_total,0)),2) AS 工资薪金 ';
 
         $sqlstring .= 'FROM userProfile up ';
         $sqlstring .= 'LEFT JOIN wage w ON up.policyNumber = w.policyNumber AND w.period_id = ? ';
@@ -300,9 +300,15 @@ class DataProcess
             // region 特殊
             '汇', '代汇', '银行发放', '实发工资', '余欠款', '法院转提',
             // endregion
+            // region 合计信息
+            '应发合计', '工资薪金',
+            // endregion
+            // region 发放日期
+            '发放日期',
+            // endregion
             // region card
             '代汇开户行', '代汇省', '代汇市', '代汇地区码', '代汇姓名', '代汇账号',
-            //endregion
+            // endregion
         ];
 
         $res['filename'] = date('Ym').'_所有字段明细数据导出.xlsx';
@@ -394,6 +400,12 @@ class DataProcess
         $sqlstring .= 'IFNULL(sp.bank_salary,0) AS 银行发放,IFNULL(sp.actual_salary,0) AS 实发工资,';
         $sqlstring .= 'IFNULL(sp.debt_salary,0) AS 余欠款,IFNULL(sp.court_salary,0) AS 法院转提, ';
         // endregion
+        // region 合计
+        $sqlstring .= 'IFNULL(ss.should_total,0), IFNULL(ss.salary_total,0),';
+        // endregion
+        // region 发放日期
+        $sqlstring .= "IFNULL(p.published_at, ''),";
+        // endregion
         // region card
         $sqlstring .= 'c.remit_bank, c.remit_province, c.remit_city,';
         $sqlstring .= 'c.remit_address_no, c.remit_name, c.remit_card_no ';
@@ -412,13 +424,15 @@ class DataProcess
         $sqlstring .= 'LEFT JOIN deduction d ON up.policyNumber = d.policyNumber AND d.period_id = ? ';
         $sqlstring .= 'LEFT JOIN taxImport t ON up.policyNumber = t.policyNumber AND t.period_id = ? ';
         $sqlstring .= 'LEFT JOIN special sp ON up.policyNumber = sp.policyNumber AND sp.period_id = ? ';
+        $sqlstring .= 'LEFT JOIN summary ss ON up.policyNumber = ss.policyNumber AND ss.period_id = ? ';
         $sqlstring .= 'LEFT JOIN card_info c ON up.user_id = c.user_id ';
+        $sqlstring .= 'LEFT JOIN periods p ON p.id = ss.period_id AND p.id = ? ';
         $sqlstring .= 'WHERE up.user_id <> 1 ';
         $sqlstring .= 'ORDER BY d1.dwdm, up.user_id';
         //endregion
 
         $res['data'] = DB::select($sqlstring, [
-            $period, $period, $period, $period, $period, $period, $period, $period, $period,
+            $period, $period, $period, $period, $period, $period, $period, $period, $period, $period, $period,
         ]);
 
         return $res;

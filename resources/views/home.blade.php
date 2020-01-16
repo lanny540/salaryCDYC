@@ -68,8 +68,9 @@
                     </div>
                 </div>
                 <div class="ibox-content text-center">
-                    <h3><a href="{{ route('salary.index') }}">查看薪酬信息</a></h3>
-                    <h3><a href="{{ route('person.print') }}">工资条打印</a></h3>
+                    <h3><a href="{{ route('salary.index') }}">查看薪酬</a></h3>
+                    <h3><a href="{{ route('person.print') }}">工资打印</a></h3>
+                    <h3><a href="{{ route('mymsg.index') }}">我的消息</a></h3>
                 </div>
             </div>
             @hasanyrole('administrator|financial_manager')
@@ -85,7 +86,7 @@
                 <div class="ibox-content text-center">
                     <h3><a href="{{ route('upload.index') }}">上传分表数据</a></h3>
                     <h3><a href="{{ route('special.index') }}">专项数据导出</a></h3>
-                    <h3><a href="{{ route('vdata.index') }}">生成凭证</a></h3>
+                    <h3><a href="{{ route('vdata.index') }}">生成业务凭证</a></h3>
                 </div>
             </div>
             @endhasanyrole

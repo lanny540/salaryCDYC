@@ -117,14 +117,15 @@ class SalaryController extends Controller
     /**
      * 导出所有人员当期薪酬明细.
      *
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Maatwebsite\Excel\BinaryFileResponse
      *
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function salaryExport()
     {
-        $period = $this->dataProcess->getPeriodId();
+        // 返回已关闭的最近会计期ID
+        $period = Period::where('published_at', '<>', '')->max('id');
         $res = $this->dataProcess->getSalaryDetail($period);
 
         if (0 === count($res['data'])) {
@@ -243,7 +244,7 @@ class SalaryController extends Controller
      * 个人打印数据导出.
      *
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return \Maatwebsite\Excel\BinaryFileResponse
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception

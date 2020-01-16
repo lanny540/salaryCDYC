@@ -66,6 +66,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('print', 'SalaryController@print');
     // 我的消息
     Route::get('mymsg', 'MessageController@index')->name('mymsg.index');
+    Route::get('mymsg/{msgId}', 'MessageController@show')->name('mymsg.show');
+    Route::delete('mymsg/{msgId}', 'MessageController@delete')->name('mymsg.delete');
 
     // 消息发送
     Route::get('messages', 'MessageController@sendIndex')->name('messages.send');

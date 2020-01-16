@@ -93,7 +93,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-2 offset-2">
-                                    <a href="#">下载模板</a>
+                                    <a href="{{ asset('/storage/customMsg/messages.xls') }}">下载模板</a>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

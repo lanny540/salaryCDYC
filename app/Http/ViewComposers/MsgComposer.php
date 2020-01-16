@@ -3,6 +3,7 @@
 namespace App\Http\ViewComposers;
 
 use App\Repository\MessageRepository;
+use Auth;
 use Illuminate\View\View;
 
 class MsgComposer
@@ -16,7 +17,7 @@ class MsgComposer
 
     public function compose(View $view)
     {
-        $user_id = \Auth::id();
+        $user_id = Auth::id();
         $view->with('messages', $this->messages->getMsg($user_id));
     }
 }

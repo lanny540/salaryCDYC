@@ -3,7 +3,6 @@
 /storage/*.key
 /storage/debugbar
 /storage/logs
-/storage/app/public
 /vendor
 /.idea
 /.vscode

@@ -42,10 +42,10 @@
                 <button class="btn btn-lg btn-block btn-success salarysubmit">当期汇总计算</button>
             </div>
             <div class="col-sm-3 offset-1">
-                <button class="btn btn-lg btn-block btn-primary salaryExport">当期导出明细</button>
+                <button class="btn btn-lg btn-block btn-success settleAccount">当前周期结束</button>
             </div>
             <div class="col-sm-3 offset-1">
-                <button class="btn btn-lg btn-block btn-success settleAccount">当前周期结束</button>
+                <button class="btn btn-lg btn-block btn-primary salaryExport">当期导出明细</button>
             </div>
         </div>
     </div>

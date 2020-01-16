@@ -28,7 +28,57 @@ class MessageController extends Controller
      */
     public function index()
     {
-        return view('messages.index');
+        $msg = Message::where('receiver', Auth::id())->orderByDesc('created_at')->get();
+
+        return view('messages.index')
+            ->with('msg', $msg);
+    }
+
+    /**
+     * 详细消息.
+     *
+     * @param $msgId
+     *
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public function show($msgId)
+    {
+        $msg = Message::select(['messages.*', 'userProfile.userName'])
+            ->where('id', $msgId)
+            ->where('receiver', Auth::id())
+            ->leftJoin('userProfile', 'userProfile.user_id', '=', 'messages.sender')
+            ->first();
+
+        $msg->isread = 1;
+        $msg->save();
+
+        return $msg;
+    }
+
+    /**
+     * 删除消息.
+     *
+     * @param $msgId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete($msgId)
+    {
+        $msg = Message::where('id', $msgId)->where('receiver', Auth::id())
+            ->get();
+
+        if (0 === count($msg)) {
+            return response()->json([
+                'code' => 417,
+                'msg' => '请求参数错误!',
+            ]);
+        } else {
+            Message::where('id', $msgId)->where('receiver', Auth::id())->delete();
+
+            return response()->json([
+                'code' => 201,
+                'msg' => '删除成功!',
+            ]);
+        }
     }
 
     /**
@@ -122,6 +172,14 @@ class MessageController extends Controller
         return redirect()->route('messages.send')->with('success', '消息发送成功！');
     }
 
+    /**
+     * 群发自定义消息.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
     public function sendCustomMessage(Request $request)
     {
         $import = json_decode($request->get('importData'), true);
