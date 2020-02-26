@@ -37,9 +37,6 @@ class VoucherController extends Controller
      */
     public function vsheetIndex()
     {
-        /**
-         * 下拉选择后，判断下拉的ID 是否存在于 ￥sheets 中，如果存在，直接读取，如果不存在，则生成。
-         */
         $periods = Period::select(['id', 'published_at'])->get()->sortByDesc('id');
         $sheets = VoucherStatistic::select(['id', 'period_id'])->get();
 
@@ -52,7 +49,7 @@ class VoucherController extends Controller
      * 根据周期生成凭证基础表.
      *
      * @param Request $request
-     * @param int     $periodId 会计期ID
+     * @param int $periodId 会计期ID
      *
      * @return mixed
      *
@@ -75,7 +72,6 @@ class VoucherController extends Controller
      * 提交凭证基础表数据存入数据库.
      *
      * @param Request $request
-     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function vsheetSubmit(Request $request)
@@ -114,7 +110,6 @@ class VoucherController extends Controller
      * 查询凭证数据是否存在.
      *
      * @param Request $request
-     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function vdataHas(Request $request)

@@ -42,105 +42,100 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="period">发放日期 </label>
                         <div class="col-sm-4">
-                            <select class="form-control select2_types" id="period" size="12" style="width: 200px;">
+                            <select class="form-control select2_types" id="period" size="12" style="width: 260px;">
                                 @foreach($periods as $p)
-                                    @if($p->published_at === '')
-                                        <option value="{{ $p->id }}">当前周期</option>
-                                    @else
-                                        <option value="{{ $p->id }}">{{ $p->published_at }}</option>
-                                    @endif
+                                @if($p->published_at === '')
+                                <option value="{{ $p->id }}">当前周期</option>
+                                @else
+                                <option value="{{ $p->id }}">{{ $p->published_at }}</option>
+                                @endif
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-sm-2">
-                            <button class="btn btn-block btn-primary" id="vsheetGenerate">重新生成</button>
-                        </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <button class="btn btn-block btn-success" id="vsheetSubmit" disabled>提交保存</button>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <button class="btn btn-block btn-info" id="vsheetExport" disabled>导出Excel</button>
                         </div>
                     </div>
                     <div class="row">
                         <div class="table-responsive">
-                            <table id="sheets-dataTables"
-                                   class="table table-striped table-bordered table-hover"
-                                   style="white-space: nowrap;"
-                            >
+                            <table id="sheets-dataTables" class="table table-striped table-bordered table-hover"
+                                style="white-space: nowrap;">
                                 <thead>
-                                <tr>
-                                    <th>dwdm</th>
-                                    <th>部门名称</th>
-                                    <th>人数</th>
+                                    <tr>
+                                        <th>dwdm</th>
+                                        <th>部门名称</th>
+                                        <th>人数</th>
 
-                                    <th>岗位工资</th>
-                                    <th>保留工资</th>
-                                    <th>套级补差</th>
-                                    <th>中夜班费</th>
-                                    <th>加班工资</th>
-                                    <th>年功工资</th>
-                                    <th>基本养老金</th>
-                                    <th>增机</th>
-                                    <th>国家小计</th>
-                                    <th>地方小计</th>
-                                    <th>行业小计</th>
-                                    <th>企业独子费</th>
-                                    <th>企业小计</th>
-                                    <th>离退休补充</th>
-                                    <th>应发工资</th>
+                                        <th>岗位工资</th>
+                                        <th>保留工资</th>
+                                        <th>套级补差</th>
+                                        <th>中夜班费</th>
+                                        <th>加班工资</th>
+                                        <th>年功工资</th>
+                                        <th>基本养老金</th>
+                                        <th>增机</th>
+                                        <th>国家小计</th>
+                                        <th>地方小计</th>
+                                        <th>行业小计</th>
+                                        <th>企业独子费</th>
+                                        <th>企业小计</th>
+                                        <th>离退休补充</th>
+                                        <th>应发工资</th>
 
-                                    <th>月奖</th>
+                                        <th>月奖</th>
 
-                                    <th>通讯补贴</th>
-                                    <th>交通费</th>
-                                    <th>住房补贴</th>
-                                    <th>独子费</th>
+                                        <th>通讯补贴</th>
+                                        <th>交通费</th>
+                                        <th>住房补贴</th>
+                                        <th>独子费</th>
 
-                                    <th>补发工资</th>
-                                    <th>补发补贴</th>
-                                    <th>补发其他</th>
-                                    <th>补发合计</th>
+                                        <th>补发工资</th>
+                                        <th>补发补贴</th>
+                                        <th>补发其他</th>
+                                        <th>补发合计</th>
 
-                                    <th>公积金个人</th>
-                                    <th>公积企业缴</th>
-                                    <th>年金个人</th>
-                                    <th>年金企业缴</th>
-                                    <th>退养金个人</th>
-                                    <th>退养企业缴</th>
-                                    <th>医保金个人</th>
-                                    <th>医疗企业缴</th>
-                                    <th>失业金个人</th>
-                                    <th>失业企业缴</th>
-                                    <th>工伤企业缴</th>
-                                    <th>生育企业缴</th>
+                                        <th>公积金个人</th>
+                                        <th>公积企业缴</th>
+                                        <th>年金个人</th>
+                                        <th>年金企业缴</th>
+                                        <th>退养金个人</th>
+                                        <th>退养企业缴</th>
+                                        <th>医保金个人</th>
+                                        <th>医疗企业缴</th>
+                                        <th>失业金个人</th>
+                                        <th>失业企业缴</th>
+                                        <th>工伤企业缴</th>
+                                        <th>生育企业缴</th>
 
-                                    <th>成钞水费</th>
-                                    <th>成钞电费</th>
-                                    <th>鑫源水费</th>
-                                    <th>鑫源电费</th>
-                                    <th>车库水费</th>
-                                    <th>车库电费</th>
-                                    <th>退补水费</th>
-                                    <th>退补电费</th>
-                                    <th>水电</th>
-                                    <th>物管费</th>
-                                    <th>扣工会会费</th>
-                                    <th>公车费用</th>
-                                    <th>固定扣款</th>
-                                    <th>临时扣款</th>
-                                    <th>其他扣款</th>
-                                    <th>上期余欠款</th>
-                                    <th>已销欠款</th>
-                                    <th>扣欠款</th>
-                                    <th>税差</th>
-                                    <th>个人所得税</th>
+                                        <th>成钞水费</th>
+                                        <th>成钞电费</th>
+                                        <th>鑫源水费</th>
+                                        <th>鑫源电费</th>
+                                        <th>车库水费</th>
+                                        <th>车库电费</th>
+                                        <th>退补水费</th>
+                                        <th>退补电费</th>
+                                        <th>水电</th>
+                                        <th>物管费</th>
+                                        <th>扣工会会费</th>
+                                        <th>公车费用</th>
+                                        <th>固定扣款</th>
+                                        <th>临时扣款</th>
+                                        <th>其他扣款</th>
+                                        <th>上期余欠款</th>
+                                        <th>已销欠款</th>
+                                        <th>扣欠款</th>
+                                        <th>税差</th>
+                                        <th>个人所得税</th>
 
-                                    <th>代汇</th>
-                                    <th>银行发放</th>
-                                    <th>余欠款</th>
-                                    <th>法院转提</th>
-                                </tr>
+                                        <th>代汇</th>
+                                        <th>银行发放</th>
+                                        <th>余欠款</th>
+                                        <th>法院转提</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -169,26 +164,27 @@
 
 <script src="{{ asset('js/helper.js') }}"></script>
 <script>
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}});
     $(".select2_types").select2({
         placeholder: "请选择发放日期...",
         allowClear: true
     });
 
+    let sheetData;
+
     $(document).ready(function () {
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}});
+
         let sheets = <?php echo $sheets; ?>;
-        let sheetData;
 
         $('#period').on('change', function () {
-            let period = $("#period").val();
-            console.log(period);
-        });
-
-        $('#vsheetGenerate').on('click', function () {
             $('#ibox').children('.ibox-content').toggleClass('sk-loading');
-            let pid = $('#period').val();
+            sheetData = [];
+            $('#vsheetSubmit').attr('disabled', true);
+            $('#vsheetExport').attr('disabled', true);
 
-            if (pid > 0) {
+            let pid = $("#period").val();
+
+            if (pid !== null) {
                 if (sheets[pid - 1] && sheets[pid - 1].id === parseInt(pid)) {
                     swal({
                         title: "你确定重新生成汇总表吗?",
@@ -203,25 +199,38 @@
                     }, function (isConfirm) {
                         if (isConfirm) {
                             calulateSheet(pid, 1);
+                            $('#vsheetSubmit').removeAttr('disabled');
+                            $('#vsheetExport').removeAttr('disabled');
                         } else {
                             calulateSheet(pid, 0);
+                            $('#vsheetExport').removeAttr('disabled');
                         }
                     });
                 } else {
-                    calulateSheet(pid, 1);
+                    swal({
+                        title: "没有查询到数据！",
+                        text: "该会计期没有汇总表数据！",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "生成汇总表!",
+                        cancelButtonText: "取消操作!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true,
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            calulateSheet(pid, 1);
+                            $('#vsheetSubmit').removeAttr('disabled');
+                            $('#vsheetExport').removeAttr('disabled');
+                        }
+                    });
                 }
-                setTimeout(function () {
-                    $('#ibox').children('.ibox-content').toggleClass('sk-loading');
-                    sheetData = $('#sheets-dataTables').DataTable().data();
-                }, 5000);
-            } else {
-                swal({
-                    title: "出错了!",
-                    text: "没有选择会计期!",
-                    type: "error"
-                });
-                $('#ibox').children('.ibox-content').toggleClass('sk-loading');
             }
+
+            setTimeout(function () {
+                $('#ibox').children('.ibox-content').toggleClass('sk-loading');
+                sheetData = $('#sheets-dataTables').DataTable().data();
+            }, 4000);
         });
 
         $('#vsheetSubmit').on('click', function () {
@@ -238,7 +247,7 @@
                 periodId: periodId,
                 _token: '{{ csrf_token() }}',
             };
-
+            // console.log(params);
             Post("vsheet", params);
         });
     });
@@ -249,7 +258,14 @@
             $('#vsheetSubmit').removeAttr('disabled');
         }
         let url = '/vsheet/' + pid + '?calculate=' + calculate;
-        // console.log(url);
+
+        $.get({
+            url: url,
+            success: function (data) {
+                // console.log(data);
+                sheetData = $('#sheets-dataTables').DataTable().data();
+            }
+        });
         let tabledom = $('#sheets-dataTables');
         let sheetsTable = tabledom.dataTable();
         if (tabledom.hasClass('dataTable')) {
@@ -259,7 +275,7 @@
         sheetsTable.show();
 
         tabledom.DataTable({
-            scrollY: "500px",
+            scrollY: '700px',
             scrollX: true,
             scrollCollapse: true,
             paging: false,
@@ -267,7 +283,7 @@
             autoWidth: true,
             ajax: url,
             columns: [
-                {data: 'dwdm', name: 'dwdm'},
+                {data: 'dwdm', name: 'dwdm', orderable: false},
                 {data: 'name', name: 'name', orderable: false},
                 {data: 'sum_number', name: 'sum_number', orderable: false},
                 {data: 'wage', name: 'wage', orderable: false},
@@ -337,9 +353,7 @@
                 {data: 'debt_salary', name: 'debt_salary', orderable: false},
                 {data: 'court_salary', name: 'court_salary', orderable: false},
             ],
-            fixedColumns: {
-                leftColumns: 2
-            }
+            fixedColumns: {leftColumns: 2},
         });
     }
 </script>

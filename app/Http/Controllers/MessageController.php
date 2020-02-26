@@ -59,6 +59,7 @@ class MessageController extends Controller
      * 删除消息.
      *
      * @param $msgId
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function delete($msgId)
@@ -108,7 +109,6 @@ class MessageController extends Controller
     /**
      * 固定消息群发.
      *
-     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
@@ -175,7 +175,6 @@ class MessageController extends Controller
     /**
      * 群发自定义消息.
      *
-     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException

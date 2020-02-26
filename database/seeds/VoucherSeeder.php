@@ -2,7 +2,6 @@
 
 use App\Models\Voucher\VoucherData;
 use App\Models\Voucher\VoucherInfo;
-use App\Models\Voucher\VoucherTemplate;
 use App\Models\Voucher\VoucherType;
 use Illuminate\Database\Seeder;
 
