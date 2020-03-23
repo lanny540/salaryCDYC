@@ -48,7 +48,6 @@ class VoucherController extends Controller
     /**
      * 根据周期生成凭证基础表.
      *
-     * @param Request $request
      * @param int $periodId 会计期ID
      *
      * @return mixed
@@ -71,7 +70,6 @@ class VoucherController extends Controller
     /**
      * 提交凭证基础表数据存入数据库.
      *
-     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function vsheetSubmit(Request $request)
@@ -109,7 +107,6 @@ class VoucherController extends Controller
     /**
      * 查询凭证数据是否存在.
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function vdataHas(Request $request)
@@ -149,15 +146,16 @@ class VoucherController extends Controller
 
         // 分解编码
         $code = [];
-        $templates = VoucherTemplate::where('vid', $vid)->get();
+        $templates = VoucherTemplate::where('vid', $vid)->get()->toArray();
         foreach ($templates as $k => $t) {
-            $code[$k] = explode('.', $t->subject_no);
+            $code['segments'][$k] = explode('.', $t['subject_no']);
+            $code['des'][$k] = explode(',', $t['subject_description']);
         }
 
         $vdata = [];
         $data = VoucherData::where('vid', $vid)
             ->where('period_id', $pid)
-            ->get()->toArray();
+            ->first()->toArray();
         // 如果没有数据，则重新计算；否则直接读取数据库数据
         if (0 == sizeof($data)) {
             $vdata['vid'] = $vid;
@@ -173,6 +171,7 @@ class VoucherController extends Controller
             $vdata['vdata'] = $this->vs->transformData($templates, $pid);
         } else {
             $vdata = $data;
+            $vdata['vdata'] = $this->vs->transformData($templates, $pid);
         }
 
         return view('voucher.vdata')
@@ -181,7 +180,7 @@ class VoucherController extends Controller
                 ->with('vdata', $vdata)
                 ->with('subjects', $subjects);
 
-//        return $code;
+//        return $vdata['vdata'][0]['id'];
     }
 
     public function vdataStore(Request $request)

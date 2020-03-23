@@ -58,7 +58,7 @@ class SalaryData
             ->whereIn('summary.period_id', $period)
             ->leftJoin('periods', 'periods.id', '=', 'summary.period_id')
             ->select(['should_total', 'bonus_total', 'salary_total', 'summary.period_id', 'periods.published_at'])
-            ->orderBy('summary.period_id')->get();
+            ->orderBy('summary.period_id', 'desc')->get();
     }
 
     /**

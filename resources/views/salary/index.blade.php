@@ -88,6 +88,15 @@
                             <td class="client-status"><a href="{{ route('salary.show', $s->period_id) }}"> <span class="label label-primary">查看明细</span></a></td>
                         </tr>
                     @endforeach
+                    @foreach($presalary as $ps)
+                        <tr>
+                            <td>{{ $ps->published_at }}</td>
+                            <td>{{ $ps->should_total }}</td>
+                            <td>{{ $ps->bonus_total }}</td>
+                            <td>{{ $ps->salary_total }}</td>
+                            <td class="client-status"><a href="{{ route('salary.show', $ps->period_id) }}"> <span class="label label-primary">查看明细</span></a></td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>

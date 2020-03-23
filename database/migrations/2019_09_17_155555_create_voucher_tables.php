@@ -8,50 +8,7 @@ class CreateVoucherTables extends Migration
 {
     public function up()
     {
-        // 凭证基础信息表
-        Schema::create('voucher', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name', 100)->comment('凭证名称');
-            $table->smallInteger('type_id')->comment('凭证类型ID');
-            $table->string('description')->default('')->comment('凭证描述');
-            $table->timestamps();
-        });
-        // 凭证类型表
-        Schema::create('voucher_type', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('tname', 100)->comment('凭证类型名称');
-            $table->string('tdescription')->default('')->comment('凭证类型描述');
-        });
-        // 凭证模板表
-        Schema::create('voucher_template', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('vid')->index()->comment('凭证ID');
-            $table->string('name')->comment('名称');
-            $table->string('subject_no', 64)->comment('科目编码');
-            $table->tinyInteger('isLoan')->default(0)->comment('借贷标识.借 0 贷 1.');
-            $table->string('subject_description')->default('')->comment('科目描述');
-            $table->string('subject_method')->default('')->comment('计算方法.暂时不用');
-            $table->softDeletes();
-            $table->timestamps();
-        });
-        // 凭证数据表
-        Schema::create('voucher_data', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('vid')->index()->comment('凭证ID');
-            $table->integer('period_id')->index()->comment('会计期ID');
-
-            $table->string('vname')->comment('凭证名称');
-            $table->string('vcategory', 32)->comment('凭证类别.手工转账、现金凭证、银行凭证');
-            $table->string('vuser', 32)->comment('凭证创建人');
-            $table->string('cdate', 32)->comment('凭证日期');
-            $table->string('period', 32)->comment('会计周期');
-            $table->string('cgroup', 64)->comment('凭证批组');
-            $table->string('vdescription')->comment('凭证描述');
-            $table->json('vdata')->comment('凭证数据');
-            $table->tinyInteger('isUpload')->default(1)->comment('上传成功标识. 失败 0 成功 1.');
-            $table->timestamps();
-        });
-        // 凭证所需的汇总表
+        // 凭证汇总表
         Schema::create('voucher_statistic', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('period_id')->index()->comment('会计期ID');
@@ -118,6 +75,50 @@ class CreateVoucherTables extends Migration
             $table->decimal('bank_salary', 14, 2)->default(0)->comment('银行发放');
             $table->decimal('debt_salary', 14, 2)->default(0)->comment('余欠款');
             $table->decimal('court_salary', 14, 2)->default(0)->comment('法院转提');
+        });
+
+        // 凭证类型表
+        Schema::create('voucher_type', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('tname', 100)->comment('凭证类型名称');
+            $table->string('tdescription')->default('')->comment('凭证类型描述');
+        });
+        // 凭证基础信息表
+        Schema::create('voucher', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name', 100)->comment('凭证名称');
+            $table->smallInteger('type_id')->comment('凭证类型ID');
+            $table->string('description')->default('')->comment('凭证描述');
+            $table->timestamps();
+        });
+        // 凭证模板表
+        Schema::create('voucher_template', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('vid')->index()->comment('凭证ID');
+            $table->string('name')->comment('名称');
+            $table->string('subject_no', 64)->comment('科目编码');
+            $table->tinyInteger('isLoan')->default(0)->comment('借贷标识.借 0 贷 1.');
+            $table->string('subject_description')->default('')->comment('科目描述');
+            $table->string('subject_method')->default('')->comment('计算方法.暂时不用');
+            $table->softDeletes();
+            $table->timestamps();
+        });
+        // 凭证数据表
+        Schema::create('voucher_data', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('vid')->index()->comment('凭证ID');
+            $table->integer('period_id')->index()->comment('会计期ID');
+
+            $table->string('vname')->comment('凭证名称');
+            $table->string('vcategory', 32)->comment('凭证类别.手工转账、现金凭证、银行凭证');
+            $table->string('vuser', 32)->comment('凭证创建人');
+            $table->string('cdate', 32)->comment('凭证日期');
+            $table->string('period', 32)->comment('会计周期');
+            $table->string('cgroup', 64)->comment('凭证批组');
+            $table->string('vdescription')->comment('凭证描述');
+            $table->json('vdata')->comment('凭证数据');
+            $table->tinyInteger('isUpload')->default(1)->comment('上传成功标识. 失败 0 成功 1.');
+            $table->timestamps();
         });
     }
 

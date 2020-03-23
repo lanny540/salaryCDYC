@@ -104,71 +104,38 @@
                             <th>参考段</th>
                             <th>借方金额</th>
                             <th>贷方金额</th>
-                            <th data-hide="all">名称</th>
-                            <th data-hide="all">凭证摘要</th>
+                            <th data-hide="all">会计科目描述</th>
+                            <th data-hide="all">凭证单项描述</th>
                             <th class="text-right">操作</th>
                         </tr>
                         </thead>
                         <tbody id="vdata-list">
                         @foreach($vdata['vdata'] as $k => $vd)
-                            <tr id="vdata{{ $vd->id }}">
-                                <td>{{ $vd->id }}</td>
+                            <tr id="vdata{{ $vd['id'] }}">
+                                <td>{{ $vd['id'] }}</td>
                                 <td>
                                     <label>
-{{--                                        <select class="form-control select2_category" name="code1[]">--}}
-{{--                                            <option value="540">--}}
-{{--                                                成钞公司--}}
-{{--                                            </option>--}}
-{{--                                        </select>--}}
-                                        <input value="{{ $code[$k][0] }}" name="code1[]" class="form-control form-control-sm" readonly>
+                                        <input value="{{ $code['segments'][$k][0] }}" name="code1[]" class="form-control form-control-sm" readonly>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-{{--                                        <select class="form-control select2_category" name="code2[]">--}}
-{{--                                            @foreach($subjects['segment2'] as $s)--}}
-{{--                                                <option value="{{ $s->subject_no }}" @if($code[$k][1] == $s->subject_no) selected @endif>--}}
-{{--                                                    {{ $s->subject_name }}--}}
-{{--                                                </option>--}}
-{{--                                            @endforeach--}}
-{{--                                        </select>--}}
-                                        <input value="{{ $code[$k][1] }}" name="code2[]" class="form-control form-control-sm" readonly>
+                                        <input value="{{ $code['segments'][$k][1] }}" name="code2[]" class="form-control form-control-sm" readonly>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-{{--                                        <select class="form-control select2_category" name="code3[]">--}}
-{{--                                            @foreach($subjects['segment3'] as $s)--}}
-{{--                                                <option value="{{ $s->subject_no }}" @if($code[$k][2] == $s->subject_no) selected @endif>--}}
-{{--                                                    {{ $s->subject_name }}--}}
-{{--                                                </option>--}}
-{{--                                            @endforeach--}}
-{{--                                        </select>--}}
-                                        <input value="{{ $code[$k][2] }}" name="code3[]" class="form-control form-control-sm" readonly>
+                                        <input value="{{ $code['segments'][$k][2] }}" name="code3[]" class="form-control form-control-sm" readonly>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-{{--                                        <select class="form-control select2_category" name="code4[]">--}}
-{{--                                            @foreach($subjects['segment4'] as $s)--}}
-{{--                                                <option value="{{ $s->subject_no }}" @if($code[$k][3] == $s->subject_no) selected @endif>--}}
-{{--                                                    {{ $s->subject_name }} -- {{ $s->subject_no }}--}}
-{{--                                                </option>--}}
-{{--                                            @endforeach--}}
-{{--                                        </select>--}}
-                                        <input value="{{ $code[$k][3] }}" name="code4[]" class="form-control form-control-sm" readonly>
+                                        <input value="{{ $code['segments'][$k][3] }}" name="code4[]" class="form-control form-control-sm" readonly>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-{{--                                        <select class="form-control select2_category" name="code5[]">--}}
-{{--                                            @foreach($subjects['segment5'] as $s)--}}
-{{--                                                <option value="{{ $s->subject_no }}" @if($code[$k][4] == $s->subject_no) selected @endif>--}}
-{{--                                                    {{ $s->subject_name }} -- {{ $s->subject_no }}--}}
-{{--                                                </option>--}}
-{{--                                            @endforeach--}}
-{{--                                        </select>--}}
-                                        <input value="{{ $code[$k][4] }}" name="code5[]" class="form-control form-control-sm" readonly>
+                                        <input value="{{ $code['segments'][$k][4] }}" name="code5[]" class="form-control form-control-sm" readonly>
                                     </label>
                                 </td>
                                 <td>
@@ -180,33 +147,38 @@
 {{--                                                </option>--}}
 {{--                                            @endforeach--}}
 {{--                                        </select>--}}
-                                        <input value="{{ $code[$k][5] }}" name="code6[]" class="form-control form-control-sm" readonly>
+                                        <input value="{{ $code['segments'][$k][5] }}" name="code6[]" class="form-control form-control-sm" readonly>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-                                        <input value="0" class="form-control form-control-sm" name="debit[]" readonly>
+                                        <input value="{{ $vd['debit'] }}" class="form-control form-control-sm" name="debit[]" readonly>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-                                        <input value="0" class="form-control form-control-sm" name="credit[]" readonly>
+                                        <input value="{{ $vd['credit'] }}" class="form-control form-control-sm" name="credit[]" readonly>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-                                        <input value="{{ $vd->name }}" class="form-control form-control-sm" name="name[]" style="width: 600px;" readonly>
+                                        <input value="{{ $templates[$k]['name'] }}" class="form-control form-control-sm" name="name[]" style="width: 600px;" readonly>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-                                        <input value="成钞公司" class="form-control form-control-sm" name="description[]" style="width: 600px;" readonly>
+                                        @if ($vd['des'] !== '')
+                                            <input value="{{ $vd['des'] }}" class="form-control form-control-sm" name="description[]" style="width: 600px;" readonly>
+                                        @else
+                                            <input value="{{ $code['des'][$k][0] }}{{ \Carbon\Carbon::now()->year }}年{{ Carbon\Carbon::now()->month }}月{{ $code['des'][$k][1] }}"
+                                                   class="form-control form-control-sm" name="description[]" style="width: 600px;" readonly>
+                                        @endif
                                     </label>
                                 </td>
                                 <td class="text-right">
                                     <div class="btn-group">
-                                        <button class="btn-info btn btn-sm edit" value="{{ $vd->id }}">Edit</button>
-                                        <button class="btn-danger btn btn-sm delete" value="{{ $vd->id }}">Delete</button>
+                                        <button class="btn-info btn btn-sm edit" value="{{ $vd['id'] }}">Edit</button>
+                                        <button class="btn-danger btn btn-sm delete" value="{{ $vd['id'] }}">Delete</button>
                                     </div>
                                 </td>
                             </tr>

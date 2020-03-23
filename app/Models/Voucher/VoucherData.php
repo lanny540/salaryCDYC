@@ -43,4 +43,8 @@ use Illuminate\Database\Eloquent\Model;
 class VoucherData extends Model
 {
     public $table = 'voucher_data';
+
+    protected $casts = [
+        'vdata' => 'json', // 声明json类型
+    ];
 }

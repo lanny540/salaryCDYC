@@ -130,6 +130,12 @@ class VoucherService
     public function transformData($data, $pid)
     {
         $statistic = VoucherStatistic::where('period_id', $pid)->get()->toArray();
-        return $data;
+
+        $temp = [
+            ['id' => 1, 'des' => '凭证单项描述测试1', 'debit' => 500.00, 'credit' => 0],
+            ['id' => 2, 'des' => '凭证单项描述测试2', 'debit' => 8600.00, 'credit' => 0],
+            ['id' => 3, 'des' => '凭证单项描述测试3', 'debit' => 0, 'credit' => 3200.00],
+        ];
+        return $temp;
     }
 }

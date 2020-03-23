@@ -52,6 +52,7 @@ class SalaryController extends Controller
 
         return view('salary.index')
             ->with('cursalary', $curSalary)
+            ->with('presalary', $preYearSalary)
             ->with('chartdata', json_encode($chartData, JSON_NUMERIC_CHECK))
         ;
     }
