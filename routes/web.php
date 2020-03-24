@@ -75,7 +75,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('customMessages', 'MessageController@sendCustomMessage')->name('customMsg.send');
 
     // 人员信息管理
-    Route::get('users', 'UserController@usersIndex')->name('users.index');
+    Route::get('users', 'UserController@index')->name('users.index');
     Route::get('getUsersData', 'UserController@getUsersData');
     Route::get('users/{userId}/edit', 'UserController@edit')->name('user.edit');
     Route::put('users/{userId}/edit', 'UserController@update')->name('user.update');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Salary\SalaryLog;
+use App\Models\WorkFlow\WorkFlow;
 use App\Services\DataProcess;
 use App\Services\ImportColumn;
 use Auth;
@@ -94,5 +95,14 @@ class WorkFlowController extends Controller
         }
 
         return redirect()->route('upload.index')->with('success', '数据上传成功!');
+    }
+
+    public function index()
+    {
+        $workflows = WorkFlow::select(['id', 'name', 'userProfile.username', 'isconfirm'])
+            ->leftJoin('userProfile', 'workflows.uploader', '=', 'userProfile.userName')
+            ->get();
+
+        return view('workflow.index')->with('workflows', $workflows);
     }
 }
