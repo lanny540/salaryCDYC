@@ -97,12 +97,47 @@ class WorkFlowController extends Controller
         return redirect()->route('upload.index')->with('success', '数据上传成功!');
     }
 
+    /**
+     * 数据流程审核列表视图
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
-        $workflows = WorkFlow::select(['id', 'name', 'userProfile.username', 'isconfirm'])
-            ->leftJoin('userProfile', 'workflows.uploader', '=', 'userProfile.userName')
-            ->get();
+        $workflows = WorkFlow::select(['id', 'name', 'userProfile.userName as uploader', 'isconfirm'])
+            ->leftJoin('userProfile', 'workflows.uploader', '=', 'userProfile.user_id')
+            ->orderByDesc('id')->get();
 
         return view('workflow.index')->with('workflows', $workflows);
+    }
+
+    /**
+     * 数据流程审核.
+     *
+     * @param $workflowId
+     * @return WorkFlow|WorkFlow[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+     */
+    public function dataConfirm($workflowId)
+    {
+        $workflow = WorkFlow::with('userprofile')->findOrFail($workflowId);
+        $workflow->isconfirm = 1;
+//        $workflow->save();
+
+        return $workflow;
+    }
+
+    /**
+     * 根据流程ID查看上传数据明细.
+     *
+     * @param $workflowId
+     * @return \Illuminate\Support\Collection
+     */
+    public function dataShow($workflowId)
+    {
+        return WorkFlow::with(['details' => function($query) {
+            $query->select(['wf_id', 'userProfile.userName as username', 'bonus_detail.policynumber as policy', 'departments.name as department', 'money', 'remarks'])
+                ->leftJoin('userProfile', 'bonus_detail.policynumber', '=', 'userProfile.policyNumber')
+                ->leftJoin('departments', 'departments.id', '=', 'userProfile.department_id');
+        }])->findOrFail($workflowId);
     }
 }

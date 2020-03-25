@@ -2,6 +2,8 @@
 
 namespace App\Models\Salary;
 
+use App\Models\Users\UserProfile;
+use App\Models\WorkFlow\WorkFlow;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -41,5 +43,15 @@ class BonusDetail extends Model
     public function type()
     {
         return $this->hasOne(BonusType::class, 'id', 'type_id');
+    }
+
+    public function userprofile()
+    {
+        return $this->hasOne(UserProfile::class, 'policyNumber', 'policynumber');
+    }
+
+    public function workflow()
+    {
+        return $this->hasOne(WorkFlow::class, 'id', 'wf_id');
     }
 }

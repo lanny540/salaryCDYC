@@ -28,13 +28,16 @@
             @hasanyrole('administrator|financial_manager')
             <li class="nav nav-link">业务办理 </li>
             <li class="{{ Request::is('uploadData*') ? 'active' : '' }}">
-                <a href="{{ route('upload.index') }}"><i class="fa fa-gears"></i> <span class="nav-label">上传分表数据 </span></a>
+                <a href="{{ route('upload.index') }}"><i class="fa fa-gears"></i> <span class="nav-label">上传数据 </span></a>
+            </li>
+            <li class="{{ Request::is('workflow*') ? 'active' : '' }}">
+                <a href="{{ route('workflow.index') }}"><i class="fa fa-rebel"></i> <span class="nav-label">数据审核 </span></a>
             </li>
             <li class="{{ Request::is('special*') ? 'active' : '' }}">
-                <a href="{{ route('special.index') }}"><i class="fa fa-plug"></i> <span class="nav-label">专项数据导入导出 </span></a>
+                <a href="{{ route('special.index') }}"><i class="fa fa-plug"></i> <span class="nav-label">专项数据 </span></a>
             </li>
             <li class="{{ Request::is('calculation*') ? 'active' : '' }}">
-                <a href="{{ route('salary.calculate') }}"><i class="fa fa-calculator"></i> <span class="nav-label">计算薪酬汇总数据 </span></a>
+                <a href="{{ route('salary.calculate') }}"><i class="fa fa-calculator"></i> <span class="nav-label">计算数据 </span></a>
             </li>
             <li class="{{ Request::is('vsheet*') ? 'active' : '' }}">
                 <a href="{{ route('vsheet.index') }}"><i class="fa fa-table"></i> <span class="nav-label">凭证基础表 </span></a>
@@ -79,7 +82,7 @@
                 <a href="{{ route('systemconfig.index') }}"><i class="fa fa-cogs"></i> <span class="nav-label">基础数据管理</span></a>
             </li>
             <li class="{{ Request::is('importconfig*') ? 'active' : '' }}">
-                <a href="{{ route('importconfig.index') }}"><i class="fa fa-codepen"></i> <span class="nav-label">导入字段管理</span></a>
+                <a href="{{ route('importconfig.index') }}"><i class="fa fa-codepen"></i> <span class="nav-label">导入管理</span></a>
             </li>
             @endhasanyrole
 

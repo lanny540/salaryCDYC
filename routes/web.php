@@ -24,6 +24,13 @@ Route::group(['middleware' => 'auth'], function () {
     // 向导表单提交
     Route::post('wizardSubmit', 'WorkFlowController@wizardSubmit')->name('wizard.submit');
 
+    // 上传数据审核
+    Route::get('workflow', 'WorkFlowController@index')->name('workflow.index');
+    // 审核数据
+    Route::put('workflow/{wfId}', 'WorkFlowController@dataConfirm')->name('workflow.confirm');
+    // 查看明细数据
+    Route::get('workflow/{wfId}', 'WorkFlowController@dataShow')->name('workflow.show');
+
     // 专项税务导入导出
     Route::get('special', 'SpecialController@index')->name('special.index');
     Route::post('specialExport', 'SpecialController@taxExport');
