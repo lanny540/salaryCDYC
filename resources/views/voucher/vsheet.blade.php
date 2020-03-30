@@ -42,7 +42,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="period">发放日期 </label>
                         <div class="col-sm-4">
-                            <select class="form-control select2_types" id="period" size="12" style="width: 260px;">
+                            <select class="form-control select2_types" id="period" size="12" style="width: 220px;">
                                 @foreach($periods as $p)
                                 @if($p->published_at === '')
                                 <option value="{{ $p->id }}">当前周期</option>
@@ -52,10 +52,13 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
+                            <button class="btn btn-block btn-danger" id="vsheetCal" disabled>重新生成</button>
+                        </div>
+                        <div class="col-sm-2">
                             <button class="btn btn-block btn-success" id="vsheetSubmit" disabled>提交保存</button>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <button class="btn btn-block btn-info" id="vsheetExport" disabled>导出Excel</button>
                         </div>
                     </div>
@@ -169,70 +172,30 @@
         allowClear: true
     });
 
-    let sheetData;
-
     $(document).ready(function () {
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}});
 
-        let sheets = <?php echo $sheets; ?>;
-
         $('#period').on('change', function () {
             $('#ibox').children('.ibox-content').toggleClass('sk-loading');
-            sheetData = [];
+            $('#vsheetCal').attr('disabled', true);
             $('#vsheetSubmit').attr('disabled', true);
             $('#vsheetExport').attr('disabled', true);
 
             let pid = $("#period").val();
+            let url = '/vsheet/' + pid + '?calculate=0';
 
-            if (pid !== null) {
-                if (sheets[pid - 1] && sheets[pid - 1].id === parseInt(pid)) {
-                    swal({
-                        title: "你确定重新生成汇总表吗?",
-                        text: "该会计期已存在汇总表!",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "是的, 重新生成!",
-                        cancelButtonText: "不, 立即查看!",
-                        closeOnConfirm: true,
-                        closeOnCancel: true,
-                    }, function (isConfirm) {
-                        if (isConfirm) {
-                            calulateSheet(pid, 1);
-                            $('#vsheetSubmit').removeAttr('disabled');
-                            $('#vsheetExport').removeAttr('disabled');
-                        } else {
-                            calulateSheet(pid, 0);
-                            $('#vsheetExport').removeAttr('disabled');
-                        }
-                    });
-                } else {
-                    swal({
-                        title: "没有查询到数据！",
-                        text: "该会计期没有汇总表数据！",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "生成汇总表!",
-                        cancelButtonText: "取消操作!",
-                        closeOnConfirm: true,
-                        closeOnCancel: true,
-                    }, function (isConfirm) {
-                        if (isConfirm) {
-                            calulateSheet(pid, 1);
-                            $('#vsheetSubmit').removeAttr('disabled');
-                            $('#vsheetExport').removeAttr('disabled');
-                        }
-                    });
-                }
-            }
-
-            setTimeout(function () {
-                $('#ibox').children('.ibox-content').toggleClass('sk-loading');
-                sheetData = $('#sheets-dataTables').DataTable().data();
-            }, 4000);
+            refreshDataTables(url);
         });
 
+        // 重新计算
+        $('#vsheetCal').on('click', function () {
+            let pid = $("#period").val();
+            let url = '/vsheet/' + pid + '?calculate=1';
+
+            refreshDataTables(url);
+        });
+
+        // 提交保存
         $('#vsheetSubmit').on('click', function () {
             let temp = getTableDatas();
             let periodId = $('#period').val();
@@ -252,26 +215,20 @@
         });
     });
 
-    // 生成凭证汇总数据
-    function calulateSheet(pid, calculate) {
-        if (calculate === 1) {
-            $('#vsheetSubmit').removeAttr('disabled');
-        }
-        let url = '/vsheet/' + pid + '?calculate=' + calculate;
-
-        $.get({
-            url: url,
-            success: function (data) {
-                // console.log(data);
-                sheetData = $('#sheets-dataTables').DataTable().data();
-            }
-        });
+    // 重新刷新datatables
+    function refreshDataTables(ajaxUrl) {
         let tabledom = $('#sheets-dataTables');
         let sheetsTable = tabledom.dataTable();
+
         if (tabledom.hasClass('dataTable')) {
             sheetsTable.fnClearTable(); //清空table
             sheetsTable.fnDestroy(); //还原初始化的datatable
         }
+
+        $('#vsheetCal').removeAttr('disabled');
+        $('#vsheetExport').removeAttr('disabled');
+        $('#vsheetSubmit').removeAttr('disabled');
+
         sheetsTable.show();
 
         tabledom.DataTable({
@@ -281,7 +238,7 @@
             paging: false,
             searching: false,
             autoWidth: true,
-            ajax: url,
+            ajax: ajaxUrl,
             columns: [
                 {data: 'dwdm', name: 'dwdm', orderable: false},
                 {data: 'name', name: 'name', orderable: false},
@@ -355,6 +312,10 @@
             ],
             fixedColumns: {leftColumns: 2},
         });
+
+        setTimeout(function () {
+            $('#ibox').children('.ibox-content').toggleClass('sk-loading');
+        }, 3000);
     }
 </script>
 @endsection

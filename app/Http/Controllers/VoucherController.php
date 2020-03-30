@@ -38,11 +38,9 @@ class VoucherController extends Controller
     public function vsheetIndex()
     {
         $periods = Period::select(['id', 'published_at'])->get()->sortByDesc('id');
-        $sheets = VoucherStatistic::select(['id', 'period_id'])->get();
 
         return view('voucher.vsheet')
-            ->with('periods', $periods)
-            ->with('sheets', json_encode($sheets));
+            ->with('periods', $periods);
     }
 
     /**
@@ -54,17 +52,20 @@ class VoucherController extends Controller
      *
      * @throws Exception
      */
-    public function vsheetShow(Request $request, $periodId)
+    public function vsheetShow($periodId)
     {
         // 是否重新计算. 0 否 1 是 .
-        $status = $request->get('calculate', 1);
-        if (0 == $status) {
-            $data = VoucherStatistic::where('period_id', $periodId)->get();
+        $status = request()->get('calculate', 0);
+
+        $data = VoucherStatistic::where('period_id', $periodId)->get();
+        // 如果无数据或者重新计算
+        if ($status === 1 || count($data) === 0) {
+            $res = $this->vs->generateSheet($periodId);
         } else {
-            $data = $this->vs->generateSheet($periodId);
+            $res = $data;
         }
 
-        return DataTables::of($data)->make(true);
+        return DataTables::of($res)->make(true);
     }
 
     /**

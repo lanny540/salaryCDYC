@@ -43,7 +43,7 @@
             </li>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user"></i> {{ Auth::user()['profile']['userName'] }}
+                    <i class="fa fa-user"></i> {{ Auth::user()->profile->userName ?? '' }}
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="/users/{{ Auth::id() }}/edit"><i class="fa fa-edit"></i> 个人资料</a></li>

@@ -63,13 +63,7 @@ class UserProfile extends Model
 
     protected $primaryKey = 'user_id';
 
-    protected $fillable = [
-        'user_id', 'userName', 'sex', 'department_id',
-        'uid', 'mobile', 'phone', 'address',
-        'policyNumber', 'wageCard', 'bonusCard',
-        'flag', 'status', 'hiredate', 'departure',
-        'handicapped', 'tax_rebates',
-    ];
+    protected $guarded = [];
 
     public function department()
     {

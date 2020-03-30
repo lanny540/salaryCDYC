@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Period;
+use App\Models\Salary\Bonus;
 use App\Models\Salary\Deduction;
+use App\Models\Salary\Other;
 use App\Models\Salary\SalarySummary;
 use App\Models\Salary\Special;
 use App\Models\Salary\TaxImport;
@@ -36,7 +38,7 @@ class DataProcess
         DB::beginTransaction();
 
         try {
-            $this->salary->saveToTable($info['period'], $info['uploadType'], $info['importData'], $info['isReset']);
+            $this->salary->saveToTable($info['period'], $info['uploadType'], $info['importData'], $info['file'], $info['isReset']);
 
             DB::commit();
         } catch (\Exception $e) {
@@ -72,7 +74,7 @@ class DataProcess
      */
     public function closePeriod(string $publishedAt = '')
     {
-        $period = Period::latest('id')->first();
+        $period = Period::latest('id')->firstOrFail();
 
         $period->published_at = $publishedAt;
         $period->enddate = Carbon::now();
@@ -104,7 +106,7 @@ class DataProcess
      * @return string
      * @throws \Exception
      */
-    public function calTotal(int $period)
+    public function calTotal(int $period): string
     {
         //避免数据部分更新，采用事务处理
         DB::beginTransaction();
@@ -148,7 +150,7 @@ class DataProcess
      *
      * @return array
      */
-    public function getTotal(int $period)
+    public function getTotal(int $period): array
     {
         //region SQL 查询语句
         $sqlstring = 'SELECT ';
@@ -252,7 +254,7 @@ class DataProcess
      *
      * @return array
      */
-    public function getSalaryDetail(int $period)
+    public function getSalaryDetail(int $period): array
     {
         $res['headings'] = [
             'dwdm', '部门', '工序', '人数', '姓名', '转储姓名', '保险编号', '人员编码', '手机号码',
@@ -443,7 +445,7 @@ class DataProcess
      *
      * @param int $period 会计期ID
      */
-    private function calWage(int $period)
+    private function calWage(int $period): void
     {
         $wage = Wage::where('period_id', $period)->get();
         $yfct = UserProfile::leftJoin('departments', 'departments.id', '=', 'userProfile.department_id')
@@ -531,8 +533,34 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      */
-    private function calBonus(int $period)
+    private function calBonus(int $period): void
     {
+        // 先计算明细数据,再update数据
+        $datas = $this->calBonusDetail($period);
+        foreach ($datas as $d)
+        {
+            Bonus::updateOrCreate(
+                ['period_id' => $period, 'policyNumber' => $d->policynumber],
+                [
+                    'special' => $d->special,
+                    'competition' => $d->competition,
+                    'class_reward' => $d->class_reward,
+                    'holiday' => $d->holiday,
+                    'party_reward' => $d->party_reward,
+                    'union_paying' => $d->union_paying,
+                    'other_reward' => $d->other_reward,
+                ]
+            );
+
+            Other::updateOrCreate(
+                ['period_id' => $period, 'policyNumber' => $d->policynumber],
+                [
+                    'finance_article' => $d->finance_article,
+                    'union_article' => $d->union_article,
+                ]
+            );
+        }
+
         $sqlstring = 'UPDATE bonus SET bonus_total = month_bonus + special + competition + class_reward + holiday';
         $sqlstring .= ' + party_reward + union_paying + other_reward WHERE period_id = ?';
         DB::update($sqlstring, [$period]);
@@ -543,7 +571,7 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      */
-    private function calSubsidy(int $period)
+    private function calSubsidy(int $period): void
     {
         $sqlstring = 'UPDATE subsidy SET subsidy_total= traffic + single + housing + communication WHERE period_id = ?';
         DB::update($sqlstring, [$period]);
@@ -554,7 +582,7 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      */
-    private function calInsurances(int $period)
+    private function calInsurances(int $period): void
     {
         $sqlstring = 'UPDATE insurances SET enterprise_out_total = gjj_out_range + annuity_out_range';
         $sqlstring .= ' + retire_out_range + medical_out_range + unemployment_out_range,';
@@ -568,7 +596,7 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      */
-    private function calReissue(int $period)
+    private function calReissue(int $period): void
     {
         $sqlstring = 'UPDATE reissue SET reissue_total=reissue_wage+reissue_subsidy+reissue_other WHERE period_id = ?';
         DB::update($sqlstring, [$period]);
@@ -579,7 +607,7 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      */
-    private function calOther(int $period)
+    private function calOther(int $period): void
     {
         // 稿酬合计
         $sqlstring = 'UPDATE other SET article_fee = finance_article + union_article WHERE period_id = ?';
@@ -591,7 +619,7 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      */
-    private function calDeduction(int $period)
+    private function calDeduction(int $period): void
     {
         // 获取上期余欠款
         // 查询上期是否有余欠款的数据
@@ -630,7 +658,7 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      */
-    private function calTax(int $period)
+    private function calTax(int $period): void
     {
         // 获取上期个人所得税
         $taxs = TaxImport::where('period_id', $period - 1)
@@ -676,7 +704,7 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      */
-    private function calSummary(int $period)
+    private function calSummary(int $period): void
     {
         $data = [];
 
@@ -709,13 +737,13 @@ class DataProcess
 
         foreach ($summary as $s) {
             SalarySummary::updateOrCreate(['period_id' => $period, 'policyNumber' => $s->policyNumber], [
-                'wage_total' => isset($s->wage_total) ? $s->wage_total : 0,
-                'bonus_total' => isset($s->bonus_total) ? $s->bonus_total : 0,
-                'subsidy_total' => isset($s->subsidy_total) ? $s->subsidy_total : 0,
-                'reissue_total' => isset($s->reissue_total) ? $s->reissue_total : 0,
-                'enterprise_out_total' => isset($s->enterprise_out_total) ? $s->enterprise_out_total : 0,
-                'should_total' => isset($s->should_total) ? $s->should_total : 0,
-                'salary_total' => isset($s->salary_total) ? $s->salary_total : 0,
+                'wage_total' => $s->wage_total ?? 0,
+                'bonus_total' => $s->bonus_total ?? 0,
+                'subsidy_total' => $s->subsidy_total ?? 0,
+                'reissue_total' => $s->reissue_total ?? 0,
+                'enterprise_out_total' => $s->enterprise_out_total ?? 0,
+                'should_total' => $s->should_total ?? 0,
+                'salary_total' => $s->salary_total ?? 0,
             ]);
         }
     }
@@ -725,7 +753,7 @@ class DataProcess
      *
      * @param int $period 会计期间ID
      */
-    private function calInstead(int $period)
+    private function calInstead(int $period): void
     {
         // 获取 需要代汇 的人员保险编号
         $temp = [];
@@ -814,7 +842,7 @@ class DataProcess
      *
      * @return array
      */
-    public function getPersonPrintData($periods, $policy)
+    public function getPersonPrintData($periods, $policy): array
     {
         $pstring = implode(',', $periods);
 
@@ -851,5 +879,32 @@ class DataProcess
         //endregion
 
         return DB::select($sqlstring, [$policy, $policy, $policy, $policy, $policy, $policy, $policy, $policy]);
+    }
+
+    /**
+     * 计算明细数据，转横表
+     *
+     * @param int $period
+     * @return array
+     */
+    public function calBonusDetail(int $period): array
+    {
+        $sqlstring = 'SELECT b.policynumber, b.period_id,';
+        $sqlstring .= "SUM(IF(type_id = 13, b.money, 0)) AS 'special',";
+        $sqlstring .= "SUM(IF(type_id = 14, b.money, 0)) AS 'competition',";
+        $sqlstring .= "SUM(IF(type_id = 15, b.money, 0)) AS 'class_reward',";
+        $sqlstring .= "SUM(IF(type_id = 16, b.money, 0)) AS 'holiday',";
+        $sqlstring .= "SUM(IF(type_id = 17, b.money, 0)) AS 'party_reward',";
+        $sqlstring .= "SUM(IF(type_id = 18, b.money, 0)) AS 'union_paying',";
+        $sqlstring .= "SUM(IF(type_id = 19, b.money, 0)) AS 'other_reward',";
+        $sqlstring .= "SUM(IF(type_id = 37, b.money, 0)) AS 'finance_article',";
+        $sqlstring .= "SUM(IF(type_id = 38, b.money, 0)) AS 'union_article' ";
+        $sqlstring .= 'FROM bonus_detail b ';
+        $sqlstring .= 'left join workflows w on b.wf_id = w.id ';
+        $sqlstring .= 'where b.period_id = ?  ';
+        $sqlstring .= 'and w.isconfirm = 1 ';
+        $sqlstring .= 'GROUP BY b.policynumber, b.period_id';
+
+        return DB::select($sqlstring, [$period]);
     }
 }

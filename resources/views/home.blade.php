@@ -134,7 +134,7 @@
                                     <p class="m-b-xs"><strong>上传</strong></p>
                                     <p>
                                         {{ Auth::user()->profile->userName }} 上传了 <b>{{ $log->description }}</b> 数据。
-                                        <a href="{{ $log->upload_file }}">下载查看该数据。</a>
+                                        <a href="{{ $log->upload_file }}" target="_blank">下载查看该数据。</a>
                                     </p>
                                 </div>
                             @else
@@ -207,7 +207,7 @@
                 showMethod: 'slideDown',
                 timeOut: 3000
             };
-            toastr.success('{{ Auth::user()->profile->userName }} 欢迎进入{{ env('APP_NAME') }}');
+            toastr.success('{{ Auth::id() }} 欢迎进入{{ env('APP_NAME') }}');
         }, 1300);
 
         $("#salary_total").html('￥' + datas.total);
