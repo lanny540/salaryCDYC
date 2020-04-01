@@ -32,7 +32,7 @@
         <div class="col-lg-12">
             <div class="ibox" id="wizardForm">
                 <div class="ibox-content">
-                    <h2>凭证数据查看/生成向导</h2>
+                    <h2>凭证数据向导</h2>
                     {{ Form::open(['route' => 'vdata.show', 'method' => 'post', 'id' => 'form', 'class' => 'wizard']) }}
 
                     <h1>选择凭证</h1>
@@ -66,7 +66,11 @@
                             <div class="col-sm-4">
                                 <select class="form-control" name="periodId" id="periodId" style="width: 300px;">
                                     @foreach($periods as $p)
-                                        <option value="{{ $p->id }}">{{ $p->published_at }}</option>
+                                        @if($p->published_at === '')
+                                            <option value="{{ $p->id }}">当前周期</option>
+                                        @else
+                                            <option value="{{ $p->id }}">{{ $p->published_at }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -75,9 +79,7 @@
 
                     <h1>查询结果</h1>
                     <fieldset>
-                        <div id="voucherText" class="text-center" style="margin-top: 100px">
-
-                        </div>
+                        <div id="voucherText" class="text-center" style="margin-top: 100px"></div>
                     </fieldset>
                     {{ Form::close() }}
                 </div>

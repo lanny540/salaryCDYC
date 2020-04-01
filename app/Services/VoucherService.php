@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Voucher\VoucherStatistic;
+use App\Models\Voucher\VoucherTemplate;
+use Carbon\Carbon;
 use DB;
 
 class VoucherService
@@ -14,7 +16,7 @@ class VoucherService
      *
      * @return array
      */
-    public function generateSheet($periodId)
+    public function generateSheet($periodId): array
     {
         $sqlstring = 'SELECT d.dwdm, d.name, COUNT(up.user_id) AS sum_number,';
         $sqlstring .= 'IFNULL(sum(up.wage),0) as wage, IFNULL(sum(up.retained_wage),0) as retained_wage,';
@@ -127,15 +129,41 @@ class VoucherService
         ]);
     }
 
-    public function transformData($data, $pid)
+    public function transformData($vid, $pid): array
     {
-        $statistic = VoucherStatistic::where('period_id', $pid)->get()->toArray();
+        $templates = VoucherTemplate::where('vid', $vid)->get();
+        $statistics = VoucherStatistic::where('period_id', $pid)->get();
 
-        $temp = [
-            ['id' => 1, 'des' => '凭证单项描述测试1', 'debit' => 500.00, 'credit' => 0],
-            ['id' => 2, 'des' => '凭证单项描述测试2', 'debit' => 8600.00, 'credit' => 0],
-            ['id' => 3, 'des' => '凭证单项描述测试3', 'debit' => 0, 'credit' => 3200.00],
-        ];
-        return $temp;
+        $year = Carbon::now()->year;
+        $month = Carbon::now()->month;
+        $data = [];
+        foreach ($templates as $k => $t) {
+            $segments = explode('.', $t['subject_no']);
+            $des = explode(',', $t['subject_description']);
+
+            $data[$k]['id'] = $t->id;
+            $data[$k]['seg_des'] = $t->name;
+            $data[$k]['seg0'] = $segments[0];
+            $data[$k]['seg1'] = $segments[1];
+            $data[$k]['seg2'] = $segments[2];
+            $data[$k]['seg3'] = $segments[3];
+            $data[$k]['seg4'] = $segments[4];
+            $data[$k]['seg5'] = $segments[5];
+            $data[$k]['debit'] = $this->calDebit(random_int(100, 1000));
+            $data[$k]['credit'] = $this->calCredit(random_int(100, 1000));
+            $data[$k]['detail_des'] = $des[0].$year.'年'.$month.'月'.$des[1];
+        }
+
+        return $data;
+    }
+
+    private function calDebit($value):float
+    {
+        return $value * 0.6;
+    }
+
+    private function calCredit($value):float
+    {
+        return $value * 0.8;
     }
 }

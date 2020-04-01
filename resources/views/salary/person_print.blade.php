@@ -43,22 +43,17 @@
         </ol>
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <div class="title-action form-group row">
-            <div class="col-lg-3">
-                <label class="col-form-label" for="published_at">发放日期</label>
-            </div>
-            <div class="col-lg-9">
-                <select name="published_at" id="published_at" class="select2_published form-control" multiple="multiple">
-                    @foreach($periods as $p)
-                        <option value="{{ $p->id }}">{{ $p->published_at }}</option>
-                    @endforeach
-                </select>
-            </div>
+            <select name="published_at" id="published_at" class="select2_published form-control" multiple="multiple">
+                @foreach($periods as $p)
+                    <option value="{{ $p->id }}">{{ $p->published_at }}</option>
+                @endforeach
+            </select>
         </div>
     </div>
 
-    <div class="col-lg-5">
+    <div class="col-lg-6">
         <div class="title-action">
             <button class="btn btn-success" id="searchBtn" style="margin-right: 10px;"><i class="fa fa-pencil"></i> 查询薪金 </button>
             <button class="btn btn-primary" id="exportBtn" style="margin-right: 10px;" disabled><i class="fa fa-pencil"></i> 导出到Excel </button>

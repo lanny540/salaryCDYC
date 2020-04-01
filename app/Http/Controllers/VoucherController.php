@@ -6,7 +6,6 @@ use App\Models\Period;
 use App\Models\Subject;
 use App\Models\Voucher\VoucherData;
 use App\Models\Voucher\VoucherStatistic;
-use App\Models\Voucher\VoucherTemplate;
 use App\Models\Voucher\VoucherType;
 use App\Services\VoucherService;
 use Auth;
@@ -73,10 +72,10 @@ class VoucherController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function vsheetSubmit(Request $request)
+    public function vsheetSubmit()
     {
-        $data = json_decode($request->get('sheet'), true);
-        $periodId = $request->get('periodId');
+        $data = json_decode(request()->get('sheet'), true);
+        $periodId = request()->get('periodId');
 
         // 先删除再保存
         $this->vs->deleteSheet($periodId);
@@ -110,20 +109,20 @@ class VoucherController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function vdataHas(Request $request)
+    public function vdataHas()
     {
-        $pid = $request->get('periodId');
-        $vid = $request->get('vid');
+        $pid = request()->get('periodId');
+        $vid = request()->get('vid');
 
         $count = VoucherData::where('vid', $vid)
                     ->where('period_id', $pid)
                     ->get()->count();
 
         if (0 === $count) {
-            $msg = '数据库中无该凭证数据!';
+            $msg = '数据库中没有凭证数据!';
             $status = '生成';
         } else {
-            $msg = '数据库中有该凭证数据!';
+            $msg = '数据库中已有凭证数据!';
             $status = '查看';
         }
 
@@ -139,26 +138,18 @@ class VoucherController extends Controller
         $vid = $request->get('vid');
 
         // 编码分类
-        $subjects['segment2'] = Subject::where('subject_type', 2)->get();
-        $subjects['segment3'] = Subject::where('subject_type', 3)->get();
-        $subjects['segment4'] = Subject::where('subject_type', 4)->get();
-        $subjects['segment5'] = Subject::where('subject_type', 5)->get();
-        $subjects['segment6'] = Subject::where('subject_type', 6)->get();
-
-        // 分解编码
-        $code = [];
-        $templates = VoucherTemplate::where('vid', $vid)->get()->toArray();
-        foreach ($templates as $k => $t) {
-            $code['segments'][$k] = explode('.', $t['subject_no']);
-            $code['des'][$k] = explode(',', $t['subject_description']);
+        $subjects = [];
+        for ($i =0; $i <= 5; ++$i) {
+            $subjects['segment'.$i] = Subject::where('subject_type', $i)->get();
         }
 
         $vdata = [];
+
         $data = VoucherData::where('vid', $vid)
             ->where('period_id', $pid)
-            ->first()->toArray();
+            ->get()->toArray();
         // 如果没有数据，则重新计算；否则直接读取数据库数据
-        if (0 == sizeof($data)) {
+        if (0 === count($data)) {
             $vdata['vid'] = $vid;
             $vdata['period_id'] = $pid;
             $vdata['vname'] = 'XXX';
@@ -169,19 +160,17 @@ class VoucherController extends Controller
             $vdata['cgroup'] = '临时批组';
             $vdata['vdescription'] = '临时描述';
             // TODO: 将模板数据读出，结合凭证基础数据表，形成凭证数据
-            $vdata['vdata'] = $this->vs->transformData($templates, $pid);
+            $vdata['vdata'] = $this->vs->transformData($vid, $pid);
         } else {
             $vdata = $data;
-            $vdata['vdata'] = $this->vs->transformData($templates, $pid);
+            $vdata['vdata'] = $this->vs->transformData($vid, $pid);
         }
 
         return view('voucher.vdata')
-                ->with('code', $code)
-                ->with('templates', $templates)
-                ->with('vdata', $vdata)
-                ->with('subjects', $subjects);
-
-//        return $vdata['vdata'][0]['id'];
+            ->with('vdata', $vdata)
+            ->with('subjects', $subjects)
+            ->with('tempdata', json_encode($vdata, JSON_NUMERIC_CHECK));
+//        return $subjects;
     }
 
     public function vdataStore(Request $request)

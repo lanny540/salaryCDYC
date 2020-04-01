@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\BonusDetail whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\BonusDetail whereWfId($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\Users\UserProfile $userprofile
+ * @property-read \App\Models\WorkFlow\WorkFlow $workflow
  */
 class BonusDetail extends Model
 {

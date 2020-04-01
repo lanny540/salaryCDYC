@@ -4,8 +4,8 @@
 <!-- Select2 -->
 <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
 <!-- FooTable -->
-<link href="{{ asset('css/plugins/footable/footable.core.css') }}" rel="stylesheet">
-@stop
+<link href="{{ asset('css/plugins/footable3/footable.bootstrap.min.css') }}" rel="stylesheet">
+@@endsection
 
 @section('breadcrumbs')
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -24,7 +24,7 @@
         </ol>
     </div>
 </div>
-@stop
+@@endsection
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
@@ -70,9 +70,9 @@
                     <label class="col-form-label" for="vcategory">凭证类别</label>
                     <div class="input-group">
                         <select id="vcategory" name="vcategory" class="form-control">
-                            <option value="手工转账" @if($vdata['vcategory'] == '手工转账') selected @endif>手工转账</option>
-                            <option value="现金凭证" @if($vdata['vcategory'] == '现金凭证') selected @endif>现金凭证</option>
-                            <option value="银行凭证" @if($vdata['vcategory'] == '银行凭证') selected @endif>银行凭证</option>
+                            <option value="手工转账" {{ ($vdata['vcategory'] === '手工转账') ? 'selected' : '' }}>手工转账</option>
+                            <option value="现金凭证" {{ ($vdata['vcategory'] === '现金凭证') ? 'selected' : '' }}>现金凭证</option>
+                            <option value="银行凭证" {{ ($vdata['vcategory'] === '银行凭证') ? 'selected' : '' }}>银行凭证</option>
                         </select>
                     </div>
                 </div>
@@ -92,10 +92,10 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-content">
-                    <table class="footable table table-responsive toggle-arrow-tiny" data-page-size="30">
+                    <table class="footable table toggle-arrow-tiny" data-paging="true" data-sorting="false">
                         <thead>
                         <tr>
-                            <th data-toggle="true">ID</th>
+                            <th></th>
                             <th>公司</th>
                             <th>责任中心段</th>
                             <th>科目段</th>
@@ -104,77 +104,25 @@
                             <th>参考段</th>
                             <th>借方金额</th>
                             <th>贷方金额</th>
-                            <th data-hide="all">会计科目描述</th>
-                            <th data-hide="all">凭证单项描述</th>
+                            <th data-breakpoints="all">会计科目描述</th>
+                            <th data-breakpoints="all">凭证单项描述</th>
                             <th class="text-right">操作</th>
                         </tr>
                         </thead>
                         <tbody id="vdata-list">
                         @foreach($vdata['vdata'] as $k => $vd)
                             <tr id="vdata{{ $vd['id'] }}">
-                                <td>{{ $vd['id'] }}</td>
-                                <td>
-                                    <label>
-                                        <input value="{{ $code['segments'][$k][0] }}" name="code1[]" class="form-control form-control-sm" readonly>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input value="{{ $code['segments'][$k][1] }}" name="code2[]" class="form-control form-control-sm" readonly>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input value="{{ $code['segments'][$k][2] }}" name="code3[]" class="form-control form-control-sm" readonly>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input value="{{ $code['segments'][$k][3] }}" name="code4[]" class="form-control form-control-sm" readonly>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input value="{{ $code['segments'][$k][4] }}" name="code5[]" class="form-control form-control-sm" readonly>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-{{--                                        <select class="form-control select2_category" name="code6[]">--}}
-{{--                                            @foreach($subjects['segment6'] as $s)--}}
-{{--                                                <option value="{{ $s->subject_no }}" @if($code[$k][5] == $s->subject_no) selected @endif>--}}
-{{--                                                    {{ $s->subject_name }} -- {{ $s->subject_no }}--}}
-{{--                                                </option>--}}
-{{--                                            @endforeach--}}
-{{--                                        </select>--}}
-                                        <input value="{{ $code['segments'][$k][5] }}" name="code6[]" class="form-control form-control-sm" readonly>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input value="{{ $vd['debit'] }}" class="form-control form-control-sm" name="debit[]" readonly>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input value="{{ $vd['credit'] }}" class="form-control form-control-sm" name="credit[]" readonly>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input value="{{ $templates[$k]['name'] }}" class="form-control form-control-sm" name="name[]" style="width: 600px;" readonly>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        @if ($vd['des'] !== '')
-                                            <input value="{{ $vd['des'] }}" class="form-control form-control-sm" name="description[]" style="width: 600px;" readonly>
-                                        @else
-                                            <input value="{{ $code['des'][$k][0] }}{{ \Carbon\Carbon::now()->year }}年{{ Carbon\Carbon::now()->month }}月{{ $code['des'][$k][1] }}"
-                                                   class="form-control form-control-sm" name="description[]" style="width: 600px;" readonly>
-                                        @endif
-                                    </label>
-                                </td>
+                                <td></td>
+                                <td>{{ $vd['seg0'] }}</td>
+                                <td>{{ $vd['seg1'] }}</td>
+                                <td>{{ $vd['seg2'] }}</td>
+                                <td>{{ $vd['seg3'] }}</td>
+                                <td>{{ $vd['seg4'] }}</td>
+                                <td>{{ $vd['seg5'] }}</td>
+                                <td>{{ $vd['debit'] }}</td>
+                                <td>{{ $vd['credit'] }}</td>
+                                <td>{{ $vd['seg_des'] }}</td>
+                                <td>{{ $vd['detail_des'] }}</td>
                                 <td class="text-right">
                                     <div class="btn-group">
                                         <button class="btn-info btn btn-sm edit" value="{{ $vd['id'] }}">Edit</button>
@@ -184,13 +132,6 @@
                             </tr>
                         @endforeach
                         </tbody>
-                        <tfoot>
-                        <tr>
-                            <td colspan="12">
-                                <ul class="pagination float-right"></ul>
-                            </td>
-                        </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -210,14 +151,24 @@
 <!-- Select2 -->
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 <!-- FooTable -->
-<script src="{{ asset('js/plugins/footable/footable.all.min.js') }}"></script>
+<script src="{{ asset('js/plugins/footable3/footable.min.js') }}"></script>
 
 <script>
     $(".select2_category").select2();
-    $('.footable').footable();
+    $('.footable').footable({
+        "expandFirst": false,
+        "useParentWidth": true,
+        "show-toggle": true,
+        "paging": {
+            "size": 20,
+            "position": "center",
+        }
+    });
+
+    let vdata = <?php echo $tempdata;?>;
 
     $(document).ready(function() {
-
+        console.log(vdata);
     });
 </script>
 @stop
