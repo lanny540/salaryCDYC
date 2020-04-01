@@ -65,7 +65,6 @@ class WorkFlowController extends Controller
         $info['period'] = $this->dataProcess->getPeriodId();
         // 上传数据分类
         $info['uploadType'] = $request->get('uploadType');
-        // TODO:更新或重传数据
         $info['isReset'] = $request->get('isReset', 1);
         // 格式化待插入的数据
         $info['importData'] = json_decode($request->get('importData'), true);

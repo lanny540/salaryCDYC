@@ -207,7 +207,7 @@
                 showMethod: 'slideDown',
                 timeOut: 3000
             };
-            toastr.success('{{ Auth::id() }} 欢迎进入{{ env('APP_NAME') }}');
+            toastr.success('欢迎 {{ Auth::user()->profile->userName }} 登录系统', '{{ env('APP_NAME') }}');
         }, 1300);
 
         $("#salary_total").html('￥' + datas.total);

@@ -47,7 +47,6 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="/users/{{ Auth::id() }}/edit"><i class="fa fa-edit"></i> 个人资料</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="fa fa-vcard"></i> 修改密码</a></li>
                     <li class="dropdown-divider"></li>
                     <li>
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item">

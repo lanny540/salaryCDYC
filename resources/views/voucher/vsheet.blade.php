@@ -227,7 +227,7 @@
 
         $('#vsheetCal').removeAttr('disabled');
         $('#vsheetExport').removeAttr('disabled');
-        $('#vsheetSubmit').removeAttr('disabled');
+        // $('#vsheetSubmit').removeAttr('disabled');
 
         sheetsTable.show();
 

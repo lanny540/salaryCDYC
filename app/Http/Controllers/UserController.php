@@ -37,7 +37,7 @@ class UserController extends Controller
         // 管理员可编辑所有人，否则只能编辑自己
         $roles = Role::where('id', '<=', 2)->get();
 
-        if (Auth::id() === $userId || Auth::user()->hasAnyRole($roles)) {
+        if (Auth::id() === (int)$userId || Auth::user()->hasAnyRole($roles)) {
             $user = User::with(['profile', 'remit'])
                 ->where('id', $userId)
                 ->select('users.id', 'users.name')
@@ -53,6 +53,7 @@ class UserController extends Controller
         } else {
             return redirect()->back()->withErrors('没有权限浏览其他人的信息!');
         }
+//        return Auth::id();
     }
 
     /**

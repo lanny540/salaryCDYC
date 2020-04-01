@@ -111,7 +111,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('importconfig/{id}', 'ConfigController@importShow')->name('importconfig.show');
     Route::put('importconfig/{id}', 'ConfigController@importUpdate')->name('importconfig.update');
     Route::delete('importconfig/{id}', 'ConfigController@importDelete')->name('importconfig.delete');
-    // TODO:凭证模板管理
 
     // 个税计算器页面
     Route::get('tax', 'HelpController@taxIndex')->name('tax');
