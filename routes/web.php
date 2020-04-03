@@ -4,11 +4,14 @@ Route::group(['namespace' => 'Auth'], function () {
     Route::get('login', 'LoginController@showLoginForm')->name('login');
     Route::post('login', 'LoginController@login');
     Route::post('logout', 'LoginController@logout')->name('logout');
-    Route::get('reset', 'LoginController@showResetForm')->name('password.request');
+    Route::get('reset', 'LoginController@showResetForm');
     Route::post('reset', 'LoginController@resetPassword')->name('password.reset');
 });
 
 Route::group(['middleware' => 'auth'], function () {
+    // 登录后重置密码
+    Route::get('resetpassword', 'UserController@showReset');
+    Route::post('resetpassword', 'UserController@resetPassword')->name('password.reset2');
     // 仪表板页面
     Route::get('/', 'HomeController@index')->name('home');
 

@@ -4599,16 +4599,16 @@
         },
         {
             "name": "yajra/laravel-datatables-editor",
-            "version": "v1.20.0",
+            "version": "v1.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-editor.git",
-                "reference": "30933fcc0eeb33571bf32262dfdfb6000c36e8f0"
+                "reference": "d46f8110af82daa14463c6ad7fbec23d75b90c3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/30933fcc0eeb33571bf32262dfdfb6000c36e8f0",
-                "reference": "30933fcc0eeb33571bf32262dfdfb6000c36e8f0",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-editor/zipball/d46f8110af82daa14463c6ad7fbec23d75b90c3a",
+                "reference": "d46f8110af82daa14463c6ad7fbec23d75b90c3a",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4663,7 +4663,17 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2020-03-03T17:10:35+00:00"
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/yajra",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/yajra",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2020-04-02T04:11:10+00:00"
         },
         {
             "name": "yajra/laravel-datatables-fractal",
@@ -4731,16 +4741,16 @@
         },
         {
             "name": "yajra/laravel-datatables-html",
-            "version": "v4.23.1",
+            "version": "v4.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-html.git",
-                "reference": "00195f383f4ecf4257c761712eda2f6510f3102d"
+                "reference": "a66ed58f7fe66acd77836b43366d3bd8d578a31b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/00195f383f4ecf4257c761712eda2f6510f3102d",
-                "reference": "00195f383f4ecf4257c761712eda2f6510f3102d",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-html/zipball/a66ed58f7fe66acd77836b43366d3bd8d578a31b",
+                "reference": "a66ed58f7fe66acd77836b43366d3bd8d578a31b",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -4793,7 +4803,17 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2020-03-07T02:47:38+00:00"
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/yajra",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/yajra",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2020-04-02T07:43:20+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",

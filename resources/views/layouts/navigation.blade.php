@@ -14,7 +14,7 @@
 {{--                        </span>--}}
 {{--                    </a>--}}
 {{--                </div>--}}
-                <div class="logo-element"> Salary</div>
+                <div class="logo-element"> 薪酬核算</div>
             </li>
 
             {{--SideBar--}}
