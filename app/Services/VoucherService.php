@@ -4,11 +4,17 @@ namespace App\Services;
 
 use App\Models\Voucher\VoucherStatistic;
 use App\Models\Voucher\VoucherTemplate;
-use Carbon\Carbon;
+use App\Repository\VoucherRepository;
 use DB;
 
 class VoucherService
 {
+    private $repository;
+    public function __construct(VoucherRepository $voucherRepository)
+    {
+        $this->repository = $voucherRepository;
+    }
+
     /**
      * 计算当前凭证汇总数据.
      *
@@ -129,41 +135,17 @@ class VoucherService
         ]);
     }
 
+    /**
+     * 根据模板规则转换数据.
+     *
+     * @param int $vid 模板ID
+     * @param int $pid 会计期间ID
+     * @return array
+     */
     public function transformData($vid, $pid): array
     {
         $templates = VoucherTemplate::where('vid', $vid)->get();
-        $statistics = VoucherStatistic::where('period_id', $pid)->get();
 
-        $year = Carbon::now()->year;
-        $month = Carbon::now()->month;
-        $data = [];
-        foreach ($templates as $k => $t) {
-            $segments = explode('.', $t['subject_no']);
-            $des = explode(',', $t['subject_description']);
-
-            $data[$k]['id'] = $t->id;
-            $data[$k]['seg_des'] = $t->name;
-            $data[$k]['seg0'] = $segments[0];
-            $data[$k]['seg1'] = $segments[1];
-            $data[$k]['seg2'] = $segments[2];
-            $data[$k]['seg3'] = $segments[3];
-            $data[$k]['seg4'] = $segments[4];
-            $data[$k]['seg5'] = $segments[5];
-            $data[$k]['debit'] = $this->calDebit(random_int(100, 1000));
-            $data[$k]['credit'] = $this->calCredit(random_int(100, 1000));
-            $data[$k]['detail_des'] = $des[0].$year.'年'.$month.'月'.$des[1];
-        }
-
-        return $data;
-    }
-
-    private function calDebit($value):float
-    {
-        return $value * 0.6;
-    }
-
-    private function calCredit($value):float
-    {
-        return $value * 0.8;
+        return $this->repository->getVoucherData($templates, $pid);
     }
 }

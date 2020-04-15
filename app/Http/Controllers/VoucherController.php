@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
+use Validator;
 use Yajra\DataTables\DataTables;
 
 class VoucherController extends Controller
@@ -132,10 +133,29 @@ class VoucherController extends Controller
         ]);
     }
 
+    /**
+     * 根据模板读取或生成数据.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function vdataShow(Request $request)
     {
         $pid = $request->get('periodId');
         $vid = $request->get('vid');
+        $data = $request->all();
+        $rules = [
+            'periodId' => 'required',
+            'vid' => 'required',
+        ];
+        $messages = [
+            'periodId.required' => '会计期不能为空',
+            'vid.required' => '凭证模板不能为空',
+        ];
+        $validator = Validator::make($data, $rules, $messages);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
 
         // 编码分类
         $subjects = [];
@@ -170,9 +190,14 @@ class VoucherController extends Controller
             ->with('vdata', $vdata)
             ->with('subjects', $subjects)
             ->with('tempdata', json_encode($vdata, JSON_NUMERIC_CHECK));
-//        return $subjects;
     }
 
+    /**
+     * 将凭数据写入数据库.
+     *
+     * @param Request $request
+     * @return array
+     */
     public function vdataStore(Request $request)
     {
         return $request->all();

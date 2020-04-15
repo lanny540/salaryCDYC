@@ -5,7 +5,7 @@
 <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
 <!-- FooTable -->
 <link href="{{ asset('css/plugins/footable3/footable.bootstrap.min.css') }}" rel="stylesheet">
-@@endsection
+@endsection
 
 @section('breadcrumbs')
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -24,7 +24,7 @@
         </ol>
     </div>
 </div>
-@@endsection
+@endsection
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
@@ -92,7 +92,7 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-content">
-                    <table class="footable table toggle-arrow-tiny" data-paging="true" data-sorting="false">
+                    <table class="footable table table-hover toggle-arrow-tiny" data-paging="true" data-sorting="false">
                         <thead>
                         <tr>
                             <th></th>
@@ -145,7 +145,7 @@
 
     @include('voucher._modals')
 </div>
-@stop
+@endsection
 
 @section('js')
 <!-- Select2 -->
@@ -171,4 +171,4 @@
         console.log(vdata);
     });
 </script>
-@stop
+@endsection

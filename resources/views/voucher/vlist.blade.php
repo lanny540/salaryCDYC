@@ -49,7 +49,7 @@
                                         <div class="radio radio-danger">
                                             <input type="radio" name="vid" id="radio{{ $v->id }}" value="{{ $v->id }}" class="required">
                                             <label for="radio{{ $v->id }}">
-                                                {{ $v->name }}
+                                                {{ $v->description }}
                                             </label>
                                         </div>
                                     </div>
