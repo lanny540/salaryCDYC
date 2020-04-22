@@ -179,17 +179,25 @@ class VoucherController extends Controller
             $vdata['period'] = Carbon::now()->month.'-'.Carbon::now()->day;
             $vdata['cgroup'] = '临时批组';
             $vdata['vdescription'] = '临时描述';
-            // TODO: 将模板数据读出，结合凭证基础数据表，形成凭证数据
             $vdata['vdata'] = $this->vs->transformData($vid, $pid);
+            $vdata['temp'] = [
+                ['id' => 1, 'seg0' => '540', 'seg1' => '0000', 'seg2' => '100101', 'seg3' => '00000', 'seg4' => '000000', 'seg5' => '00000', 'seg_des' => 'temp_seg_des', 'detail_des' => 'temp_detail_des', 'debit' => 1234, 'credit' => 0]
+            ];
         } else {
+            // TODO: 将已存在的数据读取出来，放再对应的数组中
+            // $vaata['vdata'] = select -> vdata['vdata']
+            // $vaata['temp'] = select -> vdata['temp']
             $vdata = $data;
             $vdata['vdata'] = $this->vs->transformData($vid, $pid);
+            $vdata['temp'] = [
+                ['id' => 1, 'seg0' => '540', 'seg1' => '0000', 'seg2' => '100101', 'seg3' => '00000', 'seg4' => '000000', 'seg5' => '00000', 'seg_des' => 'temp_seg_des', 'detail_des' => 'temp_detail_des', 'debit' => 1234, 'credit' => 0]
+            ];
         }
 
         return view('voucher.vdata')
             ->with('vdata', $vdata)
             ->with('subjects', $subjects)
-            ->with('tempdata', json_encode($vdata, JSON_NUMERIC_CHECK));
+            ->with('tempdata', json_encode($vdata));
     }
 
     /**
@@ -198,7 +206,7 @@ class VoucherController extends Controller
      * @param Request $request
      * @return array
      */
-    public function vdataStore(Request $request)
+    public function vdataStore(Request $request): array
     {
         return $request->all();
     }

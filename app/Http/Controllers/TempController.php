@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Voucher\VoucherData;
+use DB;
 
 class TempController extends Controller
 {
     public function test()
     {
-        $res = VoucherData::where('vid', 1)->where('period_id', 9)
-            ->select(['vdata'])->first();
+        $sqlstring = 'SELECT ROUND(a.money * b.rate * '. '0.02' .', 2) AS money FROM ';
+        $sqlstring .= '(SELECT SUM(wage) AS money FROM view_fenpei_total WHERE period_id = '. '13' .') a, ';
+        $sqlstring .= "(SELECT SUM(rate) AS rate FROM view_fenpei_total WHERE period_id = ". '13' ." AND dwdm = '". '0101010902' ."') b";
 
-        return $res['vdata'][0]['id'];
+//        return DB::selectOne($sqlstring, [0.02, 13, 13, '0101010902'])->money;
+        return DB::select($sqlstring);
+
     }
 
     public function excel()

@@ -123,10 +123,6 @@
 <script src="{{ asset('js/plugins/jsTree/jstree.min.js') }}"></script>
 
 <script>
-    $.ajaxSetup({
-        headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}
-    });
-
     let departmentsTree = $("#departmentsList").jstree({
         'core' : {
             "multiple" : false,
@@ -162,6 +158,10 @@
     });
 
     $(document).ready(function () {
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}
+        });
+
         $('.depCreate').click(function () {
             departmentInput(null);
         });
