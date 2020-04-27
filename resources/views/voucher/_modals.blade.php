@@ -76,13 +76,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="debit" class="control-label">借方金额:</label>
-                                <input id="debit" value="0.00" class="form-control" type="text">
+                                <input id="debit" value="0" class="form-control" type="text">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="credit" class="control-label">贷方金额:</label>
-                                <input id="credit" value="0.00" class="form-control" type="text">
+                                <input id="credit" value="0" class="form-control" type="text">
                             </div>
                         </div>
                     </div>

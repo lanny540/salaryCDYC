@@ -170,8 +170,8 @@
         </div>
     </div>
 
-    <input type="hidden" value="{{ $vdata['vid'] }}" name="vid">
-    <input type="hidden" value="{{ $vdata['period_id'] }}" name="period_id">
+    <input type="hidden" value="{{ $vdata['vid'] }}" name="vid" id="vid">
+    <input type="hidden" value="{{ $vdata['period_id'] }}" name="period_id" id="period_id">
 
     @include('voucher._modals')
 </div>
@@ -182,6 +182,8 @@
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 <!-- SweetAlert2 -->
 <script src="{{ asset('js/plugins/sweetalert2/sweetalert.min.js') }}"></script>
+
+<script src="{{ asset('js/helper.js') }}"></script>
 
 <script>
     $(".select2_category").select2();
@@ -325,7 +327,7 @@
             let error_messages = $('#error_messages');
             let data = validationModalData(temp);
 
-            console.log(data);
+            // console.log(data);
 
             error_messages.html('');
             if (!data.validate) {
@@ -353,8 +355,8 @@
                                 <td>${data.modalData.seg3}</td>
                                 <td>${data.modalData.seg4}</td>
                                 <td>${data.modalData.seg5}</td>
-                                <td>${data.modalData.debit}</td>
-                                <td>${data.modalData.credit}</td>
+                                <td class="text-success text-center">${data.modalData.debit}</td>
+                                <td class="text-info text-center">${data.modalData.credit}</td>
                                 <td>${data.modalData.seg_des}</td>
                                 <td>${data.modalData.detail_des}</td>
                                 <td class="text-right">
@@ -391,8 +393,8 @@
                             <td>${data.modalData.seg3}</td>
                             <td>${data.modalData.seg4}</td>
                             <td>${data.modalData.seg5}</td>
-                            <td>${data.modalData.debit}</td>
-                            <td>${data.modalData.credit}</td>
+                            <td class="text-success text-center">${data.modalData.debit}</td>
+                            <td class="text-info text-center">${data.modalData.credit}</td>
                             <td>${data.modalData.seg_des}</td>
                             <td>${data.modalData.detail_des}</td>
                             <td class="text-right">
@@ -405,11 +407,50 @@
                     `;
 
                     $('#vdata'+data.modalData.id).replaceWith(voucher);
-                    console.log('更改后:', vdata.vdata);
+                    // console.log('更改后:', vdata.vdata);
                 }
 
                 $('#tempVoucherSubjectModal').modal('hide');
             }
+        });
+
+        body.on('click', 'button.store', function() {
+            let data = {
+                vid: $('#vid').val(),               // 凭证类别ID
+                period_id: $('#period_id').val(),   // 会计周期ID
+                cdate: $('#cdate').val(),           // 凭证日期
+                vuser: $('#vuser').val(),           // 制单人名称
+                period: $('#period').val(),         // 会计周期
+                vname: $('#vname').val(),           // 凭证名称
+                cgroup: $('#cgroup').val(),         // 凭证批组
+                vcategory: $('#vcategory').val(),   // 凭证类别
+                vdescription: $('#vdescription').val(), // 凭证描述
+                vdata: JSON.stringify(vdata.vdata),
+                vtemp: JSON.stringify(vdata.temp),
+                _token: '{{ csrf_token() }}'
+            };
+
+            console.log(data);
+
+            Post('vdatastore', data);
+            // $.ajax({
+            //     type: 'POST',
+            //     url: '/vdatastore',
+            //     data: data,
+            //     dataType: 'json',
+            //     success: function (data) {
+            //         swal(data.msg, {icon: "success"});
+            //     },
+            //     error: function (data, json, errorThrown) {
+            //         console.log(data);
+            //         let errors = data.responseJSON.errors;
+            //         let errorsHtml= '';
+            //         $.each( errors, function( key, value ) {
+            //             errorsHtml += '<li>' + value[0] + '</li>';
+            //         });
+            //         toastr.error( errorsHtml , "Error " + data.status +': '+ errorThrown);
+            //     }
+            // });
         });
     });
 

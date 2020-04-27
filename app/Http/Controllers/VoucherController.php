@@ -180,18 +180,19 @@ class VoucherController extends Controller
             $vdata['cgroup'] = '临时批组';
             $vdata['vdescription'] = '临时描述';
             $vdata['vdata'] = $this->vs->transformData($vid, $pid);
-            $vdata['temp'] = [
-                ['id' => 1, 'seg0' => '540', 'seg1' => '0000', 'seg2' => '100101', 'seg3' => '00000', 'seg4' => '000000', 'seg5' => '00000', 'seg_des' => 'temp_seg_des', 'detail_des' => 'temp_detail_des', 'debit' => 1234, 'credit' => 0]
-            ];
+            $vdata['temp'] = [];
         } else {
-            // TODO: 将已存在的数据读取出来，放再对应的数组中
-            // $vaata['vdata'] = select -> vdata['vdata']
-            // $vaata['temp'] = select -> vdata['temp']
-            $vdata = $data;
-            $vdata['vdata'] = $this->vs->transformData($vid, $pid);
-            $vdata['temp'] = [
-                ['id' => 1, 'seg0' => '540', 'seg1' => '0000', 'seg2' => '100101', 'seg3' => '00000', 'seg4' => '000000', 'seg5' => '00000', 'seg_des' => 'temp_seg_des', 'detail_des' => 'temp_detail_des', 'debit' => 1234, 'credit' => 0]
-            ];
+            $vdata['vid'] = $data[0]['vid'];
+            $vdata['period_id'] = $data[0]['period_id'];
+            $vdata['vname'] = $data[0]['vname'];
+            $vdata['vcategory'] = $data[0]['vcategory'];
+            $vdata['vuser'] = $data[0]['vuser'];
+            $vdata['cdate'] = $data[0]['cdate'];
+            $vdata['period'] = $data[0]['period'];
+            $vdata['cgroup'] = $data[0]['cgroup'];
+            $vdata['vdescription'] = $data[0]['vdescription'];
+            $vdata['vdata'] = $data[0]['vdata']['vdata'];
+            $vdata['temp'] = $data[0]['vdata']['temp'];
         }
 
         return view('voucher.vdata')
@@ -204,10 +205,50 @@ class VoucherController extends Controller
      * 将凭数据写入数据库.
      *
      * @param Request $request
-     * @return array
+     *
+     * @return mixed
      */
-    public function vdataStore(Request $request): array
+    public function vdataStore(Request $request)
     {
-        return $request->all();
+        $vdata = json_decode($request->get('vdata'), true);
+        $vtemp = json_decode($request->get('vtemp'), true);
+
+        foreach ($vdata as $k => $v) {
+            $vdata[$k]['debit'] = round($v['debit'], 2);
+            $vdata[$k]['credit'] = round($v['credit'], 2);
+        }
+        foreach ($vtemp as $k => $v) {
+            $vtemp[$k]['debit'] = round($v['debit'], 2);
+            $vtemp[$k]['credit'] = round($v['credit'], 2);
+        }
+        $data['vdata'] = $vdata;
+        $data['vtemp'] = $vtemp;
+
+
+        $r = VoucherData::create([
+            'vid' => $request->get('vid'),
+            'period_id' => $request->get('period_id'),
+            'vname' => $request->get('vname'),
+            'vcategory' => $request->get('vcategory'),
+            'vuser' => $request->get('vuser'),
+            'cdate' => $request->get('cdate'),
+            'period' => $request->get('period'),
+            'cgroup' => $request->get('cgroup'),
+            'vdescription' => $request->get('vdescription'),
+            'vdata' => $data,
+            'isUpload' => 0,
+        ]);
+
+        $msg = '数据保存成功！';
+        $code = 201;
+        if (!$r) {
+            $msg = '数据保存失败！请联系系统管理员.';
+            $code = 500;
+        }
+
+        return response()->json([
+            'msg' => $msg,
+            'status' => $code,
+        ]);
     }
 }
