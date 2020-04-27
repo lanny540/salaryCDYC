@@ -44,7 +44,6 @@ class VoucherData extends Model
 {
     public $table = 'voucher_data';
 
-    protected $casts = [
-        'vdata' => 'json', // 声明json类型
-    ];
+    // 所有字段都可以批量赋值
+    protected $guarded = [];
 }

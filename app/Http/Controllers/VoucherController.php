@@ -7,6 +7,7 @@ use App\Models\Subject;
 use App\Models\Voucher\VoucherData;
 use App\Models\Voucher\VoucherStatistic;
 use App\Models\Voucher\VoucherType;
+use App\Repository\VoucherRepository;
 use App\Services\VoucherService;
 use Auth;
 use Carbon\Carbon;
@@ -19,15 +20,18 @@ use Yajra\DataTables\DataTables;
 class VoucherController extends Controller
 {
     protected $vs;
+    protected $vdatarepo;
 
     /**
      * VoucherController constructor.
      *
-     * @param VoucherService $services 凭证相关数据处理服务
+     * @param VoucherService    $voucherService
+     * @param VoucherRepository $voucherRepository
      */
-    public function __construct(VoucherService $services)
+    public function __construct(VoucherService $voucherService, VoucherRepository $voucherRepository)
     {
-        $this->vs = $services;
+        $this->vs = $voucherService;
+        $this->vdatarepo = $voucherRepository;
     }
 
     /**
@@ -108,12 +112,13 @@ class VoucherController extends Controller
     /**
      * 查询凭证数据是否存在.
      *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function vdataHas()
+    public function vdataHas(Request $request)
     {
-        $pid = request()->get('periodId');
-        $vid = request()->get('vid');
+        $pid = $request->get('periodId');
+        $vid = $request->get('vid');
 
         $count = VoucherData::where('vid', $vid)
                     ->where('period_id', $pid)
@@ -191,8 +196,9 @@ class VoucherController extends Controller
             $vdata['period'] = $data[0]['period'];
             $vdata['cgroup'] = $data[0]['cgroup'];
             $vdata['vdescription'] = $data[0]['vdescription'];
-            $vdata['vdata'] = $data[0]['vdata']['vdata'];
-            $vdata['temp'] = $data[0]['vdata']['temp'];
+            $temp = json_decode($data[0]['vdata'], true);
+            $vdata['vdata'] = $temp['vdata'];
+            $vdata['temp'] = $temp['vtemp'];
         }
 
         return view('voucher.vdata')
@@ -210,6 +216,35 @@ class VoucherController extends Controller
      */
     public function vdataStore(Request $request)
     {
+        $rules = [
+            'vid' => 'required',
+            'period_id' => 'required',
+            'vname' => 'required',
+            'vcategory' => 'required',
+            'vuser' => 'required',
+            'cdate' => 'required',
+            'period' => 'required',
+            'cgroup' => 'required',
+            'vdescription' => 'required',
+            'vdata' => 'required',
+        ];
+        $messages = [
+            'vid.required' => '凭证分类未选择',
+            'period_id.required' => '会计周期选择错误',
+            'vname.required' => '凭证名称不能为空',
+            'vcategory.required' => '凭证类别未选择',
+            'vuser.required' => '制单人名称不能未空',
+            'cdate.required' => '会计周期不能为空',
+            'period.required' => '凭证日期不能为空',
+            'cgroup.required' => '凭证批组不能为空',
+            'vdescription.required' => '凭证描述不能为空',
+            'vdata.required' => '凭证数据不能为空',
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+
         $vdata = json_decode($request->get('vdata'), true);
         $vtemp = json_decode($request->get('vtemp'), true);
 
@@ -224,10 +259,10 @@ class VoucherController extends Controller
         $data['vdata'] = $vdata;
         $data['vtemp'] = $vtemp;
 
-
-        $r = VoucherData::create([
+        $r = VoucherData::updateOrCreate([
             'vid' => $request->get('vid'),
             'period_id' => $request->get('period_id'),
+        ],[
             'vname' => $request->get('vname'),
             'vcategory' => $request->get('vcategory'),
             'vuser' => $request->get('vuser'),
@@ -235,7 +270,7 @@ class VoucherController extends Controller
             'period' => $request->get('period'),
             'cgroup' => $request->get('cgroup'),
             'vdescription' => $request->get('vdescription'),
-            'vdata' => $data,
+            'vdata' => json_encode($data),
             'isUpload' => 0,
         ]);
 
@@ -250,5 +285,21 @@ class VoucherController extends Controller
             'msg' => $msg,
             'status' => $code,
         ]);
+    }
+
+    /**
+     * 模板数据修改后需要重新计算.
+     *
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function vdataReCal(Request $request)
+    {
+        $vid = $request->get('vid');
+        $period_id = $request->get('period_id');
+        $vdata = $request->get('vdata');
+
+        // 重新计算
+        return  $this->vdatarepo->extraRule($vid, $vdata, $period_id);
     }
 }

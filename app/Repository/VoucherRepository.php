@@ -67,7 +67,7 @@ class VoucherRepository
      *
      * @param int   $tid  模板ID
      * @param array $data 凭证数据
-     * @param int   $period_id
+     * @param int   $period_id 会计期间ID
      * @return mixed
      */
     public function extraRule($tid, $data, $period_id): array
@@ -91,6 +91,14 @@ class VoucherRepository
                 $data[90]['debit'] = $data[90]['debit'] - $data[77]['debit'] - $data[91]['debit'] - $data[92]['debit'] - $data[93]['debit'] - $data[94]['debit'] - $data[95]['debit'];
                 break;
             case 3: // 关联方
+                $data[0]['debit'] = 0;
+                $data[18]['debit'] = 0;
+                $data[36]['debit'] = 0;
+                $data[54]['debit'] = 0;
+                $data[72]['debit'] = 0;
+                $data[79]['debit'] = 0;
+                $data[97]['debit'] = 0;
+
                 for ($i = 1; $i <= 17; ++$i) {
                     if (2 === $i) {
                         continue;
@@ -167,6 +175,8 @@ class VoucherRepository
                 break;
             case 4: // 年金
             case 5: // 退养金
+                $data[2]['debit'] = 0;
+
                 $data[22]['debit'] = $data[22]['debit'] - $data[21]['debit'] - $data[20]['debit'];
                 $data[25]['debit'] = $data[25]['debit'] - $data[24]['debit'] - $data[23]['debit'];
                 $data[29]['debit'] = $data[29]['debit'] - $data[34]['debit'] - $data[33]['debit'] - $data[32]['debit'] - $data[31]['debit'] - $data[30]['debit'] - $data[16]['debit'];
@@ -179,6 +189,9 @@ class VoucherRepository
                 $data[0]['credit'] = $data[1]['debit'] + $data[2]['debit'];
                 break;
             case 6: // 公积金
+                $data[0]['credit'] = 0;
+                $data[12]['debit'] = 0;
+
                 $data[32]['debit'] = $data[32]['debit'] - $data[31]['debit'] - $data[30]['debit'];
                 $data[35]['debit'] = $data[35]['debit'] - $data[34]['debit'] - $data[33]['debit'];
                 $data[39]['debit'] = $data[39]['debit'] - $data[44]['debit'] - $data[43]['debit'] - $data[42]['debit'] - $data[41]['debit'] - $data[40]['debit'] - $data[26]['debit'];
@@ -198,6 +211,17 @@ class VoucherRepository
 
                 break;
             case 7: // 保险费
+                $data[6]['debit'] = 0;
+                $data[7]['credit'] = 0;
+                $data[19]['debit'] = 0;
+                $data[20]['debit'] = 0;
+                $data[21]['debit'] = 0;
+                $data[22]['debit'] = 0;
+                $data[23]['credit'] = 0;
+                $data[24]['credit'] = 0;
+                $data[25]['credit'] = 0;
+                $data[26]['credit'] = 0;
+
                 $data[45]['debit'] = $data[45]['debit'] - $data[44]['debit'] - $data[43]['debit'];
                 $data[48]['debit'] = $data[48]['debit'] - $data[47]['debit'] - $data[46]['debit'];
                 $data[52]['debit'] = $data[52]['debit'] - $data[57]['debit'] - $data[56]['debit'] - $data[55]['debit'] - $data[54]['debit'] - $data[53]['debit'] - $data[39]['debit'];

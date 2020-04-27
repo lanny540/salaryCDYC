@@ -142,7 +142,7 @@
                         @endforeach
 
                         @foreach($vdata['temp'] as $k => $vd)
-                            <tr id="vdata{{ $vd['id'] }}_temp">
+                            <tr id="vdata{{ $vd['id'] }}_temp" style="background-color: #FFF8DC">
                                 <td></td>
                                 <td>{{ $vd['seg0'] }}</td>
                                 <td>{{ $vd['seg1'] }}</td>
@@ -285,7 +285,9 @@
                     if (temp.search("_temp") === -1 ) {
                         for(let i=0; i < vdata.vdata.length; ++i) {
                             if (vdata.vdata[i].id === id) {
-                                vdata.vdata.splice(i, 1);       // 删除数组对应下标
+                                // 不能删除，只能将 该下标的数据 置为 0
+                                vdata.vdata[i].debit = 0;
+                                vdata.vdata[i].credit = 0;
                                 $('#vdata' + temp).remove();    // 删除表格对应行
                                 break;
                             }
@@ -347,7 +349,7 @@
                         vdata.temp.push(data.modalData);
 
                         let voucher =`
-                            <tr id="vdata${data.modalData.id}_temp">
+                            <tr id="vdata${data.modalData.id}_temp" style="background-color: #FFF8DC">
                                 <td></td>
                                 <td>${data.modalData.seg0}</td>
                                 <td>${data.modalData.seg1}</td>
@@ -380,34 +382,118 @@
                     data.modalData.id = parseInt(id);
                     for(let i=0; i < vdata.vdata.length; ++i) {
                         if (vdata.vdata[i].id === parseInt(id)) {
-                            vdata.vdata[i] = data.modalData;       // 删除数组对应下标
+                            vdata.vdata[i] = data.modalData;
                             break;
                         }
                     }
-                    let voucher = `
-                        <tr id="vdata${data.modalData.id}">
-                            <td></td>
-                            <td>${data.modalData.seg0}</td>
-                            <td>${data.modalData.seg1}</td>
-                            <td>${data.modalData.seg2}</td>
-                            <td>${data.modalData.seg3}</td>
-                            <td>${data.modalData.seg4}</td>
-                            <td>${data.modalData.seg5}</td>
-                            <td class="text-success text-center">${data.modalData.debit}</td>
-                            <td class="text-info text-center">${data.modalData.credit}</td>
-                            <td>${data.modalData.seg_des}</td>
-                            <td>${data.modalData.detail_des}</td>
-                            <td class="text-right">
-                                <div class="btn-group">
-                                    <button class="btn-info btn btn-sm edit" value="${data.modalData.id}_temp"><span class="fa fa-edit"></span> Edit</button>
-                                    <input type="hidden" value="${data.modalData.hiddenId}">
-                                </div>
-                            </td>
-                        </tr>
-                    `;
+                    // console.log('计算前:', vdata.vdata);
 
-                    $('#vdata'+data.modalData.id).replaceWith(voucher);
-                    // console.log('更改后:', vdata.vdata);
+                    swal({
+                        title: "是否需要重新计算?",
+                        text: "凭证模板数据已修改。重新计算可能导致其他相关数据变化，请谨慎选择！",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    }).then((willReCal) => {
+                        if (willReCal) {
+                            // 模板数据变更后需要重新进行计算,再将计算后的数据重新渲染一次
+                            $.ajax({
+                                url: '/vdataReCal',
+                                type: 'POST',
+                                data: {
+                                    vid: $('#vid').val(),
+                                    period_id: $('#period_id').val(),
+                                    vdata: vdata.vdata
+                                },
+                                dataType: 'json',
+                                success: function (data) {
+                                    // console.log('重新计算后:',data);
+                                    let vlist = $('#vdata-list');
+                                    vdata.vdata = data;
+
+                                    vlist.html('');
+
+                                    let lists = '';
+                                    // 模板数据
+                                    for (let i=0; i < data.length; ++i) {
+                                        lists += `
+                                        <tr id="vdata${data[i].id}">
+                                            <td></td>
+                                            <td>${data[i].seg0}</td>
+                                            <td>${data[i].seg1}</td>
+                                            <td>${data[i].seg2}</td>
+                                            <td>${data[i].seg3}</td>
+                                            <td>${data[i].seg4}</td>
+                                            <td>${data[i].seg5}</td>
+                                            <td class="text-success text-center">${parseFloat(data[i].debit).toFixed(2)}</td>
+                                            <td class="text-info text-center">${parseFloat(data[i].credit).toFixed(2)}</td>
+                                            <td>${data[i].seg_des}</td>
+                                            <td>${data[i].detail_des}</td>
+                                            <td class="text-right">
+                                                <div class="btn-group">
+                                                    <button class="btn-info btn btn-sm edit" value="${data[i].id}"><span class="fa fa-edit"></span> Edit</button>
+                                                    <input type="hidden" value=${i}>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        `;
+                                    }
+                                    // 临时数据
+                                    for (let i=0; i<vdata.temp.length; ++i) {
+                                        lists += `
+                                            <tr id="vdata${vdata.temp[i].id}_temp" style="background-color: #FFF8DC">
+                                                <td></td>
+                                                <td>${vdata.temp[i].seg0}</td>
+                                                <td>${vdata.temp[i].seg1}</td>
+                                                <td>${vdata.temp[i].seg2}</td>
+                                                <td>${vdata.temp[i].seg3}</td>
+                                                <td>${vdata.temp[i].seg4}</td>
+                                                <td>${vdata.temp[i].seg5}</td>
+                                                <td class="text-success text-center">${vdata.temp[i].debit}</td>
+                                                <td class="text-info text-center">${vdata.temp[i].credit}</td>
+                                                <td>${vdata.temp[i].seg_des}</td>
+                                                <td>${vdata.temp[i].detail_des}</td>
+                                                <td class="text-right">
+                                                    <div class="btn-group">
+                                                        <button class="btn-info btn btn-sm edit" value="${vdata.temp[i].id}_temp"><span class="fa fa-edit"></span> Edit</button>
+                                                        <button class="btn-danger btn btn-sm delete" value="${vdata.temp[i].id}_temp"><span class="fa fa-trash"></span> Delete</button>
+                                                        <input type="hidden" value="${i}">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }
+
+                                    vlist.html(lists);
+                                }
+                            });
+                        } else {
+                            swal("未重新计算!");
+                            let voucher = `
+                                <tr id="vdata${data.modalData.id}">
+                                    <td></td>
+                                    <td>${data.modalData.seg0}</td>
+                                    <td>${data.modalData.seg1}</td>
+                                    <td>${data.modalData.seg2}</td>
+                                    <td>${data.modalData.seg3}</td>
+                                    <td>${data.modalData.seg4}</td>
+                                    <td>${data.modalData.seg5}</td>
+                                    <td class="text-success text-center">${parseFloat(data.modalData.debit).toFixed(2)}</td>
+                                    <td class="text-info text-center">${parseFloat(data.modalData.credit).toFixed(2)}</td>
+                                    <td>${data.modalData.seg_des}</td>
+                                    <td>${data.modalData.detail_des}</td>
+                                    <td class="text-right">
+                                        <div class="btn-group">
+                                            <button class="btn-info btn btn-sm edit" value="${data.modalData.id}"><span class="fa fa-edit"></span> Edit</button>
+                                            <input type="hidden" value="${data.modalData.hiddenId}">
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+
+                            $('#vdata'+data.modalData.id).replaceWith(voucher);
+                        }
+                    });
                 }
 
                 $('#tempVoucherSubjectModal').modal('hide');
@@ -432,25 +518,24 @@
 
             console.log(data);
 
-            Post('vdatastore', data);
-            // $.ajax({
-            //     type: 'POST',
-            //     url: '/vdatastore',
-            //     data: data,
-            //     dataType: 'json',
-            //     success: function (data) {
-            //         swal(data.msg, {icon: "success"});
-            //     },
-            //     error: function (data, json, errorThrown) {
-            //         console.log(data);
-            //         let errors = data.responseJSON.errors;
-            //         let errorsHtml= '';
-            //         $.each( errors, function( key, value ) {
-            //             errorsHtml += '<li>' + value[0] + '</li>';
-            //         });
-            //         toastr.error( errorsHtml , "Error " + data.status +': '+ errorThrown);
-            //     }
-            // });
+            $.ajax({
+                type: 'POST',
+                url: '/vdatastore',
+                data: data,
+                dataType: 'json',
+                success: function (data) {
+                    swal(data.msg, {icon: "success"});
+                },
+                error: function (data, json, errorThrown) {
+                    console.log(data);
+                    let errors = data.responseJSON.errors;
+                    let errorsHtml= '';
+                    $.each( errors, function( key, value ) {
+                        errorsHtml += '<li>' + value[0] + '</li>';
+                    });
+                    toastr.error( errorsHtml , "Error " + data.status +': '+ errorThrown);
+                }
+            });
         });
     });
 
@@ -468,7 +553,8 @@
     }
 
     // 验证数据
-    function validationModalData(data) {
+    function validationModalData(data)
+    {
         let { seg0, seg1, seg2, seg3, seg4, seg5, debit, credit, seg_des, detail_des } = data;
         let res = true;
         let message = [];

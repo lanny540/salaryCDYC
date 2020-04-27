@@ -63,6 +63,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('vdata', 'VoucherController@vdataShow')->name('vdata.show');
     // 凭证提交页面
     Route::post('vdatastore', 'VoucherController@vdataStore')->name('vdata.store');
+    // 凭证数据重新计算
+    Route::post('vdataReCal', 'VoucherController@vdataReCal')->name('vdata.recal');
 
     // 薪金查询
     Route::get('search', 'SalaryController@salarySearch')->name('salary.search');
