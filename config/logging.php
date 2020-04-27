@@ -93,5 +93,12 @@ return [
             'path' => storage_path('logs/profile.log'),
             'level' => 'info',
         ],
+
+        // 定义同步会计科目的日志
+        'syncsubject' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/syncsubject.log'),
+            'level' => 'info',
+        ],
     ],
 ];
