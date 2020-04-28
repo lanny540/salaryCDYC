@@ -302,4 +302,24 @@ class VoucherController extends Controller
         // 重新计算
         return  $this->vdatarepo->extraRule($vid, $vdata, $period_id);
     }
+
+    /**
+     * 凭证数据上传任务列表.
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function vsyncList()
+    {
+        $lists = VoucherData::select(['id', 'vname', 'vuser', 'cdate', 'period', 'isUpload', 'vdescription'])
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
+            ->get();
+        return view('voucher.vsync')->with('lists', $lists);
+    }
+
+    public function vsync($id)
+    {
+        $v = VoucherData::findOrFail($id);
+        return $v;
+    }
 }

@@ -31,6 +31,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('workflow', 'WorkFlowController@index')->name('workflow.index');
     // 审核数据
     Route::put('workflow/{wfId}', 'WorkFlowController@dataConfirm')->name('workflow.confirm');
+    // 删除数据
+    Route::delete('workflow/{wfId}', 'WorkFlowController@dataDelete')->name('workflow.delete');
     // 查看明细数据
     Route::get('workflow/{wfId}', 'WorkFlowController@dataShow')->name('workflow.show');
 
@@ -65,6 +67,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('vdatastore', 'VoucherController@vdataStore')->name('vdata.store');
     // 凭证数据重新计算
     Route::post('vdataReCal', 'VoucherController@vdataReCal')->name('vdata.recal');
+    // 凭证同步列表
+    Route::get('vsynclists', 'VoucherController@vsyncList')->name('vsync.list');
+    // 凭证同步至ERP
+    Route::post('vsync/{id}', 'VoucherController@vsync')->name('vsync');
 
     // 薪金查询
     Route::get('search', 'SalaryController@salarySearch')->name('salary.search');

@@ -45,6 +45,9 @@
             <li class="{{ Request::is('vdata*') ? 'active' : '' }}">
                 <a href="{{ route('vdata.index') }}"><i class="fa fa-retweet"></i> <span class="nav-label">生成凭证 </span></a>
             </li>
+            <li class="{{ Request::is('vsynclists*') ? 'active' : '' }}">
+                <a href="{{ route('vsync.list') }}"><i class="fa fa-etsy"></i><span class="nav-label"> 上传ERP </span> </a>
+            </li>
             @endhasanyrole
 
             <li class="nav nav-link">自助服务 </li>
