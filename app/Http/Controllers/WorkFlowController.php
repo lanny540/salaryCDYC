@@ -7,6 +7,7 @@ use App\Models\WorkFlow\WorkFlow;
 use App\Services\DataProcess;
 use App\Services\ImportColumn;
 use Auth;
+use Carbon\Carbon;
 use File;
 use Illuminate\Http\Request;
 use Storage;
@@ -74,7 +75,7 @@ class WorkFlowController extends Controller
         $arr = explode('.', $file['name']);
         $fileName = uniqid('excel_', false).'.'.end($arr);
         $content = File::get($file['tmp_name']);
-//        Storage::disk('excelFiles')->put($fileName, $content);
+        Storage::disk('excelFiles')->put($fileName, $content);
         $info['file'] = asset('/storage/excelFiles/'.$fileName);
 
         // 写入salary_log
@@ -103,8 +104,11 @@ class WorkFlowController extends Controller
      */
     public function index()
     {
-        $workflows = WorkFlow::select(['id', 'name', 'userProfile.userName as uploader', 'isconfirm'])
+        $end = Carbon::now()->toDateString();
+        $start = Carbon::now()->modify('-3 months');
+        $workflows = WorkFlow::select(['id', 'name', 'userProfile.userName as uploader','upload_file', 'isconfirm', 'workflows.created_at', 'workflows.updated_at'])
             ->leftJoin('userProfile', 'workflows.uploader', '=', 'userProfile.user_id')
+            ->whereRaw("UNIX_TIMESTAMP(workflows.created_at)  BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')")
             ->orderByDesc('id')->get();
 
         return view('workflow.index')->with('workflows', $workflows);
@@ -120,9 +124,27 @@ class WorkFlowController extends Controller
     {
         $workflow = WorkFlow::with('userprofile')->findOrFail($workflowId);
         $workflow->isconfirm = 1;
-//        $workflow->save();
+        $workflow->save();
 
         return $workflow;
+    }
+
+    /**
+     * 数据删除.
+     *
+     * @param $workflowId
+     * @return WorkFlow|WorkFlow[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+     */
+    public function dataDelete($workflowId)
+    {
+        $wf = WorkFlow::findOrFail($workflowId);
+        try {
+            $wf->delete();
+        } catch (\Exception $e) {
+        }
+        $wf->save();
+
+        return $wf;
     }
 
     /**

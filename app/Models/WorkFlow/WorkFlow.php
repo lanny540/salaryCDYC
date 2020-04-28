@@ -5,6 +5,7 @@ namespace App\Models\WorkFlow;
 use App\Models\Salary\BonusDetail;
 use App\Models\Users\UserProfile;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\WorkFlow\WorkFlow
@@ -33,6 +34,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class WorkFlow extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'workflows';
 
     // 所有字段都可以批量赋值

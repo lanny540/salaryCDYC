@@ -14,6 +14,7 @@ class CreateWorkflowsTables extends Migration
             $table->integer('uploader')->index()->comment('上传用户ID');
             $table->string('upload_file')->nullable()->comment('上传文件地址');
             $table->boolean('isconfirm')->default(false)->comment('上传数据是否被财务确认');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

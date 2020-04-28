@@ -25,8 +25,8 @@
             <div class="col-lg-12">
                 <div class="tabs-container">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li><a class="nav-link active" data-toggle="tab" href="#unconfirmWorkflow"><i class="fa fa-desktop"></i> 未审核</a></li>
-                        <li><a class="nav-link" data-toggle="tab" href="#confirmWorkflow"><i class="fa fa-database"></i> 已审核</a></li>
+                        <li><a class="nav-link active" data-toggle="tab" href="#unconfirmWorkflow"><i class="fa fa-desktop"></i> 三个月内未审核</a></li>
+                        <li><a class="nav-link" data-toggle="tab" href="#confirmWorkflow"><i class="fa fa-database"></i> 三个月内已审核</a></li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="unconfirmWorkflow" class="tab-pane active">
@@ -38,6 +38,8 @@
                                             <th>状态</th>
                                             <th>流程名称</th>
                                             <th>上传人</th>
+                                            <th>创建时间</th>
+                                            <th>源文件</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -50,12 +52,17 @@
                                                 </td>
                                                 <td>{{ $w->name }}</td>
                                                 <td>{{ $w->uploader }}</td>
-                                                <td class="client-status" style="width: 220px;margin-left: 30px;">
+                                                <td>{{ $w->created_at }}</td>
+                                                <td><a href="{{ $w->upload_file }}">下载</a></td>
+                                                <td class="client-status text-right" style="width: 280px;">
                                                     <button class="btn btn-sm btn-primary view" value="{{ $w->id }}">
-                                                        <i class="fa fa-edit"></i> 查看数据
+                                                        <i class="fa fa-edit"></i> 查看
                                                     </button>
-                                                    <button class="btn btn-sm btn-success pull-right confirm" value="{{ $w->id }}" style="margin-left: 10px;">
-                                                        <i class="fa fa-bug"></i> 数据确认
+                                                    <button class="btn btn-sm btn-success confirm" value="{{ $w->id }}">
+                                                        <i class="fa fa-bug"></i> 确认
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger delete" value="{{ $w->id }}">
+                                                        <i class="fa fa-bug"></i> 删除
                                                     </button>
                                                 </td>
                                             </tr>
@@ -74,6 +81,8 @@
                                         <th>状态</th>
                                         <th>流程名称</th>
                                         <th>上传人</th>
+                                        <th>审核时间</th>
+                                        <th>源文件</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -86,6 +95,8 @@
                                                 </td>
                                                 <td>{{ $w->name }}</td>
                                                 <td>{{ $w->uploader }}</td>
+                                                <td>{{ $w->updated_at }}</td>
+                                                <td><a href="{{ $w->upload_file }}">下载</a></td>
                                                 <td class="client-status" style="width: 120px;">
                                                     <button class="btn btn-sm btn-primary view" value="{{ $w->id }}">
                                                         <i class="fa fa-edit"></i> 查看数据
@@ -165,6 +176,8 @@
                                     </td>
                                     <td>${data.name}</td>
                                     <td>${data.userprofile.userName}</td>
+                                    <td>${data.updated_at}</td>
+                                    <td><a href="${data.upload_file}">下载</a></td>
                                     <td class="client-status" style="width: 120px;">
                                     <button class="btn btn-sm btn-primary view" value="${data.id}">
                                         <i class="fa fa-edit"></i> 查看数据
@@ -187,6 +200,34 @@
                 }
             });
         });
+
+        body.on('click', 'button.delete', function () {
+            swal({
+                title: "数据是否删除?",
+                text: "请联系业务人员重新上传数据!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willConfirm) => {
+                if (willConfirm) {
+                    let id = $(this).val();
+                    $.ajax({
+                        type: 'DELETE',
+                        url: url + id,
+                        success: function (data) {
+                            let msg = data.name + '已删除！';
+                            $('#wf'+id).remove();
+                            swal(msg, { icon: "success" });
+                        },
+                        error: function (data, json, errorThrow) {
+                            console.log(data, errorThrow);
+                        }
+                    });
+                } else {
+                    swal("取消操作!");
+                }
+            });
+        })
     });
 </script>
 @endsection

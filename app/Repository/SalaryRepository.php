@@ -104,7 +104,7 @@ class SalaryRepository
 //                foreach ($data as $d) {
 //                    $this->specialBonus($periodId, $d);
 //                }
-                $workflowName = \Auth::user()['profile']['userName'].'上传的'.$this->types[$uploadType].'发放明细';
+                $workflowName = $this->types[$uploadType].'发放明细';
                 $workflow = WorkFlow::create([
                     'name' => $workflowName,
                     'uploader' => \Auth::id(),
