@@ -25,8 +25,8 @@
             <div class="col-lg-12">
                 <div class="tabs-container">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li><a class="nav-link active" data-toggle="tab" href="#unconfirmWorkflow"><i class="fa fa-desktop"></i> 三个月内未审核</a></li>
-                        <li><a class="nav-link" data-toggle="tab" href="#confirmWorkflow"><i class="fa fa-database"></i> 三个月内已审核</a></li>
+                        <li><a class="nav-link active" data-toggle="tab" href="#unconfirmWorkflow"><i class="fa fa-desktop"></i> 未审核数据</a></li>
+                        <li><a class="nav-link" data-toggle="tab" href="#confirmWorkflow"><i class="fa fa-database"></i> 当期已审核</a></li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="unconfirmWorkflow" class="tab-pane active">
@@ -38,35 +38,43 @@
                                             <th>状态</th>
                                             <th>流程名称</th>
                                             <th>上传人</th>
+                                            <th>记录数</th>
+                                            <th>合计金额</th>
                                             <th>创建时间</th>
                                             <th>源文件</th>
                                             <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($workflows as $w)
-                                        @if($w->isconfirm === 0)
+                                        @foreach($workflows[0] as $w)
                                             <tr id="wf{{ $w->id }}" class="text-center">
                                                 <td style="width: 100px;">
-                                                    <span class="label label-danger">数据待审核</span>
+                                                    @if($w->updated_at != $w->created_at)
+                                                        <span class="label label-info">数据有变动</span>
+                                                    @else
+                                                        <span class="label label-danger">数据待审核</span>
+                                                    @endif
                                                 </td>
                                                 <td>{{ $w->name }}</td>
                                                 <td>{{ $w->uploader }}</td>
+                                                <td>{{ $w->record }}</td>
+                                                <td>{{ $w->money }}</td>
                                                 <td>{{ $w->created_at }}</td>
                                                 <td><a href="{{ $w->upload_file }}">下载</a></td>
                                                 <td class="client-status text-right" style="width: 280px;">
-                                                    <button class="btn btn-sm btn-primary view" value="{{ $w->id }}">
+                                                    @if(in_array($w->name, $viewTypes, true))
+                                                    <button class="btn btn-xs btn-primary view" value="{{ $w->id }}">
                                                         <i class="fa fa-edit"></i> 查看
                                                     </button>
-                                                    <button class="btn btn-sm btn-success confirm" value="{{ $w->id }}">
+                                                    @endif
+                                                    <button class="btn btn-xs btn-success confirm" value="{{ $w->id }}">
                                                         <i class="fa fa-bug"></i> 确认
                                                     </button>
-                                                    <button class="btn btn-sm btn-danger delete" value="{{ $w->id }}">
+                                                    <button class="btn btn-xs btn-danger delete" value="{{ $w->id }}">
                                                         <i class="fa fa-bug"></i> 删除
                                                     </button>
                                                 </td>
                                             </tr>
-                                        @endif
                                         @endforeach
                                         </tbody>
                                     </table>
@@ -81,29 +89,33 @@
                                         <th>状态</th>
                                         <th>流程名称</th>
                                         <th>上传人</th>
+                                        <th>记录数</th>
+                                        <th>合计金额</th>
                                         <th>审核时间</th>
                                         <th>源文件</th>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody id="confirmList">
-                                    @foreach($workflows as $w)
-                                        @if($w->isconfirm === 1)
+                                    @foreach($workflows[1] as $w)
                                             <tr id="wf{{ $w->id }}" class="text-center">
                                                 <td style="width: 100px;">
                                                     <span class="label label-success">数据已审核</span>
                                                 </td>
                                                 <td>{{ $w->name }}</td>
                                                 <td>{{ $w->uploader }}</td>
+                                                <td>{{ $w->record }}</td>
+                                                <td>{{ $w->money }}</td>
                                                 <td>{{ $w->updated_at }}</td>
                                                 <td><a href="{{ $w->upload_file }}">下载</a></td>
                                                 <td class="client-status" style="width: 120px;">
-                                                    <button class="btn btn-sm btn-primary view" value="{{ $w->id }}">
-                                                        <i class="fa fa-edit"></i> 查看数据
-                                                    </button>
+                                                    @if(in_array($w->name, $viewTypes, true))
+                                                        <button class="btn btn-xs btn-primary view" value="{{ $w->id }}">
+                                                            <i class="fa fa-edit"></i> 查看数据
+                                                        </button>
+                                                    @endif
                                                 </td>
                                             </tr>
-                                        @endif
                                     @endforeach
                                     </tbody>
                                 </table>
@@ -127,6 +139,8 @@
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}});
         const url = 'workflow/';
         const body = $('body');
+
+        const viewTypes = ['专项奖', '劳动竞赛', '课酬', '节日慰问费', '党员奖励', '工会发放', '其他奖励', '财务发稿酬', '工会发稿酬'];
 
         body.on('click', 'button.view', function () {
             let id = $(this).val();
@@ -177,14 +191,25 @@
                                     <td>${data.name}</td>
                                     <td>${data.userprofile.userName}</td>
                                     <td>${data.updated_at}</td>
+                                    <td>${data.record}</td>
+                                    <td>${data.money}</td>
                                     <td><a href="${data.upload_file}">下载</a></td>
                                     <td class="client-status" style="width: 120px;">
-                                    <button class="btn btn-sm btn-primary view" value="${data.id}">
+                            `;
+
+                            if (viewTypes.includes(data.name)) {
+                                temp += `
+                                    <button class="btn btn-xs btn-primary view" value="${data.id}">
                                         <i class="fa fa-edit"></i> 查看数据
                                     </button>
-                                    </td>
-                                </tr>
-                            `;
+                                `;
+                            } else {
+                                temp += `
+                                        </td>
+                                    </tr>
+                                `;
+                            }
+
 
                             $('#confirmList').append(temp);
                             $('#wf'+id).remove();

@@ -52,7 +52,7 @@
                                     <td>{{ $t->vname }}</td>
                                     <td>{{ $t->vuser }}</td>
                                     <td>{{ $t->cdate }}</td>
-                                    <td>{{ $t->vdescription }}</td>
+                                    <td>{{ Illuminate\Support\Str::limit($t->vdescription, 20, '...') }}</td>
                                     <td class="client-status text-right" style="width: 280px;">
                                         <button class="btn btn-primary view" value="{{ $t->id }}">
                                             <i class="fa fa-edit"></i> 查看

@@ -13,22 +13,12 @@ use App\Models\Salary\TaxImport;
 use App\Models\Salary\Wage;
 use App\Models\Users\UserProfile;
 use App\Models\WorkFlow\WorkFlow;
+use Auth;
 use DB;
+use Spatie\Permission\Models\Role;
 
 class SalaryRepository
 {
-    private $types = [
-        '13' => '专项奖',
-        '14' => '劳动竞赛',
-        '15' => '课酬',
-        '16' => '节日慰问费',
-        '17' => '党员奖励',
-        '18' => '工会发放',
-        '19' => '其他奖励',
-        '37' => '财务发稿酬',
-        '38' => '工会发稿酬',
-    ];
-
     /**
      * 插入或更新数据.
      *
@@ -51,6 +41,7 @@ class SalaryRepository
 
                 break;
             case 9: //职工工资在岗
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetEmployeesWage($periodId);
                 }
@@ -60,6 +51,7 @@ class SalaryRepository
 
                 break;
             case 10: //离岗休养
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetLgxy($periodId);
                 }
@@ -69,6 +61,7 @@ class SalaryRepository
 
                 break;
             case 11: // 退休数据
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetTxsj($periodId);
                 }
@@ -78,6 +71,7 @@ class SalaryRepository
 
                 break;
             case 12: //月奖
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 1);
                 if (1 === $reset) {
                     $this->resetMonthBonus($periodId);
                 }
@@ -86,8 +80,6 @@ class SalaryRepository
                 }
 
                 break;
-
-            //
             case 13: //专项奖
             case 14: //劳动竞赛
             case 15: //课酬
@@ -104,13 +96,8 @@ class SalaryRepository
 //                foreach ($data as $d) {
 //                    $this->specialBonus($periodId, $d);
 //                }
-                $workflowName = $this->types[$uploadType].'发放明细';
-                $workflow = WorkFlow::create([
-                    'name' => $workflowName,
-                    'uploader' => \Auth::id(),
-                    'upload_file' => $file,
-                    'isconfirm' => 0
-                ]);
+
+                $workflow = $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 1);
 
                 foreach ($data as $d) {
                     $this->BonusDetail($periodId, $uploadType, $workflow->id, $d);
@@ -172,6 +159,7 @@ class SalaryRepository
 //
 //                break;
             case 20: //住房补贴
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '住房补贴', 1);
                 if (1 === $reset) {
                     $this->resHousing($periodId);
                 }
@@ -181,6 +169,7 @@ class SalaryRepository
 
                 break;
             case 21: //独子费
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetSingle($periodId);
                 }
@@ -190,6 +179,7 @@ class SalaryRepository
 
                 break;
             case 22: //公积金
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetGjj($periodId);
                 }
@@ -199,6 +189,7 @@ class SalaryRepository
 
                 break;
             case 23: //社保
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetInsurances($periodId);
                 }
@@ -208,6 +199,7 @@ class SalaryRepository
 
                 break;
             case 24: //车库
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetGarage($periodId);
                 }
@@ -217,6 +209,7 @@ class SalaryRepository
 
                 break;
             case 25: //成钞水电
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetCcWater($periodId);
                 }
@@ -226,6 +219,7 @@ class SalaryRepository
 
                 break;
             case 26: //成钞物管
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetCcProperty($periodId);
                 }
@@ -235,6 +229,7 @@ class SalaryRepository
 
                 break;
             case 27: //鑫源
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetXyDeduction($periodId);
                 }
@@ -244,6 +239,7 @@ class SalaryRepository
 
                 break;
             case 28: //水电物管退补
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetBackDeduction($periodId);
                 }
@@ -253,6 +249,7 @@ class SalaryRepository
 
                 break;
             case 29: //公车补扣除
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetCarDeduction($periodId);
                 }
@@ -262,6 +259,7 @@ class SalaryRepository
 
                 break;
             case 30: //公车费用
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 1);
                 if (1 === $reset) {
                     $this->resetCarFee($periodId);
                 }
@@ -271,6 +269,7 @@ class SalaryRepository
 
                 break;
             case 31: //它项扣除
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetRestDeduction($periodId);
                 }
@@ -280,6 +279,7 @@ class SalaryRepository
 
                 break;
             case 32: //固定扣款
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '固定扣款', 1);
                 if (1 === $reset) {
                     $this->resetFixedDeduction($periodId);
                 }
@@ -289,6 +289,7 @@ class SalaryRepository
 
                 break;
             case 33: //临时扣款
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 1);
                 if (1 === $reset) {
                     $this->resetTempDeduction($periodId);
                 }
@@ -298,6 +299,7 @@ class SalaryRepository
 
                 break;
             case 34: //其他扣款
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 1);
                 if (1 === $reset) {
                     $this->resetOtherDeduction($periodId);
                 }
@@ -307,6 +309,7 @@ class SalaryRepository
 
                 break;
             case 35: //扣工会会费
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '工会会费', 1);
                 if (1 === $reset) {
                     $this->resetUnionDeduction($periodId);
                 }
@@ -316,6 +319,7 @@ class SalaryRepository
 
                 break;
             case 36: //捐赠
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 1);
                 if (1 === $reset) {
                     $this->resetDonate($periodId);
                 }
@@ -343,6 +347,7 @@ class SalaryRepository
 //
 //                break;
             case 39: //特许使用权
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 1);
                 if (1 === $reset) {
                     $this->resetFranchise($periodId);
                 }
@@ -352,6 +357,7 @@ class SalaryRepository
 
                 break;
             case 40: //已销欠款
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '已销欠款', 1);
                 if (1 === $reset) {
                     $this->resetHadDebt($periodId);
                 }
@@ -361,6 +367,7 @@ class SalaryRepository
 
                 break;
             case 41: //专项税务
+                $this->createWorkFlow($periodId, $file, $data, $uploadType, '金额', 0);
                 if (1 === $reset) {
                     $this->resetTaxImport($periodId);
                 }
@@ -1974,6 +1981,51 @@ class SalaryRepository
             'policynumber' => $data['保险编号'],
             'period_id' => $period,
             'money' => $data['金额'],
+        ]);
+    }
+
+    /**
+     * @param int    $periodId   会计周ID
+     * @param string $file       上传文件地址
+     * @param array  $data       上传数据
+     * @param int    $uploadType 上传类型
+     * @param string $column     需要计算合计的字段
+     * @param int    $cal        是否计算合计.默认不计算
+     * @return mixed
+     */
+    private function createWorkFlow(int $periodId,string $file,array $data,int $uploadType,string $column, $cal=0)
+    {
+        $types = [13, 14, 15, 16, 17 ,18, 19 ,37, 38];
+
+        $sum = 0;
+        if (0 !== $cal) {
+            foreach ($data as $d) {
+                $sum += $d[$column] * 100;
+            }
+        }
+        $workflowName = Role::where('id', $uploadType)->first();
+
+        if (in_array($uploadType, $types)) {
+            return WorkFlow::create([
+                'period_id' => $periodId,
+                'name' => $workflowName->description,
+                'uploader' => Auth::id(),
+                'upload_file' => $file,
+                'isconfirm' => 0,
+                'record' => count($data),
+                'money' => $sum / 100,
+            ]);
+        }
+
+        return WorkFlow::updateOrCreate([
+            'period_id' => $periodId,
+            'name' => $workflowName->description,
+        ], [
+            'uploader' => Auth::id(),
+            'upload_file' => $file,
+            'isconfirm' => 0,
+            'record' => count($data),
+            'money' => $sum / 100,
         ]);
     }
 }

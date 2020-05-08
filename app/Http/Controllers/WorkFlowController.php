@@ -17,6 +17,18 @@ class WorkFlowController extends Controller
     protected $dataProcess;
     protected $importColumns;
 
+    private $types = [
+        '专项奖',
+        '劳动竞赛',
+        '课酬',
+        '节日慰问费',
+        '党员奖励',
+        '工会发放',
+        '其他奖励',
+        '财务发稿酬',
+        '工会发稿酬',
+    ];
+
     public function __construct(DataProcess $services, ImportColumn $importColumn)
     {
         $this->dataProcess = $services;
@@ -104,14 +116,20 @@ class WorkFlowController extends Controller
      */
     public function index()
     {
-        $end = Carbon::now()->toDateString();
+        $end = Carbon::now()->addHours(8);
         $start = Carbon::now()->modify('-3 months');
-        $workflows = WorkFlow::select(['id', 'name', 'userProfile.userName as uploader','upload_file', 'isconfirm', 'workflows.created_at', 'workflows.updated_at'])
+        $workflows = WorkFlow::select([
+            'id', 'name', 'userProfile.userName as uploader','upload_file', 'isconfirm', 'workflows.created_at', 'workflows.updated_at', 'record', 'money'
+        ])
             ->leftJoin('userProfile', 'workflows.uploader', '=', 'userProfile.user_id')
             ->whereRaw("UNIX_TIMESTAMP(workflows.created_at)  BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')")
             ->orderByDesc('id')->get();
 
-        return view('workflow.index')->with('workflows', $workflows);
+        $result = $workflows->mapToDictionary(function ($item) {
+            return [$item['isconfirm'] => $item];
+        });
+
+        return view('workflow.index')->with('workflows', $result)->with('viewTypes', $this->types);
     }
 
     /**
