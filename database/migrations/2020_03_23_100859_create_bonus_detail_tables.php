@@ -25,6 +25,7 @@ class CreateBonusDetailTables extends Migration
             $table->string('policynumber', 24)->index()->comment('保险编号');
             $table->integer('period_id')->default(1)->index()->comment('会计期ID');
             $table->decimal('money', 14, 2)->default(0.00)->comment('金额');
+            $table->string('card', 32)->default('')->comment('发放卡号');
             $table->string('remarks')->default('')->comment('备注');
             $table->timestamps();
         });

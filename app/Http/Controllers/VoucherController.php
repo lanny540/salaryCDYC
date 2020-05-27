@@ -316,10 +316,4 @@ class VoucherController extends Controller
             ->get();
         return view('voucher.vsync')->with('lists', $lists);
     }
-
-    public function vsync($id)
-    {
-        $v = VoucherData::findOrFail($id);
-        return $v;
-    }
 }

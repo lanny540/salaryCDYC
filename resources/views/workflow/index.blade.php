@@ -25,7 +25,7 @@
             <div class="col-lg-12">
                 <div class="tabs-container">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li><a class="nav-link active" data-toggle="tab" href="#unconfirmWorkflow"><i class="fa fa-desktop"></i> 未审核数据</a></li>
+                        <li><a class="nav-link active" data-toggle="tab" href="#unconfirmWorkflow"><i class="fa fa-desktop"></i> 当期未审核</a></li>
                         <li><a class="nav-link" data-toggle="tab" href="#confirmWorkflow"><i class="fa fa-database"></i> 当期已审核</a></li>
                     </ul>
                     <div class="tab-content">
@@ -158,6 +158,7 @@
                             <td>${item.policy}</td>
                             <td>${item.department}</td>
                             <td>${item.money}</td>
+                            <td>${item.card}</td>
                             <td>${item.remarks}</td>
                         </tr>
                     `;

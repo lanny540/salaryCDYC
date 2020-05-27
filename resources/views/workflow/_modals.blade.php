@@ -16,6 +16,7 @@
                         <th>保险编号</th>
                         <th>部门</th>
                         <th>金额</th>
+                        <th>卡号</th>
                         <th>备注</th>
                     </tr>
                     </thead>

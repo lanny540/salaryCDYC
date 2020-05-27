@@ -34,6 +34,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \App\Models\Users\UserProfile $userprofile
  * @property-read \App\Models\WorkFlow\WorkFlow $workflow
+ * @property string|null $card 卡号
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Salary\BonusDetail whereCard($value)
  */
 class BonusDetail extends Model
 {

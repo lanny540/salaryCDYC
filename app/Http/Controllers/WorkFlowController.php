@@ -116,13 +116,12 @@ class WorkFlowController extends Controller
      */
     public function index()
     {
-        $end = Carbon::now()->addHours(8);
-        $start = Carbon::now()->modify('-3 months');
+        $period_id = $this->dataProcess->getPeriodId();
         $workflows = WorkFlow::select([
             'id', 'name', 'userProfile.userName as uploader','upload_file', 'isconfirm', 'workflows.created_at', 'workflows.updated_at', 'record', 'money'
         ])
             ->leftJoin('userProfile', 'workflows.uploader', '=', 'userProfile.user_id')
-            ->whereRaw("UNIX_TIMESTAMP(workflows.created_at)  BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')")
+            ->where('period_id', $period_id)
             ->orderByDesc('id')->get();
 
         $result = $workflows->mapToDictionary(function ($item) {
@@ -174,7 +173,7 @@ class WorkFlowController extends Controller
     public function dataShow($workflowId)
     {
         return WorkFlow::with(['details' => function($query) {
-            $query->select(['wf_id', 'userProfile.userName as username', 'bonus_detail.policynumber as policy', 'departments.name as department', 'money', 'remarks'])
+            $query->select(['wf_id', 'userProfile.userName as username', 'bonus_detail.policynumber as policy', 'departments.name as department', 'money', 'card', 'remarks'])
                 ->leftJoin('userProfile', 'bonus_detail.policynumber', '=', 'userProfile.policyNumber')
                 ->leftJoin('departments', 'departments.id', '=', 'userProfile.department_id');
         }])->findOrFail($workflowId);

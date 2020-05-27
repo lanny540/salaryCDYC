@@ -69,8 +69,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('vdataReCal', 'VoucherController@vdataReCal')->name('vdata.recal');
     // 凭证同步列表
     Route::get('vsynclists', 'VoucherController@vsyncList')->name('vsync.list');
-    // 凭证同步至ERP
-    Route::post('vsync/{id}', 'VoucherController@vsync')->name('vsync');
 
     // 薪金查询
     Route::get('search', 'SalaryController@salarySearch')->name('salary.search');
@@ -133,6 +131,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('report', 'HelpController@reportPost')->name('report.post');
     // 联系我们页面
     Route::get('contact', 'HelpController@contactIndex')->name('contact');
+
+    // 凭证同步至ERP
+    Route::post('erpsync/{id}', 'SyncController@erpSync')->name('erpsync');
 
     Route::get('temp', 'TempController@test');
 });

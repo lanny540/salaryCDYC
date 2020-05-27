@@ -84,7 +84,7 @@
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')}});
 
         const body = $('body');
-        const url = 'vsync/';
+        const url = 'erpsync/';
 
         body.on('click', 'button.upload', function () {
             let id = $(this).val();

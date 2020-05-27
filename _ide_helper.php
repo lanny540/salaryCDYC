@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 6.18.13 on 2020-05-08 09:55:30.
+ * Generated for Laravel 6.18.16 on 2020-05-27 14:49:21.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -16066,13 +16066,14 @@ namespace Collective\Html {
          * @param string $url
          * @param string $title
          * @param array $attributes
+         * @param bool $escape
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */ 
-        public static function secureLink($url, $title = null, $attributes = [])
+        public static function secureLink($url, $title = null, $attributes = [], $escape = true)
         {
                         /** @var \Collective\Html\HtmlBuilder $instance */
-                        return $instance->secureLink($url, $title, $attributes);
+                        return $instance->secureLink($url, $title, $attributes, $escape);
         }
         
         /**
@@ -16082,13 +16083,14 @@ namespace Collective\Html {
          * @param string $title
          * @param array $attributes
          * @param bool $secure
+         * @param bool $escape
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */ 
-        public static function linkAsset($url, $title = null, $attributes = [], $secure = null)
+        public static function linkAsset($url, $title = null, $attributes = [], $secure = null, $escape = true)
         {
                         /** @var \Collective\Html\HtmlBuilder $instance */
-                        return $instance->linkAsset($url, $title, $attributes, $secure);
+                        return $instance->linkAsset($url, $title, $attributes, $secure, $escape);
         }
         
         /**
@@ -16097,13 +16099,14 @@ namespace Collective\Html {
          * @param string $url
          * @param string $title
          * @param array $attributes
+         * @param bool $escape
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */ 
-        public static function linkSecureAsset($url, $title = null, $attributes = [])
+        public static function linkSecureAsset($url, $title = null, $attributes = [], $escape = true)
         {
                         /** @var \Collective\Html\HtmlBuilder $instance */
-                        return $instance->linkSecureAsset($url, $title, $attributes);
+                        return $instance->linkSecureAsset($url, $title, $attributes, $escape);
         }
         
         /**
@@ -16113,13 +16116,15 @@ namespace Collective\Html {
          * @param string $title
          * @param array $parameters
          * @param array $attributes
+         * @param bool $secure
+         * @param bool $escape
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */ 
-        public static function linkRoute($name, $title = null, $parameters = [], $attributes = [])
+        public static function linkRoute($name, $title = null, $parameters = [], $attributes = [], $secure = null, $escape = true)
         {
                         /** @var \Collective\Html\HtmlBuilder $instance */
-                        return $instance->linkRoute($name, $title, $parameters, $attributes);
+                        return $instance->linkRoute($name, $title, $parameters, $attributes, $secure, $escape);
         }
         
         /**
@@ -16129,13 +16134,15 @@ namespace Collective\Html {
          * @param string $title
          * @param array $parameters
          * @param array $attributes
+         * @param bool $secure
+         * @param bool $escape
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */ 
-        public static function linkAction($action, $title = null, $parameters = [], $attributes = [])
+        public static function linkAction($action, $title = null, $parameters = [], $attributes = [], $secure = null, $escape = true)
         {
                         /** @var \Collective\Html\HtmlBuilder $instance */
-                        return $instance->linkAction($action, $title, $parameters, $attributes);
+                        return $instance->linkAction($action, $title, $parameters, $attributes, $secure, $escape);
         }
         
         /**

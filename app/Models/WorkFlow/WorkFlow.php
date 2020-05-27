@@ -36,6 +36,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\WorkFlow\WorkFlow withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\WorkFlow\WorkFlow withoutTrashed()
  * @mixin \Eloquent
+ * @property int $period_id 会计期ID
+ * @property int $record 数据条数
+ * @property float $money 合计金额
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\WorkFlow\WorkFlow whereMoney($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\WorkFlow\WorkFlow wherePeriodId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\WorkFlow\WorkFlow whereRecord($value)
  */
 class WorkFlow extends Model
 {
