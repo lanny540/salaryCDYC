@@ -46,6 +46,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        @if( isset($workflows[0]) )
                                         @foreach($workflows[0] as $w)
                                             <tr id="wf{{ $w->id }}" class="text-center">
                                                 <td style="width: 100px;">
@@ -76,6 +77,7 @@
                                                 </td>
                                             </tr>
                                         @endforeach
+                                        @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -97,6 +99,7 @@
                                     </tr>
                                     </thead>
                                     <tbody id="confirmList">
+                                    @if( isset($workflows[1]) )
                                     @foreach($workflows[1] as $w)
                                             <tr id="wf{{ $w->id }}" class="text-center">
                                                 <td style="width: 100px;">
@@ -117,6 +120,7 @@
                                                 </td>
                                             </tr>
                                     @endforeach
+                                    @endif
                                     </tbody>
                                 </table>
                             </div>

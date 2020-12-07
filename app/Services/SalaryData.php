@@ -110,8 +110,8 @@ class SalaryData
      */
     public function getPolicyNumber($userId)
     {
-        //return 1 === $userId ? '0500038' : UserProfile::where('user_id', $userId)->first()->policyNumber;
-        return UserProfile::where('user_id', $userId)->first()->policyNumber;
+        return 1 === $userId ? '0500038' : UserProfile::where('user_id', $userId)->first()->policyNumber;
+//        return UserProfile::where('user_id', $userId)->first()->policyNumber;
     }
 
     /**

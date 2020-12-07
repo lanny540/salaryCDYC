@@ -35,7 +35,7 @@ class SyncController extends Controller
         $rules = [
             'name' => 'required',
             'uid' => 'required',
-            'record' => 'required | gte:1',
+            'record' => 'required | numeric | gte:1',
             'money' => 'required | numeric | gte:0.01',
             'upload_file' => 'required | file',
             'upload_data' => 'required | array'
@@ -43,11 +43,13 @@ class SyncController extends Controller
         $messages = [
             'name.required' => '数据分类不能为空',
             'uid.required' => '同步人员的员工编号不能为空',
+            'record.numeric' => '记录数必须是数字',
             'record.gte' => '记录数必须大于0',
+            'money.numeric' => '发放金额必须是数字',
             'money.gte' => '发放金额合计必须大于0.01',
             'upload_file' => '附件没有上传',
             'upload_data.required' => '同步数据不能为空',
-            'upload_data.array' => '同步数据必须是数组'
+            'upload_data.array' => '同步数据必须是数组',
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {

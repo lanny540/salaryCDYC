@@ -25,8 +25,8 @@ class HomeController extends Controller
     {
         $year = Carbon::now()->year;
         $periods = $this->salaryData->getPeriodIds($year);
-        if (0 == count($periods)) {
-            $year = $year - 1;
+        if (0 === count($periods)) {
+            --$year;
         }
 
         // 获取今年的薪酬汇总数据

@@ -4,7 +4,7 @@
 <!-- Toastr style -->
 <link href="{{ asset('css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
 
-<style>
+<style type="text/css">
     @media (max-height: 768px) {
         .dash-text1 {
             font-size: 18px;
@@ -207,7 +207,7 @@
                 showMethod: 'slideDown',
                 timeOut: 3000
             };
-            toastr.success('欢迎 {{ Auth::user()->profile->userName }} 登录系统', '{{ env('APP_NAME') }}');
+            toastr.success('欢迎登录员工薪酬系统');
         }, 1300);
 
         $("#salary_total").html('￥' + datas.total);
