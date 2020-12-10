@@ -24,6 +24,8 @@ class DepartmentsSeeder extends Seeder
             ['name' => '经理办公室', 'dwdm' => '010101010101', 'pid' => 6, 'weight' => 70, 'level' => 3, 'created_at' => $date, 'updated_at' => $date],
             ['name' => '机关办公室', 'dwdm' => '010101010102', 'pid' => 6, 'weight' => 80, 'level' => 3, 'created_at' => $date, 'updated_at' => $date],
             ['name' => '企业管理与规划发展部', 'dwdm' => '0101010103', 'pid' => 5, 'weight' => 90, 'level' => 2, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => '企管规划部', 'dwdm' => '010101010301', 'pid' => 5, 'weight' => 90, 'level' => 2, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => '信息技术部', 'dwdm' => '010101010302', 'pid' => 5, 'weight' => 335, 'level' => 2, 'created_at' => $date, 'updated_at' => $date],
             ['name' => '计划财务部', 'dwdm' => '0101010104', 'pid' => 5, 'weight' => 100, 'level' => 2, 'created_at' => $date, 'updated_at' => $date],
             ['name' => '印钞管理部', 'dwdm' => '0101010105', 'pid' => 5, 'weight' => 110, 'level' => 2, 'created_at' => $date, 'updated_at' => $date],
             ['name' => '印钞管理部管理', 'dwdm' => '010101010501', 'pid' => 11, 'weight' => 120, 'level' => 3, 'created_at' => $date, 'updated_at' => $date],

@@ -17,16 +17,16 @@ class SystemConfigSeeder extends Seeder
 
         $data = [
             // 社保相关
-            ['config_key' => 'GJJ_PERSON_UPPER_LIMIT', 'config_value' => '2139', 'type' => 'insurances'],
-            ['config_key' => 'GJJ_ENTERPRISE_UPPER_LIMIT', 'config_value' => '2139', 'type' => 'insurances'],
-            ['config_key' => 'RETIRE_PERSON_UPPER_LIMIT', 'config_value' => '1294.32', 'type' => 'insurances'],
-            ['config_key' => 'RETIRE_ENTERPRISE_UPPER_LIMIT', 'config_value' => '999999', 'type' => 'insurances'],
-            ['config_key' => 'ANNUITY_PERSON_UPPER_LIMIT', 'config_value' => '713', 'type' => 'insurances'],
-            ['config_key' => 'ANNUITY_ENTERPRISE_UPPER_LIMIT', 'config_value' => '999999', 'type' => 'insurances'],
-            ['config_key' => 'MEDICAL_PERSON_UPPER_LIMIT', 'config_value' => '323.58', 'type' => 'insurances'],
-            ['config_key' => 'MEDICAL_ENTERPRISE_UPPER_LIMIT', 'config_value' => '1213.43', 'type' => 'insurances'],
-            ['config_key' => 'UNEMPLOYMENT_PERSON_UPPER_LIMIT', 'config_value' => '64.72', 'type' => 'insurances'],
-            ['config_key' => 'UNEMPLOYMENT_ENTERPRISE_UPPER_LIMIT', 'config_value' => '97.07', 'type' => 'insurances'],
+            ['config_key' => 'GJJ_PERSON_UPPER_LIMIT', 'config_value' => '2139', 'description' => '公积金个人缴纳上限', 'type' => 'insurances'],
+            ['config_key' => 'GJJ_ENTERPRISE_UPPER_LIMIT', 'config_value' => '2139', 'description' => '公积金企业缴纳上限', 'type' => 'insurances'],
+            ['config_key' => 'RETIRE_PERSON_UPPER_LIMIT', 'config_value' => '1294.32', 'description' => '退养金个人缴纳上限', 'type' => 'insurances'],
+            ['config_key' => 'RETIRE_ENTERPRISE_UPPER_LIMIT', 'config_value' => '999999', 'description' => '退养金企业缴纳上限', 'type' => 'insurances'],
+            ['config_key' => 'ANNUITY_PERSON_UPPER_LIMIT', 'config_value' => '713', 'description' => '年金个人缴纳上限', 'type' => 'insurances'],
+            ['config_key' => 'ANNUITY_ENTERPRISE_UPPER_LIMIT', 'config_value' => '999999', 'description' => '年金企业缴纳上限', 'type' => 'insurances'],
+            ['config_key' => 'MEDICAL_PERSON_UPPER_LIMIT', 'config_value' => '323.58', 'description' => '医疗保险个人缴纳上限', 'type' => 'insurances'],
+            ['config_key' => 'MEDICAL_ENTERPRISE_UPPER_LIMIT', 'config_value' => '1213.43', 'description' => '医疗保险企业缴纳上限', 'type' => 'insurances'],
+            ['config_key' => 'UNEMPLOYMENT_PERSON_UPPER_LIMIT', 'config_value' => '64.72', 'description' => '失业保险个人缴纳上限', 'type' => 'insurances'],
+            ['config_key' => 'UNEMPLOYMENT_ENTERPRISE_UPPER_LIMIT', 'config_value' => '97.07', 'description' => '失业保险企业缴纳上限', 'type' => 'insurances'],
             // 系统查询字段
             ['config_key' => '工资', 'config_value' => 's1', 'type' => 'search'],
             ['config_key' => '月奖', 'config_value' => 's2', 'type' => 'search'],
