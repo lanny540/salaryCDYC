@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 6.20.6.
+ * Generated for Laravel 6.20.7.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -9844,6 +9844,7 @@
                     /**
          * 
          *
+         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestValidation()
          * @param array $rules
          * @param mixed $params
          * @static 
@@ -9855,6 +9856,7 @@
                     /**
          * 
          *
+         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestValidation()
          * @param string $errorBag
          * @param array $rules
          * @param mixed $params
@@ -9867,6 +9869,7 @@
                     /**
          * 
          *
+         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestSignatureValidation()
          * @param mixed $absolute
          * @static 
          */ 
@@ -15926,6 +15929,7 @@
                     /**
          * 
          *
+         * @see \Maatwebsite\Excel\Mixins\DownloadCollection::downloadExcel()
          * @param string $fileName
          * @param string|null $writerType
          * @param mixed $withHeadings
@@ -15938,6 +15942,7 @@
                     /**
          * 
          *
+         * @see \Maatwebsite\Excel\Mixins\StoreCollection::storeExcel()
          * @param string $filePath
          * @param string|null $disk
          * @param string|null $writerType
@@ -15962,6 +15967,7 @@
                     /**
          * 
          *
+         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestValidation()
          * @param array $rules
          * @param mixed $params
          * @static 
@@ -15973,6 +15979,7 @@
                     /**
          * 
          *
+         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestValidation()
          * @param string $errorBag
          * @param array $rules
          * @param mixed $params
@@ -15985,6 +15992,7 @@
                     /**
          * 
          *
+         * @see \Illuminate\Foundation\Providers\FoundationServiceProvider::registerRequestSignatureValidation()
          * @param mixed $absolute
          * @static 
          */ 
@@ -16006,6 +16014,7 @@
                     /**
          * 
          *
+         * @see \Spatie\Permission\PermissionServiceProvider::registerMacroHelpers()
          * @param mixed $roles
          * @static 
          */ 
@@ -16016,6 +16025,7 @@
                     /**
          * 
          *
+         * @see \Spatie\Permission\PermissionServiceProvider::registerMacroHelpers()
          * @param mixed $permissions
          * @static 
          */ 
@@ -16040,6 +16050,7 @@
                     /**
          * 
          *
+         * @see \Yajra\DataTables\FractalServiceProvider::registerMacro()
          * @param mixed $transformer
          * @static 
          */ 
@@ -16050,6 +16061,7 @@
                     /**
          * 
          *
+         * @see \Yajra\DataTables\FractalServiceProvider::registerMacro()
          * @param mixed $transformer
          * @static 
          */ 
@@ -16060,6 +16072,7 @@
                     /**
          * 
          *
+         * @see \Yajra\DataTables\FractalServiceProvider::registerMacro()
          * @param mixed $serializer
          * @static 
          */ 
