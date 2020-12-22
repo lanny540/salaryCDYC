@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Department;
 use App\Models\Users\User;
 use App\Models\Users\UserProfile;
 use Carbon\Carbon;
@@ -32,8 +31,8 @@ class UsersSeeder extends Seeder
             'user_id' => $user->id,
             'userName' => '李凌',
             'sex' => '男',
-            'department_id' => 9,
-            'organation_id' => 9,
+            'department_id' => 11,
+            'organization_id' => 11,
             'uid' => $faker->uuid,
             'mobile' => $faker->phoneNumber,
             'phone' => $faker->phoneNumber,

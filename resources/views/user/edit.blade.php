@@ -98,7 +98,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label text-center">状态:</label>
                                                 <div class="col-sm-9">
-                                                    {{ Form::select('status', ['在职' => '在职', '离职' => '离职', '行业内交流' => '行业内交流'], $user->profile->status, ['class' => 'form-control']) }}
+                                                    {{ Form::select('status', ['在职' => '在职', '离退' => '离退', '行业内交流' => '行业内交流'], $user->profile->status, ['class' => 'form-control']) }}
                                                 </div>
                                             </div>
                                         </fieldset>

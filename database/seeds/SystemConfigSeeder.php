@@ -28,13 +28,13 @@ class SystemConfigSeeder extends Seeder
             ['config_key' => 'UNEMPLOYMENT_PERSON_UPPER_LIMIT', 'config_value' => '64.72', 'description' => '失业保险个人缴纳上限', 'type' => 'insurances'],
             ['config_key' => 'UNEMPLOYMENT_ENTERPRISE_UPPER_LIMIT', 'config_value' => '97.07', 'description' => '失业保险企业缴纳上限', 'type' => 'insurances'],
             // 系统查询字段
-            ['config_key' => '工资', 'config_value' => 's1', 'type' => 'search'],
-            ['config_key' => '月奖', 'config_value' => 's2', 'type' => 'search'],
-            ['config_key' => '劳动竞赛', 'config_value' => 's3', 'type' => 'search'],
-            ['config_key' => '其他奖励', 'config_value' => 's4', 'type' => 'search'],
-            ['config_key' => '补贴', 'config_value' => 's5', 'type' => 'search'],
-            ['config_key' => '四险一金', 'config_value' => 's6', 'type' => 'search'],
-            ['config_key' => '个人所得税', 'config_value' => 's7', 'type' => 'search'],
+            ['config_key' => '工资', 'config_value' => 's1', 'description' => '薪金查询字段-工资', 'type' => 'search'],
+            ['config_key' => '月奖', 'config_value' => 's2', 'description' => '薪金查询字段-月奖', 'type' => 'search'],
+            ['config_key' => '劳动竞赛', 'config_value' => 's3', 'description' => '薪金查询字段-劳动竞赛', 'type' => 'search'],
+            ['config_key' => '其他奖励', 'config_value' => 's4', 'description' => '薪金查询字段-其他奖励', 'type' => 'search'],
+            ['config_key' => '补贴', 'config_value' => 's5', 'description' => '薪金查询字段-补贴', 'type' => 'search'],
+            ['config_key' => '四险一金', 'config_value' => 's6', 'description' => '薪金查询字段-四险一金', 'type' => 'search'],
+            ['config_key' => '个人所得税', 'config_value' => 's7', 'description' => '薪金查询字段-个人所得税', 'type' => 'search'],
         ];
 
         SystemConfig::insert($data);
