@@ -27,25 +27,25 @@ class UsersSeeder extends Seeder
 
         $faker = factory::create('zh_CN');
 
-        UserProfile::create([
-            'user_id' => $user->id,
-            'userName' => '李凌',
-            'sex' => '男',
-            'department_id' => 11,
-            'organization_id' => 11,
-            'uid' => $faker->uuid,
-            'mobile' => $faker->phoneNumber,
-            'phone' => $faker->phoneNumber,
-            'address' => $faker->address,
-            'policyNumber' => $faker->ean8,
-            'wageCard' => $faker->creditCardNumber,
-            'bonusCard' => $faker->creditCardNumber,
-            'flag' => 0,
-            'status' => '在职',
-            'hiredate' => '2005-08-01',
-            'handicapped' => 0,
-            'tax_rebates' => 0,
-        ]);
+//        UserProfile::create([
+//            'user_id' => $user->id,
+//            'userName' => '李凌',
+//            'sex' => '男',
+//            'department_id' => 11,
+//            'organization_id' => 11,
+//            'uid' => $faker->uuid,
+//            'mobile' => $faker->phoneNumber,
+//            'phone' => $faker->phoneNumber,
+//            'address' => $faker->address,
+//            'policyNumber' => $faker->ean8,
+//            'wageCard' => $faker->creditCardNumber,
+//            'bonusCard' => $faker->creditCardNumber,
+//            'flag' => 0,
+//            'status' => '在职',
+//            'hiredate' => '2005-08-01',
+//            'handicapped' => 0,
+//            'tax_rebates' => 0,
+//        ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 

@@ -156,7 +156,7 @@
                 <table class="table table-bordered table-striped text-center">
                 <thead>
                     <tr>
-                        <th>类别</th>
+                        <th style="width:15%;">类别</th>
                         ${theadString}
                     </tr>
                 </thead>

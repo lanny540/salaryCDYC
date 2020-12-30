@@ -78,25 +78,24 @@
                         <th style='width: 5%'></th>
                     </tr>
                     </thead>
-                    <tbody>
-                    @foreach($cursalary as $s)
-                        <tr>
-                            <td>{{ $s->published_at }}</td>
-                            <td>{{ $s->should_total }}</td>
-                            <td>{{ $s->bonus_total }}</td>
-                            <td>{{ $s->salary_total }}</td>
-                            <td class="client-status"><a href="{{ route('salary.show', $s->period_id) }}"> <span class="label label-primary">查看明细</span></a></td>
+		    <tbody>
+                    @for ($i=count($cursalary); $i>0; $i--)
+                            <td>{{ $cursalary[$i-1]->published_at }}</td>
+                            <td>{{ $cursalary[$i-1]->should_total }}</td>
+                            <td>{{ $cursalary[$i-1]->bonus_total }}</td>
+                            <td>{{ $cursalary[$i-1]->salary_total }}</td>
+                            <td class="client-status"><a href="{{ route('salary.show', $cursalary[$i-1]->period_id) }}"> <span class="label label-primary">查看明细</span></a></td>
                         </tr>
-                    @endforeach
-                    @foreach($presalary as $ps)
+		    @endfor
+                    @for ($i=count($presalary); $i>0; $i--)
                         <tr>
-                            <td>{{ $ps->published_at }}</td>
-                            <td>{{ $ps->should_total }}</td>
-                            <td>{{ $ps->bonus_total }}</td>
-                            <td>{{ $ps->salary_total }}</td>
-                            <td class="client-status"><a href="{{ route('salary.show', $ps->period_id) }}"> <span class="label label-primary">查看明细</span></a></td>
+                            <td>{{ $presalary[$i-1]->published_at }}</td>
+                            <td>{{ $presalary[$i-1]->should_total }}</td>
+                            <td>{{ $presalary[$i-1]->bonus_total }}</td>
+                            <td>{{ $presalary[$i-1]->salary_total }}</td>
+                            <td class="client-status"><a href="{{ route('salary.show', $cursalary[$i-1]->period_id) }}"> <span class="label label-primary">查看明细</span></a></td>
                         </tr>
-                    @endforeach
+                    @endfor
                     </tbody>
                 </table>
             </div>
