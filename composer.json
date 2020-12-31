@@ -8,7 +8,7 @@
     ],
     "license": "Proprietary",
     "require": {
-        "php": "^8.0",
+        "php": "^7.2",
         "ext-json": "*",
         "doctrine/dbal": "^2.8",
         "fideloper/proxy": "^4.0",

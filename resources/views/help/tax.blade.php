@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="col-sm-5">
-                            <h2 class="text-center" id="tax"> 应缴纳个税: ￥ 0.00</h2>
+                            <h2 class="text-center" id="tax" style="margin-top: 10px;"> 应缴纳个税: ￥ 0.00</h2>
                         </div>
                     </div>
                 </div>
@@ -40,12 +40,37 @@
             <h2>如果您对个税计算有任何疑问，请咨询 <strong>计划财务部</strong> ！</h2>
         </div>
     </div>
-    {{--TODO: FAQ列表--}}
     <div class="faq-item">
         <div class="row">
             <div class="col-md-12">
-                <a data-toggle="collapse" href="#faq1" class="faq-question">2019年个人所得税是如何计算的 ?</a>
-                <small>Added by <strong>Alex Smith</strong> <i class="fa fa-clock-o"></i> Today 2:40 pm - 24.06.2014</small>
+                <a data-toggle="collapse" href="#faq1" class="faq-question">个人所得税是如何计算的 ?</a>
+                <small>Added by <strong>计划财务部</strong> <i class="fa fa-clock-o"></i> 2020-02-15</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="faq1" class="panel-collapse collapse ">
+                    <div class="faq-answer">
+                        <p> 新个人所得税应纳税所得额的计算：</p>
+                        <p> (一)居民个人的综合所得，以每一纳税年度的收入额减除费用六万元以及专项扣除、专项附加扣除和依法确定的其他扣除后的余额，为应纳税所得额。</p>
+                        <p> (二)非居民个人的工资、薪金所得，以每月收入额减除费用五千元后的余额为应纳税所得额;劳务报酬所得、稿酬所得、特许权使用费所得，以每次收入额为应纳税所得额。</p>
+                        <p> (三)经营所得，以每一纳税年度的收入总额减除成本、费用以及损失后的余额，为应纳税所得额。</p>
+                        <p>(四)财产租赁所得，每次收入不超过四千元的，减除费用八百元;四千元以上的，减除百分之二十的费用，其余额为应纳税所得额。</p>
+                        <p> (五)财产转让所得，以转让财产的收入额减除财产原值和合理费用后的余额，为应纳税所得额。</p>
+                        <p> (六)利息、股息、红利所得和偶然所得，以每次收入额为应纳税所得额。</p>
+                        <p>劳务报酬所得、稿酬所得、特许权使用费所得以收入减除百分之二十的费用后的余额为收入额。稿酬所得的收入额减按百分之七十计算。</p>
+                        <p>个人将其所得对教育、扶贫、济困等公益慈善事业进行捐赠，捐赠额未超过纳税人申报的应纳税所得额百分之三十的部分，可以从其应纳税所得额中扣除;国务院规定对公益慈善事业捐赠实行全额税前扣除的，从其规定。
+                        <p>本条第一款第一项规定的专项扣除，包括居民个人按照国家规定的范围和标准缴纳的基本养老保险、基本医疗保险、失业保险等社会保险费和住房公积金等;专项附加扣除，包括子女教育、继续教育、大病医疗、住房贷款利息或者住房租金、赡养老人等支出，具体范围、标准和实施步骤由国务院确定，并报全国人民代表大会常务委员会备案。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="faq-item">
+        <div class="row">
+            <div class="col-md-12">
+                <a data-toggle="collapse" href="#faq1" class="faq-question">为什么我的收入合计和其他地方统计的不一样 ?</a>
+                <small>Added by <strong>计划财务部</strong> <i class="fa fa-clock-o"></i> 2019-05-15</small>
             </div>
         </div>
         <div class="row">
@@ -53,80 +78,7 @@
                 <div id="faq1" class="panel-collapse collapse ">
                     <div class="faq-answer">
                         <p>
-                            It is a long established fact that a reader will be distracted by the
-                            readable content of a page when looking at its layout. The point of
-                            using Lorem Ipsum is that it has a more-or-less normal distribution of
-                            letters, as opposed to using 'Content here, content here', making it
-                            look like readable English.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="faq-item">
-        <div class="row">
-            <div class="col-md-12">
-                <a data-toggle="collapse" href="#faq2" class="faq-question">Many desktop publishing packages ?</a>
-                <small>Added by <strong>Mark Nowak</strong> <i class="fa fa-clock-o"></i> Today 3:30 pm - 11.06.2014</small>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div id="faq2" class="panel-collapse collapse">
-                    <div class="faq-answer">
-                        <p>
-                            Many desktop publishing packages and web page editors now use Lorem
-                            Ipsum as their default model text, and a search for 'lorem ipsum' will
-                            uncover many web sites still in their infancy. Various versions have
-                            evolved over the years, sometimes by accident, sometimes on purpose
-                            (injected humour and the like).
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="faq-item">
-        <div class="row">
-            <div class="col-md-12">
-                <a data-toggle="collapse" href="#faq4" class="faq-question">What Finibus Bonorum et Malorum mean ?</a>
-                <small>Added by <strong>Janet North</strong> <i class="fa fa-clock-o"></i> Today 2:43 pm - 22.06.2014</small>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div id="faq4" class="panel-collapse collapse">
-                    <div class="faq-answer">
-                        <p>
-                            Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus
-                            Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written
-                            in 45 BC. This book is a treatise on the theory of ethics, very popular
-                            during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum
-                            dolor sit amet..", comes from a line in section 1.10.32.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="faq-item">
-        <div class="row">
-            <div class="col-md-12">
-                <a data-toggle="collapse" href="#faq5" class="faq-question">The standard chunk of Lorem Ipsum used since ?</a>
-                <small>Added by <strong>Robert Task</strong> <i class="fa fa-clock-o"></i> Today 1:23 pm - 12.06.2014</small>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div id="faq5" class="panel-collapse collapse">
-                    <div class="faq-answer">
-                        <p>
-                            The standard chunk of Lorem Ipsum used since the 1500s is reproduced
-                            below for those interested. Sections 1.10.32 and 1.10.33 from "de
-                            Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact
-                            original form, accompanied by English versions from the 1914 translation
-                            by H. Rackham.
+                            收入合计不一致的主要原因是计划财务部与其他部门的统计口径不一致所造成的。
                         </p>
                     </div>
                 </div>

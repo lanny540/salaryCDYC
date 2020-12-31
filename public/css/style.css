@@ -5689,9 +5689,9 @@ body.mini-navbar.fixed-sidebar .logo-element {
   width: 300px;
 }
 .loginColumns {
-  max-width: 800px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 100px 20px 20px 20px;
+  padding: 250px 10px 10px 10px;
 }
 .passwordBox {
   max-width: 460px;
